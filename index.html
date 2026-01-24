@@ -644,6 +644,23 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
         const isDevMode = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
         const bypassAuth = new URLSearchParams(window.location.search).has('dev');
         
+        // --- SESSION PERSISTENCE LOGIC (3 Hour Timeout) ---
+        const lastActive = localStorage.getItem('lsp_last_active');
+        if (lastActive && !bypassAuth) {
+            const diff = Date.now() - parseInt(lastActive, 10);
+            if (diff < (3 * 60 * 60 * 1000)) { // 3 Hours
+                // Valid Session: Refresh timestamp & bypass login
+                localStorage.setItem('lsp_last_active', Date.now().toString()); 
+                loginView.style.display = 'none';
+                mainContainer.classList.remove('hidden');
+                document.body.style.userSelect = "auto";
+                // Note: We don't return here so that event listeners below still attach correctly
+            } else {
+                // Session Expired
+                localStorage.removeItem('lsp_last_active');
+            }
+        }
+        
         if (isDevMode && bypassAuth) {
             loginView.style.display = 'none';
             mainContainer.classList.remove('hidden');
@@ -746,6 +763,7 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
     });
 
     function loginSuccess(loginView, mainContainer, loginStatus, btnLogin) {
+        localStorage.setItem('lsp_last_active', Date.now().toString()); // START SESSION TIMER
         loginStatus.innerText = "✓ Access Granted";
         loginStatus.style.color = "var(--success)";
         setTimeout(() => {
