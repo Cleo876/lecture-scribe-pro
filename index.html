@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture Scribe Pro</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --input-bg: #020617;
+            --border: #334155;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --accent: #8b5cf6;
+            --scribe: #f59e0b;
+            --card-front: #1e293b;
+            --card-back: #0f172a;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            user-select: none;
+        }
+
+        /* --- LOGIN STYLES --- */
+        #login-view {
+            width: 100%;
+            max-width: 400px;
+            background: var(--surface);
+            padding: 2.5rem;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-logo {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-tagline {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 2rem;
+        }
+
+        /* --- MAIN CONTAINER STYLES --- */
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--surface);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border: 1px solid var(--border);
+            transition: max-width 0.5s ease;
+            position: relative;
+        }
+        
+        .container.wide-mode {
+            max-width: 1200px;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1 { margin-top: 0; font-size: 1.8rem; font-weight: 700; text-align: center; color: var(--text-main); margin-bottom: 0.5rem; }
+        p.subtitle { text-align: center; color: var(--text-muted); margin-bottom: 2rem; font-size: 0.9rem; }
+
+        .fullscreen-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: all 0.2s ease;
+            z-index: 100;
+        }
+        .fullscreen-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+            border-color: var(--text-muted);
+        }
+
+        .mode-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .mode-btn { background: none; border: none; color: var(--text-muted); padding: 10px 20px; cursor: pointer; border-bottom: 2px solid transparent; font-weight: 600;}
+        .mode-btn.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
+
+        .input-group { margin-bottom: 1.5rem; position: relative; }
+        
+        .label-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem; }
+        label { display: block; font-size: 0.875rem; font-weight: 500; color: var(--text-muted); margin: 0; }
+        
+        .api-help-link {
+            font-size: 0.8rem; color: var(--primary); text-decoration: none; cursor: pointer; transition: color 0.2s;
+        }
+        .api-help-link:hover { color: var(--primary-hover); text-decoration: underline; }
+
+        input[type="text"], input[type="password"], select, textarea {
+            width: 100%; padding: 0.75rem 1rem; background: var(--input-bg); border: 1px solid var(--border);
+            border-radius: 8px; color: var(--text-main); font-size: 1rem; box-sizing: border-box;
+            transition: border-color 0.2s; font-family: inherit;
+        }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); }
+
+        .model-info {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+            padding: 8px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+        .model-info span { color: var(--accent); font-weight: 600; }
+
+        details.advanced-settings {
+            background: rgba(0, 0, 0, 0.2); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; overflow: hidden;
+        }
+        details.advanced-settings summary {
+            padding: 1rem; cursor: pointer; font-size: 0.9rem; font-weight: 600; color: var(--text-muted); user-select: none;
+        }
+        details.advanced-settings summary:hover { color: var(--text-main); }
+        .prompt-editor { padding: 1rem; }
+        textarea.prompt-box { font-family: 'Courier New', monospace; font-size: 0.85rem; height: 160px; resize: vertical; line-height: 1.4; }
+
+        button {
+            width: 100%; padding: 1rem; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer;
+            transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        button:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
+        
+        .btn-file-select { background: #334155; color: #e2e8f0; border: 1px solid #475569; }
+        .btn-file-select:hover { background: #475569; color: white; }
+        
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-warning { background: var(--scribe); color: #000; }
+        .btn-accent { background: var(--accent); color: white; width: auto; padding: 0.5rem 1rem; font-size: 0.9rem;}
+        .btn-scribe { background: var(--scribe); color: #000; width: auto; padding: 0.5rem 1rem; font-size: 0.9rem;}
+        .btn-cards { background: var(--success); color: #000; width: auto; padding: 0.5rem 1rem; font-size: 0.9rem;}
+        .btn-secondary { background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); margin-top: 1rem;}
+        .btn-mini { padding: 0.5rem; font-size: 0.8rem; background: #334155; color: #cbd5e1; width: auto; margin-top: 8px; }
+
+        /* Review Button Styling */
+        .review-mode-container {
+            border: 1px dashed var(--border);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            background: rgba(255,255,255,0.02);
+            text-align: center;
+        }
+
+        .recording-ui {
+            background: #000; border-radius: 12px; padding: 1.5rem; text-align: center; border: 1px solid var(--border); margin-bottom: 1.5rem;
+        }
+        .timer { font-family: 'Courier New', monospace; font-size: 2.5rem; color: var(--success); font-weight: 700; margin-bottom: 0.5rem; }
+        .status-badge {
+            display: inline-block; padding: 4px 12px; border-radius: 99px; font-size: 0.75rem; background: rgba(239, 68, 68, 0.2);
+            color: var(--danger); animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        .quota-alert {
+            display: none;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--danger);
+            color: #fca5a5;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        .quota-alert strong { color: var(--danger); }
+        
+        /* New Protocol Alert */
+        .protocol-alert {
+            display: none;
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid var(--scribe);
+            color: #fcd34d;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .result-tabs { display: flex; gap: 5px; background: #000; padding: 5px; border-radius: 8px; margin-bottom: 10px; border: 1px solid var(--border); }
+        .result-tab-btn {
+            flex: 1; padding: 10px; background: transparent; border: none; color: #64748b; border-radius: 6px; cursor: pointer; transition: all 0.2s; position: relative;
+        }
+        .result-tab-btn.active { background: var(--surface); color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .result-tab-btn.active.scribe-tab { color: var(--scribe); }
+        .result-tab-btn.active.study-tab { color: var(--accent); }
+        .result-tab-btn.active.cards-tab { color: var(--success); }
+
+        /* LOADING SPINNER ON TABS */
+        .tab-spinner {
+            display: inline-block; width: 10px; height: 10px; border: 2px solid rgba(255,255,255,0.3); border-top: 2px solid white; border-radius: 50%; animation: spin 1s linear infinite; margin-left: 8px;
+        }
+
+        #step-result { display: flex; flex-direction: column; flex-grow: 1; overflow: hidden; }
+        .output-pane { display: none; flex-direction: column; flex-grow: 1; height: 100%; min-height: 0; }
+        .output-pane.active { display: flex; }
+        
+        .result-box {
+            width: 100%; flex-grow: 1; background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px;
+            color: var(--text-main); padding: 2rem; font-family: 'Georgia', 'Times New Roman', serif; line-height: 1.7;
+            font-size: 1.1rem; overflow-y: auto; box-sizing: border-box;
+        }
+
+        /* LOADING SKELETON STYLES */
+        .skeleton-container { padding: 1rem; width: 100%; box-sizing: border-box; }
+        .skeleton-line {
+            height: 16px; background: #334155; margin-bottom: 12px; border-radius: 4px;
+            animation: pulse-skeleton 1.5s infinite ease-in-out;
+        }
+        .skeleton-line.short { width: 60%; }
+        .skeleton-line.medium { width: 80%; }
+        .skeleton-line.header { height: 28px; width: 40%; margin-bottom: 20px; background: #475569; }
+        
+        @keyframes pulse-skeleton {
+            0% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0.5; }
+        }
+
+        .result-box h1, .result-box h2, .result-box h3 { color: #ffffff; margin-top: 1.5em; margin-bottom: 0.5em; border-bottom: 1px solid #334155; padding-bottom: 5px; }
+        .result-box h1 { font-size: 1.8em; }
+        .result-box h2 { font-size: 1.5em; }
+        .result-box strong { color: var(--success); }
+        .result-box table { width: 100%; border-collapse: collapse; margin: 1em 0; }
+        .result-box th, .result-box td { border: 1px solid #475569; padding: 8px; text-align: left; }
+        .result-box th { background: #1e293b; color: var(--scribe); }
+        .result-box ul { padding-left: 20px; }
+        .result-box li { margin-bottom: 5px; }
+        
+        .flashcard-container {
+            flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; padding: 2rem;
+            position: relative;
+        }
+        .flashcard { width: 100%; max-width: 600px; height: 350px; perspective: 1000px; cursor: pointer; }
+        .flashcard-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; }
+        .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+        .flashcard-front, .flashcard-back {
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+            display: flex; align-items: center; justify-content: center; padding: 2rem; box-sizing: border-box;
+            border-radius: 12px; border: 1px solid var(--border); font-size: 1.4rem; line-height: 1.6;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+        .flashcard-front { background: var(--surface); color: var(--text-main); }
+        .flashcard-back { background: var(--bg); color: var(--accent); transform: rotateY(180deg); border-color: var(--accent); }
+        
+        .card-controls { display: flex; gap: 20px; margin-top: 20px; align-items: center; }
+        .card-counter { font-family: monospace; color: var(--text-muted); }
+
+        .hidden { display: none !important; }
+        .spinner {
+            width: 40px; height: 40px; border: 4px solid var(--border); border-top: 4px solid var(--primary);
+            border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7);
+            display: flex; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(4px);
+        }
+        .modal-content {
+            background: var(--surface); border: 1px solid var(--border); padding: 2rem; border-radius: 12px;
+            max-width: 450px; width: 90%; color: var(--text-main); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);
+        }
+        .modal-title { font-size: 1.25rem; font-weight: bold; margin-bottom: 1rem; color: var(--primary); }
+        .step-list { margin: 0; padding-left: 1.2rem; line-height: 1.6; color: #cbd5e1; font-size: 0.95rem; }
+        .step-list li { margin-bottom: 0.8rem; }
+        .copy-icon {
+            display: inline-block; width: 14px; height: 14px; border: 2px solid currentColor; border-radius: 3px; position: relative; top: 2px;
+        }
+        .copy-icon::after {
+            content: ''; position: absolute; width: 100%; height: 100%; top: -4px; left: 2px; border: 2px solid currentColor; border-radius: 3px; border-left: none; border-bottom: none;
+        }
+        .modal-actions { margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 10px; }
+
+        .recording-controls {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+        }
+        .recording-controls button { flex: 1; }
+    </style>
+</head>
+<body>
+
+<!-- NETWORK LOGIN VIEW -->
+<div id="login-view">
+    <div class="login-logo">Lecture Scribe Pro</div>
+    <div class="login-tagline">Network Validation Required</div>
+    
+    <div class="input-group">
+        <label>User Email</label>
+        <input type="text" id="login-email" placeholder="email@example.com">
+    </div>
+    
+    <div class="input-group">
+        <label>Verification U-CODE</label>
+        <input type="text" id="login-ucode" placeholder="XXXX" maxlength="16" style="text-align: center; font-family: monospace; letter-spacing: 0.3em; text-transform: uppercase;">
+    </div>
+    
+    <button id="btn-login" class="btn-primary">Verify Access</button>
+    <div id="login-status" style="margin-top: 1rem; font-size: 0.8rem; min-height: 1.2rem;"></div>
+</div>
+
+<div id="helpModal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <div class="modal-title">How to Get a Free API Key</div>
+        <ol class="step-list">
+            <li><strong>Sign In:</strong> Log in to your Google account if you haven't already.</li>
+            <li><strong>Create Key:</strong> Click the blue <strong>"Create API key"</strong> button.</li>
+            <li><strong>Select Project:</strong> Choose "Create API key in new project" (or use an existing one).</li>
+            <li><strong>Copy It:</strong> Look for the key on the right side. Click the <strong>Copy Icon</strong> <span class="copy-icon"></span> next to the billing section.</li>
+            <li><strong>Paste:</strong> Come back here and paste the key.</li>
+        </ol>
+        <div class="modal-actions">
+            <button id="btnCloseModal" class="btn-secondary" style="width: auto; margin:0;">Close</button>
+            <a href="https://aistudio.google.com/api-keys" target="_blank" style="text-decoration: none;">
+                <button class="btn-primary" style="width: auto; margin:0;">Open Google AI Studio</button>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div id="mainContainer" class="container hidden">
+    <button id="btnFullscreen" class="fullscreen-btn" title="Toggle Fullscreen Mode">⛶</button>
+
+    <h1>Lecture Scribe Pro</h1>
+    <p class="subtitle">Triple-Engine: Study Guide + Transcription + Interactive Flashcards</p>
+
+    <div id="quotaAlert" class="quota-alert"></div>
+    <!-- Protocol Alert for File:// Usage -->
+    <div id="protocolAlert" class="protocol-alert">
+        <strong>⚠️ Mobile Permission Warning</strong><br>
+        Mobile browsers block microphone access for local files.<br>
+        Please upload this HTML file to a secure website (HTTPS) to enable recording.
+    </div>
+
+    <div id="step-setup">
+        <!-- NEW: DIRECT REVIEW MODE -->
+        <div class="review-mode-container">
+            <p style="margin:0 0 10px 0; color:var(--success); font-weight:600;">Already have a deck?</p>
+            <input type="file" id="directReviewInput" accept=".csv" class="hidden">
+            <button id="btnDirectReview" class="btn-secondary" style="background: rgba(34, 197, 94, 0.1); color: var(--success); border-color: var(--success);">
+                📂 Load Flashcards & Skip AI
+            </button>
+        </div>
+
+        <div style="width:100%; height:1px; background:var(--border); margin: 20px 0;"></div>
+
+        <div class="input-group">
+            <div class="label-row">
+                <label for="apiKey">Gemini API Key</label>
+                <a id="btnOpenHelp" class="api-help-link">Make/Get API Key here</a>
+            </div>
+            <input type="password" id="apiKey" placeholder="Paste your AI Studio Key here (Auto-loads)">
+            <span id="modelLoadStatus" style="font-size: 0.75rem; margin-top:5px; display:block; height:1rem;"></span>
+        </div>
+        
+        <div class="input-group">
+            <label for="modelSelect">Select AI Model</label>
+            <select id="modelSelect">
+                <option value="gemini-1.5-flash">Gemini 1.5 Flash (Default)</option>
+                <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+            </select>
+            <div id="quotaInfo" class="model-info">
+                Google API Quota: <span>~500 recordings/day</span> (1500 req/day).<br>
+                Speed Limit: <span>5 recordings/minute</span> (15 req/min).<br>
+                <em>Note: This is a limit of the Google Free Tier, not this tool.</em>
+            </div>
+        </div>
+        
+        <!-- MICROPHONE SELECTION -->
+        <div class="input-group">
+            <div class="label-row">
+                <label for="micSelect">Select Microphone</label>
+                <a id="btnRefreshMics" class="api-help-link" style="font-size:0.8rem; cursor:pointer;">Grant Permission / Refresh List</a>
+            </div>
+            <select id="micSelect">
+                <option value="">Default Microphone (System)</option>
+            </select>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 5px;">
+                Note: If you don't see your specific device (like AirPods/Blue Yeti), click "Grant Permission / Refresh List".
+            </p>
+        </div>
+
+        <div class="input-group">
+            <label for="micQuality">Recording Quality</label>
+            <select id="micQuality">
+                <option value="32000">Standard (32 kbps) - Best for long lectures</option>
+                <option value="128000">High Quality (128 kbps) - Best for clear audio</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label for="courseName">Course / Class Name</label>
+            <input type="text" id="courseName" placeholder="e.g. Advanced Calculus II">
+        </div>
+
+        <div class="mode-tabs">
+            <button id="tabRecord" class="mode-btn active">Record Audio</button>
+            <button id="tabUpload" class="mode-btn">Upload File</button>
+        </div>
+
+        <div id="modeRecord">
+            <button id="btnStart" class="btn-primary">
+                <span>Start Recording Session</span>
+            </button>
+            <p style="font-size: 0.75rem; color: #64748b; text-align: center; margin-top: 1rem;">
+                Features: IndexedDB Storage + Wake Lock + 99.5MB Auto-Stop
+            </p>
+        </div>
+
+        <div id="modeUpload" class="hidden">
+            <div class="input-group">
+                <label style="margin-bottom:10px;">Select Audio File</label>
+                <input type="file" id="fileUpload" accept="audio/*" class="hidden">
+                <button id="btnSelectFile" class="btn-file-select">
+                    <span style="font-size: 1.2rem;">📂</span> <span>Choose Audio File</span>
+                </button>
+                <div id="fileNameDisplay" style="margin-top: 10px; text-align: center; font-size: 0.9rem; color: var(--text-muted); font-style: italic;">
+                    No file selected <span style="font-size: 0.8em; opacity: 0.7; margin-left: 5px;">(Supports: .mp3, .wav, .m4a, .aac, .flac, .ogg)</span>
+                </div>
+            </div>
+            <button id="btnUploadProcess" class="btn-primary" style="margin-top: 20px;">
+                <span>Process Uploaded File</span>
+            </button>
+        </div>
+
+        <div style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 10px;">
+            <label style="margin-bottom: 10px;">Customize AI Instructions</label>
+            <details class="advanced-settings">
+                <summary>Engine 1: Study Mode Prompt</summary>
+                <div class="prompt-editor">
+                    <textarea id="promptStudy" class="prompt-box">You are an expert academic peer who understands this topic deeply.
+Course: "[COURSE_NAME]".
+
+Goal: Don't just summarize. Explain the material with deep understanding and offer a unique perspective that might not be obvious from the lesson alone.
+CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (e.g. use "A ∪ B" not "$A \cup B$").
+
+Structure:
+# 1. THE CLASS NAME
+(Identify the specific subject).
+
+# 2. WHAT WAS DISCUSSED
+(A comprehensive summary of the topics).
+
+# 3. SIMPLIFIED PERSPECTIVE & EXAMPLES
+(Identify the hardest concept. Explain it in plain English. Provide a concrete analogy).
+
+# 4. ASSIGNMENTS MENTIONED
+(List specific homework. If none, state "No specific assignments detected").
+
+# 5. DUE DATES & PORTALS
+(List specific dates. If none, state "No due dates detected").</textarea>
+                </div>
+            </details>
+
+            <details class="advanced-settings">
+                <summary>Engine 2: Scribe Note-Taker Prompt</summary>
+                <div class="prompt-editor">
+                    <textarea id="promptScribe" class="prompt-box">You are an expert academic note-taker.
+Course: "[COURSE_NAME]".
+
+Goal: Create a natural, chronological set of lecture notes that captures the detailed flow of the class.
+CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math.
+
+Structure:
+1. **Executive Summary**: Start with a "WHAT WAS DISCUSSED" section (digestible bullet points).
+2. **Detailed Lecture Notes**:
+   - Use a hierarchical outline format (Headers > Bullets > Indented Sub-bullets).
+   - Capture the speaker's narrative flow, specific analogies, and examples.
+   - For definitions, quote the specific phrasing used by the speaker where possible.
+   - Highlight key terms in **bold**.
+
+Constraints:
+- AVOID EXCESSIVE TABLES. Only use a table if there is a strict data comparison. Use standard lists for most comparisons.
+- Do not summarize too heavily; preserve the detail and nuance of the explanation.
+- Use headers (##) to denote topic shifts.</textarea>
+                </div>
+            </details>
+
+            <details class="advanced-settings">
+                <summary>Engine 3: Flashcard Generator Prompt</summary>
+                <div class="prompt-editor">
+                    <textarea id="promptCards" class="prompt-box">You are a Flashcard Generator.
+Course: "[COURSE_NAME]".
+
+Goal: Create 10-15 high-yield study flashcards for ACTIVE RECALL.
+Output: JSON Array of objects. No other text.
+Format:
+[
+  { "front": "Question? (e.g. Define X, What is Y?, How does Z work?)", "back": "Clear Answer or Definition" }
+]
+IMPORTANT: The 'front' MUST be a specific Question or a Term to define. Do not use random statements. The 'back' must be the direct answer.
+CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (e.g. use "A ∪ B" not "$A \cup B$").
+</textarea>
+                </div>
+            </details>
+        </div>
+    </div>
+
+    <div id="step-recording" class="hidden">
+        <div class="recording-ui">
+            <div id="recordingStatus" class="status-badge">● RECORDING (WAKE LOCK ACTIVE)</div>
+            <div id="timer" class="timer">00:00:00</div>
+            <div id="sizeMonitor" class="file-size">Current Size: 0.00 MB</div>
+            <p style="font-size: 0.75rem; color: #f59e0b; margin-top:5px;">Auto-Submits at 99.5 MB</p>
+        </div>
+        <div class="recording-controls">
+            <button id="btnPause" class="btn-warning">Pause</button>
+            <button id="btnStop" class="btn-danger">Stop & Process</button>
+        </div>
+    </div>
+
+    <div id="step-processing" class="hidden">
+        <div style="text-align: center;">
+            <p id="processStatus" style="font-weight:bold; font-size:1.1rem;">Initializing...</p>
+            <div class="spinner"></div>
+            <p id="processSubStatus" style="font-size: 0.8rem; color: #64748b; margin-top: 10px;">
+                Please wait. Do not close this tab.
+            </p>
+        </div>
+    </div>
+
+    <div id="step-result" class="hidden">
+        <div class="result-tabs">
+            <button id="btnTabStudy" class="result-tab-btn study-tab active">Study Mode <span id="spinStudy" class="tab-spinner hidden"></span></button>
+            <button id="btnTabScribe" class="result-tab-btn scribe-tab">Scribe Notes <span id="spinScribe" class="tab-spinner hidden"></span></button>
+            <button id="btnTabCards" class="result-tab-btn cards-tab">Flashcards <span id="spinCards" class="tab-spinner hidden"></span></button>
+        </div>
+
+        <div id="paneStudy" class="output-pane active">
+            <div id="outputStudy" class="result-box"></div>
+            <div style="display:flex; gap:10px; margin-top:10px; justify-content: space-between;">
+                <button id="btnDlStudy" onclick="downloadRTF('study')" class="btn-accent" disabled>Download Study Guide (.rtf)</button>
+                <button onclick="location.reload()" class="btn-mini" style="width:auto;">New Session</button>
+            </div>
+        </div>
+
+        <div id="paneScribe" class="output-pane">
+            <div id="outputScribe" class="result-box"></div>
+            <div style="display:flex; gap:10px; margin-top:10px; justify-content: space-between;">
+                <button id="btnDlScribe" onclick="downloadRTF('scribe')" class="btn-scribe" disabled>Download Scribe Notes (.rtf)</button>
+                <button onclick="location.reload()" class="btn-mini" style="width:auto;">New Session</button>
+            </div>
+        </div>
+
+        <div id="paneCards" class="output-pane">
+            <div id="flashcardContainer" class="flashcard-container">
+                <div class="flashcard" id="activeCard">
+                    <div class="flashcard-inner">
+                        <div class="flashcard-front" id="cardFront">Loading...</div>
+                        <div class="flashcard-back" id="cardBack"></div>
+                    </div>
+                </div>
+                <div class="card-controls">
+                    <button class="btn-secondary" id="btnPrevCard" style="width:auto;">&larr; Prev</button>
+                    <span class="card-counter" id="cardCounter">0 / 0</span>
+                    <button class="btn-secondary" id="btnNextCard" style="width:auto;">Next &rarr;</button>
+                </div>
+            </div>
+            <div style="display:flex; gap:10px; margin-top:10px; justify-content: space-between;">
+                 <!-- IMPORT FEATURE -->
+                 <input type="file" id="importCardsInput" accept=".csv" class="hidden">
+                 <button id="btnImportCards" class="btn-secondary" style="width:auto;">Import Deck (.csv)</button>
+
+                <button id="btnDlCards" onclick="downloadFlashcards()" class="btn-cards" disabled>Download Anki Deck (.csv)</button>
+                <button onclick="location.reload()" class="btn-mini" style="width:auto;">New Session</button>
+            </div>
+            <p style="text-align:center; font-size:0.8rem; color:#64748b; margin-top:10px;">
+                Import CSV into Anki, Quizlet, or Brainscape. (Format: Front,Back)
+            </p>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    // --- SECURITY & NETWORK CONFIG ---
+    const REPO_OWNER = "Cleo876";
+    const REPO_NAME = "lsp-data";
+    const FILE_PATH = "lsp-data.json";
+    const ENCRYPTED_PAT = "Z2l0aHViX3BhdF8xMUFHQVhHQkkwYXJ3ZHZJMGdpTEYyX3N2cHJ1S09iVWJ6a1E5eHdFcWZ0TUJBOHd4d2xNM2xDRnpTSU9ZaDZobnlENVVOUUpMQ044YkZDQURk";
+    
+    // --- OBFUSCATION ENGINE (1:1 from Dashboard) ---
+    const deobfuscate = (str) => {
+        try {
+            // Decode Base64 then unshift characters by -2
+            const decoded = atob(str);
+            return decoded.split('').map(c => String.fromCharCode(c.charCodeAt(0) - 2)).join('');
+        } catch (e) { return "{}"; }
+    };
+
+    const getDecryptedToken = () => {
+        try { return atob(ENCRYPTED_PAT); } catch(e) { return ""; }
+    };
+
+    // --- LOGIN LOGIC (Safe-Parse) ---
+    window.addEventListener('DOMContentLoaded', () => {
+        const loginView = document.getElementById('login-view');
+        const mainContainer = document.getElementById('mainContainer');
+        const btnLogin = document.getElementById('btn-login');
+        const loginEmail = document.getElementById('login-email');
+        const loginUcode = document.getElementById('login-ucode');
+        const loginStatus = document.getElementById('login-status');
+
+        // Check if user is already authenticated (for development/testing)
+        const isDevMode = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const bypassAuth = new URLSearchParams(window.location.search).has('dev');
+        
+        if (isDevMode && bypassAuth) {
+            loginView.style.display = 'none';
+            mainContainer.classList.remove('hidden');
+            document.body.style.userSelect = "auto";
+            return;
+        }
+
+        btnLogin.onclick = async () => {
+            const emailInput = loginEmail.value.trim().toLowerCase();
+            const codeInput = loginUcode.value.trim().toUpperCase();
+            
+            if (!emailInput || !codeInput) {
+                loginStatus.innerText = "✗ Please enter email and U-CODE";
+                loginStatus.style.color = "var(--danger)";
+                return;
+            }
+            
+            loginStatus.innerText = "Connecting to network...";
+            loginStatus.style.color = "var(--text-muted)";
+            btnLogin.disabled = true;
+
+            try {
+                const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`;
+                const token = getDecryptedToken();
+                const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+                
+                if (!res.ok) throw new Error("Could not reach network database.");
+                
+                const data = await res.json();
+                const content = atob(data.content); 
+                
+                let db;
+                try {
+                    db = JSON.parse(content);
+                } catch (e) {
+                    try {
+                        const jsonStr = deobfuscate(content); 
+                        db = JSON.parse(jsonStr);
+                    } catch(err2) {
+                        throw new Error("Registry decryption failed.");
+                    }
+                }
+
+                // Master Overwrite for Mr. Williams
+                if (emailInput === "cleowillo@gmail.com" && codeInput === "K9W2") {
+                    loginSuccess(loginView, mainContainer, loginStatus, btnLogin);
+                    return;
+                }
+
+                // Universal Check (Distributors AND Customers)
+                let authorized = false;
+                if (db.distributors) {
+                    db.distributors.forEach(dist => {
+                        // Check Distributor Creds
+                        if (dist.email.toLowerCase() === emailInput && dist.u_code.toUpperCase() === codeInput) {
+                            authorized = true;
+                        }
+                        // Check Customer Creds
+                        if (dist.customers) {
+                            dist.customers.forEach(cust => {
+                                if (cust.email.toLowerCase() === emailInput && cust.u_code.toUpperCase() === codeInput) {
+                                    authorized = true;
+                                }
+                            });
+                        }
+                    });
+                }
+
+                if (authorized) {
+                    loginSuccess(loginView, mainContainer, loginStatus, btnLogin);
+                } else {
+                    loginStatus.innerText = "✗ Invalid Credentials";
+                    loginStatus.style.color = "var(--danger)";
+                    btnLogin.disabled = false;
+                }
+
+            } catch (err) {
+                console.error("Auth error:", err);
+                loginStatus.innerText = "✗ Network Error - Try Again";
+                loginStatus.style.color = "var(--danger)";
+                btnLogin.disabled = false;
+                
+                // Fallback for development
+                if (isDevMode) {
+                    setTimeout(() => {
+                        loginStatus.innerText = "⚠️ Using dev fallback...";
+                        setTimeout(() => {
+                            loginSuccess(loginView, mainContainer, loginStatus, btnLogin);
+                        }, 1000);
+                    }, 1000);
+                }
+            }
+        };
+
+        // Allow Enter key to submit
+        loginUcode.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') btnLogin.click();
+        });
+    });
+
+    function loginSuccess(loginView, mainContainer, loginStatus, btnLogin) {
+        loginStatus.innerText = "✓ Access Granted";
+        loginStatus.style.color = "var(--success)";
+        setTimeout(() => {
+            loginView.style.display = 'none';
+            mainContainer.classList.remove('hidden');
+            document.body.style.userSelect = "auto";
+            btnLogin.disabled = false;
+        }, 800);
+    }
+
+    // --- MAIN APPLICATION LOGIC (after authentication) ---
+    import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+    import { marked } from "https://esm.run/marked";
+
+    let wakeLock = null;
+    let detectedMimeType = ""; 
+    
+    class AudioDB {
+        constructor(dbName = 'LectureScribePro', storeName = 'audioChunks') {
+            this.dbName = dbName;
+            this.storeName = storeName;
+            this.db = null;
+        }
+        async open() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(this.dbName, 1);
+                request.onupgradeneeded = (e) => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains(this.storeName)) db.createObjectStore(this.storeName, { autoIncrement: true });
+                };
+                request.onsuccess = (e) => { this.db = e.target.result; resolve(this.db); };
+                request.onerror = (e) => reject(e.target.error);
+            });
+        }
+        async addChunk(chunk) {
+            return new Promise((resolve, reject) => {
+                const tx = this.db.transaction(this.storeName, 'readwrite');
+                tx.objectStore(this.storeName).add(chunk);
+                tx.oncomplete = () => resolve();
+                tx.onerror = (e) => reject(e.target.error);
+            });
+        }
+        async getAllChunks() {
+            return new Promise((resolve, reject) => {
+                const tx = this.db.transaction(this.storeName, 'readonly');
+                const request = tx.objectStore(this.storeName).getAll();
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = (e) => reject(e.target.error);
+            });
+        }
+        async clear() {
+            return new Promise((resolve, reject) => {
+                const tx = this.db.transaction(this.storeName, 'readwrite');
+                tx.objectStore(this.storeName).clear();
+                tx.oncomplete = () => resolve();
+            });
+        }
+    }
+
+    let mediaRecorder;
+    let startTime;
+    let timerInterval;
+    let currentBlob = null;
+    let rawStudyMarkdown = "";
+    let rawScribeMarkdown = "";
+    let flashcardsData = [];
+    let currentCardIndex = 0;
+    let debounceTimer; 
+    let elapsedMs = 0; 
+    let totalSize = 0;
+    const audioDB = new AudioDB();
+
+    const els = {
+        mainContainer: document.getElementById('mainContainer'),
+        apiKey: document.getElementById('apiKey'),
+        courseName: document.getElementById('courseName'),
+        modelSelect: document.getElementById('modelSelect'),
+        micQuality: document.getElementById('micQuality'),
+        micSelect: document.getElementById('micSelect'),
+        btnRefreshMics: document.getElementById('btnRefreshMics'),
+        quotaInfo: document.getElementById('quotaInfo'),
+        timer: document.getElementById('timer'),
+        sizeMonitor: document.getElementById('sizeMonitor'),
+        status: document.getElementById('processStatus'),
+        subStatus: document.getElementById('processSubStatus'),
+        
+        outputStudy: document.getElementById('outputStudy'),
+        outputScribe: document.getElementById('outputScribe'),
+        flashcardContainer: document.getElementById('flashcardContainer'),
+        
+        spinStudy: document.getElementById('spinStudy'),
+        spinScribe: document.getElementById('spinScribe'),
+        spinCards: document.getElementById('spinCards'),
+        
+        btnDlStudy: document.getElementById('btnDlStudy'),
+        btnDlScribe: document.getElementById('btnDlScribe'),
+        btnDlCards: document.getElementById('btnDlCards'),
+
+        modelLoadStatus: document.getElementById('modelLoadStatus'),
+        quotaAlert: document.getElementById('quotaAlert'), 
+        protocolAlert: document.getElementById('protocolAlert'),
+        btnFullscreen: document.getElementById('btnFullscreen'),
+        btnPause: document.getElementById('btnPause'),
+        recordingStatus: document.getElementById('recordingStatus'),
+        
+        promptStudy: document.getElementById('promptStudy'),
+        promptScribe: document.getElementById('promptScribe'),
+        promptCards: document.getElementById('promptCards'),
+        
+        tabRecord: document.getElementById('tabRecord'),
+        tabUpload: document.getElementById('tabUpload'),
+        modeRecord: document.getElementById('modeRecord'),
+        modeUpload: document.getElementById('modeUpload'),
+        fileUpload: document.getElementById('fileUpload'),
+        
+        btnSelectFile: document.getElementById('btnSelectFile'),
+        fileNameDisplay: document.getElementById('fileNameDisplay'),
+        
+        // Direct Review Elements
+        btnDirectReview: document.getElementById('btnDirectReview'),
+        directReviewInput: document.getElementById('directReviewInput'),
+
+        btnTabStudy: document.getElementById('btnTabStudy'),
+        btnTabScribe: document.getElementById('btnTabScribe'),
+        btnTabCards: document.getElementById('btnTabCards'),
+        paneStudy: document.getElementById('paneStudy'),
+        paneScribe: document.getElementById('paneScribe'),
+        paneCards: document.getElementById('paneCards'),
+        
+        activeCard: document.getElementById('activeCard'),
+        cardFront: document.getElementById('cardFront'),
+        cardBack: document.getElementById('cardBack'),
+        btnPrevCard: document.getElementById('btnPrevCard'),
+        btnNextCard: document.getElementById('btnNextCard'),
+        cardCounter: document.getElementById('cardCounter'),
+        importCardsInput: document.getElementById('importCardsInput'),
+        btnImportCards: document.getElementById('btnImportCards'),
+        
+        btnOpenHelp: document.getElementById('btnOpenHelp'),
+        helpModal: document.getElementById('helpModal'),
+        btnCloseModal: document.getElementById('btnCloseModal')
+    };
+    
+    // CHECK PROTOCOL ON LOAD (after auth)
+    setTimeout(() => {
+        if (window.location.protocol === 'file:') {
+            els.protocolAlert.style.display = 'block';
+            document.getElementById('btnStart').disabled = true;
+            document.getElementById('btnStart').innerText = "Blocked (HTTPS Required)";
+            document.getElementById('btnStart').style.background = "#334155";
+        }
+
+        // AUTO-LOAD SAVED KEY
+        const savedKey = localStorage.getItem('lsp_gemini_key');
+        if (savedKey) {
+            els.apiKey.value = savedKey;
+            if (savedKey.length > 20) loadModels(savedKey);
+        }
+
+        loadMicrophones();
+    }, 100);
+
+    async function loadMicrophones() {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) return;
+        try {
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            const audioDevices = devices.filter(d => d.kind === 'audioinput');
+            els.micSelect.innerHTML = '<option value="">Default Microphone (System)</option>';
+            audioDevices.forEach(device => {
+                if (device.label) {
+                    const opt = document.createElement('option');
+                    opt.value = device.deviceId;
+                    opt.text = device.label;
+                    els.micSelect.appendChild(opt);
+                }
+            });
+        } catch(e) { console.log("Error enumerating devices:", e); }
+    }
+
+    els.btnRefreshMics.onclick = async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            stream.getTracks().forEach(t => t.stop());
+            await loadMicrophones();
+        } catch (e) { alert("Could not access microphones. Please check browser permissions."); }
+    };
+
+    els.btnFullscreen.onclick = () => {
+        if (!document.fullscreenElement) {
+            els.mainContainer.requestFullscreen().catch(err => { console.error(`Error: ${err.message}`); });
+        } else { document.exitFullscreen(); }
+    };
+
+    document.addEventListener('fullscreenchange', () => {
+        if (document.fullscreenElement) els.btnFullscreen.textContent = "✖";
+        else els.btnFullscreen.textContent = "⛶";
+    });
+
+    els.apiKey.addEventListener('input', (e) => {
+        const key = e.target.value.trim();
+        localStorage.setItem('lsp_gemini_key', key);
+        clearTimeout(debounceTimer);
+        if (key.length > 20) { 
+            els.modelLoadStatus.textContent = "Checking key...";
+            els.modelLoadStatus.style.color = "var(--text-muted)";
+            debounceTimer = setTimeout(() => { loadModels(key); }, 800); 
+        } else { els.modelLoadStatus.textContent = ""; }
+    });
+
+    async function loadModels(key) {
+        try {
+            const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`);
+            if (resp.status === 400 || resp.status === 403) throw new Error("Invalid API Key");
+            const data = await resp.json();
+            const models = (data.models || []).filter(m => m.supportedGenerationMethods?.includes("generateContent"))
+                .map(m => m.name.replace('models/', '')).sort();
+            els.modelSelect.innerHTML = "";
+            models.forEach(m => {
+                const opt = document.createElement("option");
+                opt.value = m; opt.textContent = m;
+                if(m.includes("flash") && !m.includes("8b")) opt.selected = true;
+                els.modelSelect.appendChild(opt);
+            });
+            els.modelLoadStatus.textContent = "✓ Key Valid & Models Loaded"; 
+            els.modelLoadStatus.style.color = "var(--success)";
+            updateQuotaDisplay();
+        } catch (e) {
+            els.modelLoadStatus.textContent = "✗ Error: " + e.message;
+            els.modelLoadStatus.style.color = "var(--danger)";
+        }
+    }
+
+    els.modelSelect.addEventListener('change', updateQuotaDisplay);
+
+    function updateQuotaDisplay() {
+        const model = els.modelSelect.value;
+        if (model.includes("flash")) {
+            els.quotaInfo.innerHTML = `Google API Quota: <span>~500 recordings/day</span> (1500 req/day).<br>Speed Limit: <span>5 recordings/minute</span> (15 req/min).`;
+        } else if (model.includes("pro")) {
+             els.quotaInfo.innerHTML = `Google API Quota: <span>~16 recordings/day</span> (50 req/day).<br>Speed Limit: <span>~1 recording/minute</span> (2 req/min).`;
+        }
+    }
+
+    els.btnSelectFile.onclick = () => { els.fileUpload.click(); };
+    els.fileUpload.onchange = () => {
+        const file = els.fileUpload.files[0];
+        if (file) {
+            els.fileNameDisplay.textContent = "Selected: " + file.name;
+            els.fileNameDisplay.style.color = "var(--success)";
+            els.fileNameDisplay.style.fontWeight = "bold";
+        } else {
+            els.fileNameDisplay.innerHTML = 'No file selected <span style="font-size: 0.8em; opacity: 0.7; margin-left: 5px;">(Supports: .mp3, .wav, .m4a, .aac, .flac, .ogg)</span>';
+        }
+    };
+
+    els.btnOpenHelp.onclick = (e) => { e.preventDefault(); els.helpModal.classList.remove('hidden'); };
+    els.btnCloseModal.onclick = () => { els.helpModal.classList.add('hidden'); };
+
+    els.tabRecord.onclick = () => {
+        els.tabRecord.classList.add('active'); els.tabUpload.classList.remove('active');
+        els.modeRecord.classList.remove('hidden'); els.modeUpload.classList.add('hidden');
+    };
+    els.tabUpload.onclick = () => {
+        els.tabUpload.classList.add('active'); els.tabRecord.classList.remove('active');
+        els.modeUpload.classList.remove('hidden'); els.modeRecord.classList.add('hidden');
+    };
+    
+    function setActiveTab(tabName) {
+        ['Study', 'Scribe', 'Cards'].forEach(t => {
+            els[`btnTab${t}`].classList.remove('active');
+            els[`pane${t}`].classList.remove('active');
+        });
+        els[`btnTab${tabName}`].classList.add('active');
+        els[`pane${tabName}`].classList.add('active');
+    }
+    els.btnTabStudy.onclick = () => setActiveTab('Study');
+    els.btnTabScribe.onclick = () => setActiveTab('Scribe');
+    els.btnTabCards.onclick = () => setActiveTab('Cards');
+
+    els.activeCard.onclick = () => { els.activeCard.classList.toggle('flipped'); };
+    function renderCard(index) {
+        if (!flashcardsData || flashcardsData.length === 0) return;
+        currentCardIndex = index;
+        const card = flashcardsData[index];
+        els.cardFront.textContent = card.front;
+        els.cardBack.textContent = card.back;
+        els.cardCounter.textContent = `${index + 1} / ${flashcardsData.length}`;
+        els.activeCard.classList.remove('flipped');
+        els.btnPrevCard.disabled = index === 0;
+        els.btnNextCard.disabled = index === flashcardsData.length - 1;
+    }
+    els.btnPrevCard.onclick = () => { if(currentCardIndex > 0) renderCard(currentCardIndex - 1); };
+    els.btnNextCard.onclick = () => { if(currentCardIndex < flashcardsData.length - 1) renderCard(currentCardIndex + 1); };
+
+    els.btnDirectReview.onclick = () => { els.directReviewInput.click(); };
+    els.directReviewInput.onchange = (e) => {
+        const file = e.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+            if(parseAndLoadCards(evt.target.result)) {
+                switchView('result');
+                setActiveTab('Cards');
+                els.btnTabStudy.style.display = 'none';
+                els.btnTabScribe.style.display = 'none';
+                els.outputStudy.innerHTML = "<p style='color:#64748b; text-align:center;'>Review Mode Only (Study Guide not loaded)</p>";
+                els.outputScribe.innerHTML = "<p style='color:#64748b; text-align:center;'>Review Mode Only (Scribe Notes not loaded)</p>";
+                els.btnDlCards.disabled = false;
+            }
+        };
+        reader.readAsText(file);
+    };
+
+    els.btnImportCards.onclick = () => { els.importCardsInput.click(); };
+    els.importCardsInput.onchange = (e) => {
+        const file = e.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+            if(parseAndLoadCards(evt.target.result)) {
+                alert(`Imported ${flashcardsData.length} cards successfully!`);
+            }
+        };
+        reader.readAsText(file);
+        els.importCardsInput.value = '';
+    };
+
+    function parseAndLoadCards(text) {
+        try {
+            const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
+            const newCards = [];
+            const startIndex = (lines[0].toLowerCase().includes("front") && lines[0].toLowerCase().includes("back")) ? 1 : 0;
+            for(let i=startIndex; i<lines.length; i++) {
+                const line = lines[i];
+                const matches = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || line.split(',');
+                if (matches && matches.length >= 2) {
+                    let front = matches[0].replace(/^"|"$/g, '').replace(/""/g, '"').trim();
+                    const parts = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); 
+                    if (parts.length >= 2) {
+                        front = parts[0].replace(/^"|"$/g, '').replace(/""/g, '"').trim();
+                        let back = parts[1].replace(/^"|"$/g, '').replace(/""/g, '"').trim();
+                        newCards.push({ front, back });
+                    }
+                }
+            }
+            if (newCards.length > 0) {
+                flashcardsData = newCards;
+                renderCard(0);
+                return true;
+            } else {
+                alert("Could not find valid flashcards in this CSV.");
+                return false;
+            }
+        } catch(err) {
+            alert("Error parsing CSV: " + err.message);
+            return false;
+        }
+    }
+
+    window.downloadFlashcards = () => {
+        if (!flashcardsData.length) return alert("No flashcards generated.");
+        let csvContent = "Front,Back\n";
+        flashcardsData.forEach(card => {
+            const f = `"${card.front.replace(/"/g, '""')}"`;
+            const b = `"${card.back.replace(/"/g, '""')}"`;
+            csvContent += `${f},${b}\n`;
+        });
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        const course = els.courseName.value || "Class";
+        link.download = `${course.replace(/\s+/g,'_')}_AnkiDeck.csv`;
+        link.click();
+    };
+
+    document.getElementById('btnStart').onclick = async () => {
+        if (!els.apiKey.value) return alert("Enter API Key.");
+        try {
+            try { wakeLock = await navigator.wakeLock.request('screen'); } catch (e) {}
+            await audioDB.open(); await audioDB.clear();
+            const selectedMicId = els.micSelect.value;
+            const constraints = {
+                audio: { echoCancellation: true, deviceId: selectedMicId ? { exact: selectedMicId } : undefined }
+            };
+            const stream = await navigator.mediaDevices.getUserMedia(constraints);
+            const quality = parseInt(els.micQuality.value);
+            let options = { bitsPerSecond: quality };
+            
+            if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) detectedMimeType = 'audio/webm;codecs=opus';
+            else if (MediaRecorder.isTypeSupported('audio/webm')) detectedMimeType = 'audio/webm';
+            else if (MediaRecorder.isTypeSupported('audio/mp4')) detectedMimeType = 'audio/mp4'; 
+            else detectedMimeType = '';
+            
+            if (detectedMimeType) options.mimeType = detectedMimeType;
+            
+            mediaRecorder = new MediaRecorder(stream, options);
+            totalSize = 0; elapsedMs = 0;
+            mediaRecorder.ondataavailable = async (e) => {
+                if (e.data.size > 0) {
+                    await audioDB.addChunk(e.data);
+                    totalSize += e.data.size;
+                    updateSizeDisplay(totalSize);
+                    if (totalSize > 99.5 * 1024 * 1024) mediaRecorder.stop();
+                }
+            };
+            mediaRecorder.start(1000);
+            startTimer();
+            switchView('recording');
+        } catch (e) { 
+            if (e.name === "NotAllowedError" || e.name === "PermissionDeniedError") {
+                alert("Microphone Access Denied.\n\nNote: If you are opening this file directly (file://), mobile browsers block the microphone. You must upload this HTML file to a secure website (HTTPS) to use the recording feature.");
+            } else { alert("Recording Error: " + e.message); }
+        }
+    };
+
+    els.btnPause.onclick = () => {
+        if (mediaRecorder.state === 'recording') {
+            mediaRecorder.pause();
+            clearInterval(timerInterval);
+            els.btnPause.textContent = "Resume";
+            els.btnPause.classList.replace('btn-warning', 'btn-primary');
+            els.recordingStatus.textContent = "⏸ PAUSED";
+            els.recordingStatus.style.animation = "none";
+        } else if (mediaRecorder.state === 'paused') {
+            mediaRecorder.resume();
+            startTimer();
+            els.btnPause.textContent = "Pause";
+            els.btnPause.classList.replace('btn-primary', 'btn-warning');
+            els.recordingStatus.textContent = "● RECORDING (WAKE LOCK ACTIVE)";
+            els.recordingStatus.style.animation = "pulse 2s infinite";
+        }
+    };
+
+    document.getElementById('btnStop').onclick = () => {
+        if(mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+        if(mediaRecorder && mediaRecorder.stream) mediaRecorder.stream.getTracks().forEach(t => t.stop());
+        clearInterval(timerInterval);
+        if(wakeLock) wakeLock.release();
+        mediaRecorder.onstop = async () => {
+            const chunks = await audioDB.getAllChunks();
+            const finalType = detectedMimeType || 'audio/webm';
+            currentBlob = new Blob(chunks, { type: finalType });
+            processMultiEngine();
+        };
+    };
+
+    document.getElementById('btnUploadProcess').onclick = async () => {
+        if (!els.apiKey.value) return alert("Enter API Key.");
+        if (!els.fileUpload.files[0]) return alert("Select file.");
+        currentBlob = els.fileUpload.files[0];
+        processMultiEngine();
+    };
+
+    // --- MAIN GENERATION LOGIC WITH IMMEDIATE UI & CONCURRENCY ---
+    async function processMultiEngine() {
+        els.quotaAlert.style.display = 'none';
+        
+        // 1. Immediate UI Switch
+        switchView('processing');
+        els.status.innerText = "Encoding Audio...";
+        
+        const apiKey = els.apiKey.value;
+        const genAI = new GoogleGenerativeAI(apiKey);
+        const modelName = els.modelSelect.value;
+        const model = genAI.getGenerativeModel({ model: modelName });
+        const course = els.courseName.value || "General Class";
+        
+        // Base64 Encoding
+        let base64Audio;
+        try {
+            base64Audio = await blobToBase64(currentBlob);
+        } catch(e) { alert("Encoding failed"); return; }
+        
+        // Switch to Results View IMMEDIATELY
+        switchView('result');
+        
+        // Setup Loading States
+        const loadingHTML = `
+            <div class="skeleton-container">
+                <div class="skeleton-line header"></div>
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line medium"></div>
+                <div class="skeleton-line short"></div>
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line medium"></div>
+            </div>
+            <p style="text-align:center; color:#64748b; font-size:0.9rem;">Analysing audio & generating notes...</p>
+        `;
+        
+        els.outputStudy.innerHTML = loadingHTML;
+        els.outputScribe.innerHTML = loadingHTML;
+        // Flashcard specific loading state in its specific container is already handled by default text, but we can enhance it
+        els.flashcardContainer.style.opacity = "0.6"; 
+        
+        els.spinStudy.classList.remove('hidden');
+        els.spinScribe.classList.remove('hidden');
+        els.spinCards.classList.remove('hidden');
+
+        els.btnDlStudy.disabled = true;
+        els.btnDlScribe.disabled = true;
+        els.btnDlCards.disabled = true;
+
+        const finalMimeType = currentBlob.type || detectedMimeType || 'audio/webm';
+        const payload = { inlineData: { mimeType: finalMimeType, data: base64Audio } };
+
+        // Helper functions
+        const runStudy = async () => {
+            try {
+                const res = await model.generateContent([payload, els.promptStudy.value.replace("[COURSE_NAME]", course)]);
+                rawStudyMarkdown = await res.response.text();
+                els.outputStudy.innerHTML = marked.parse(rawStudyMarkdown);
+                els.spinStudy.classList.add('hidden');
+                els.btnDlStudy.disabled = false;
+            } catch(e) { 
+                els.outputStudy.innerHTML = `<p style="color:red">Error: ${e.message}</p>`; 
+                els.spinStudy.classList.add('hidden');
+            }
+        };
+
+        const runScribe = async () => {
+            try {
+                const res = await model.generateContent([payload, els.promptScribe.value.replace("[COURSE_NAME]", course)]);
+                rawScribeMarkdown = await res.response.text();
+                els.outputScribe.innerHTML = marked.parse(rawScribeMarkdown);
+                els.spinScribe.classList.add('hidden');
+                els.btnDlScribe.disabled = false;
+            } catch(e) { 
+                els.outputScribe.innerHTML = `<p style="color:red">Error: ${e.message}</p>`; 
+                els.spinScribe.classList.add('hidden');
+            }
+        };
+
+        const runCards = async () => {
+            try {
+                const res = await model.generateContent([payload, els.promptCards.value.replace("[COURSE_NAME]", course)]);
+                const t3 = await res.response.text();
+                try { 
+                    flashcardsData = JSON.parse(t3.replace(/```json/g, '').replace(/```/g, '').trim()); 
+                    renderCard(0); 
+                } catch (e) { 
+                    flashcardsData = [{front: "Error generating cards", back: "Raw: " + t3}]; 
+                    renderCard(0); 
+                }
+                els.flashcardContainer.style.opacity = "1";
+                els.spinCards.classList.add('hidden');
+                els.btnDlCards.disabled = false;
+            } catch(e) { 
+                 flashcardsData = [{front: "Error", back: e.message}]; renderCard(0);
+                 els.spinCards.classList.add('hidden');
+            }
+        };
+
+        // Execution Logic: Parallel for Flash, Sequential for Pro (to respect Rate Limits)
+        if (modelName.includes("pro")) {
+            // Sequential for safety
+            await runStudy();
+            await runScribe();
+            await runCards();
+        } else {
+            // Parallel for speed (Fire and forget style)
+            // We do NOT await Promise.all() because we want them to populate independently as they finish
+            runStudy();
+            runScribe();
+            runCards();
+        }
+    }
+
+    window.downloadRTF = (type) => {
+        const course = els.courseName.value || "Class";
+        const title = type === 'study' ? "Study_Guide" : "Scribe_Notes";
+        const markdown = type === 'study' ? rawStudyMarkdown : rawScribeMarkdown;
+        if(!markdown) return alert("Content not ready yet.");
+        let rtfBody = markdownToRTF(markdown);
+        let rtf = `{\\rtf1\\ansi\\ansicpg1252\\deff0{\\fonttbl{\\f0 Arial;}}\\f0\\fs24 \n`;
+        rtf += `{\\colortbl;\\red0\\green0\\blue0;\\red59\\green130\\blue246;}\n`; 
+        rtf += `\\pard\\sa200\\sl276\\slmult1\\b\\fs36 ${course} - ${title.replace('_', ' ')}\\b0\\fs24 \\par \n`;
+        rtf += `Generated: ${new Date().toLocaleString()} \\par \\par \n`;
+        rtf += `-------------------------------------------------- \\par \\par \n`;
+        rtf += rtfBody;
+        rtf += `\n}`;
+        const blob = new Blob([rtf], { type: "application/rtf" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `${course.replace(/\s+/g,'_')}_${title}.rtf`;
+        link.click();
+    };
+
+    function markdownToRTF(md) {
+        let lines = md.split('\n');
+        let rtf = "";
+        lines.forEach(line => {
+            line = line.trim();
+            if (!line) { rtf += "\\par \n"; return; }
+            line = escapeUnicode(line);
+            if (line.startsWith('# ')) { rtf += `\\par\\pard\\sa200\\sb200\\b\\fs32 ${line.substring(2)}\\b0\\fs24\\par \n`; return; }
+            if (line.startsWith('## ')) { rtf += `\\par\\pard\\sa150\\sb150\\b\\fs28 ${line.substring(3)}\\b0\\fs24\\par \n`; return; }
+            if (line.startsWith('### ')) { rtf += `\\par\\pard\\sa100\\sb100\\b\\i ${line.substring(4)}\\i0\\b0\\par \n`; return; }
+            if (line.includes('|')) {
+                let rowContent = line.replace(/^\||\|$/g, '');
+                if (rowContent.includes('---')) return; 
+                let cells = rowContent.split('|').map(c => c.trim());
+                rtf += `\\pard\\tqr\\tx9000 ${cells.join('\\tab ')} \\par \n`;
+                return;
+            }
+            line = line.replace(/\*\*(.*?)\*\*/g, '\\b $1\\b0 ');
+            line = line.replace(/\*(.*?)\*/g, '\\i $1\\i0 ');
+            if (line.startsWith('- ') || line.startsWith('* ')) {
+                rtf += `\\par\\pard\\li720\\fi-360 \\bullet \\tab ${line.substring(2)} \\par \n`;
+            } else if (/^\d+\./.test(line)) {
+                rtf += `\\par\\pard\\li720\\fi-360 ${line.split('.')[0]}. \\tab ${line.substring(line.indexOf('.')+1).trim()} \\par \n`;
+            } else {
+                rtf += `\\pard\\sa100 ${line} \\par \n`;
+            }
+        });
+        return rtf;
+    }
+
+    function escapeUnicode(str) {
+        return str.replace(/[^\x00-\x7F]/g, char => {
+            const code = char.charCodeAt(0);
+            return `\\uc1\\u${code}?`;
+        });
+    }
+
+    function switchView(view) {
+        ['step-setup','step-recording','step-processing','step-result'].forEach(id => document.getElementById(id).classList.add('hidden'));
+        document.getElementById(`step-${view}`).classList.remove('hidden');
+        if(view === 'result') els.mainContainer.classList.add('wide-mode');
+        else els.mainContainer.classList.remove('wide-mode');
+        
+        // Restore tab visibility if leaving result view or starting fresh
+        if (view === 'setup') {
+             els.btnTabStudy.style.display = 'block';
+             els.btnTabScribe.style.display = 'block';
+        }
+    }
+
+    function startTimer() {
+        startTime = Date.now() - elapsedMs;
+        timerInterval = setInterval(() => {
+            elapsedMs = Date.now() - startTime;
+            els.timer.innerText = new Date(elapsedMs).toISOString().substr(11, 8);
+        }, 1000);
+    }
+
+    function updateSizeDisplay(bytes) {
+        const mb = (bytes / (1024*1024)).toFixed(2);
+        els.sizeMonitor.innerText = `Size: ${mb} MB (Limit: 99.5)`;
+    }
+
+    function blobToBase64(blob) {
+        return new Promise((r, j) => {
+            const reader = new FileReader();
+            reader.onloadend = () => r(reader.result.split(',')[1]);
+            reader.readAsDataURL(blob);
+        });
+    }
+</script>
+</body>
+</html>
