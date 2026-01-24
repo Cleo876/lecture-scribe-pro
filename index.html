@@ -46,22 +46,11 @@
             border: 1px solid var(--border);
             text-align: center;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
         }
 
-        .login-logo {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .login-tagline {
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 2rem;
-        }
+        .login-logo { font-size: 2rem; font-weight: 800; color: var(--primary); margin-bottom: 0.5rem; }
+        .login-tagline { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 2rem; }
 
         /* --- MAIN CONTAINER STYLES --- */
         .container {
@@ -87,43 +76,19 @@
         p.subtitle { text-align: center; color: var(--text-muted); margin-bottom: 2rem; font-size: 0.9rem; }
 
         .fullscreen-btn {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            width: 32px;
-            height: 32px;
-            padding: 0;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            color: var(--text-muted);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-            transition: all 0.2s ease;
-            z-index: 100;
+            position: absolute; top: 1rem; right: 1rem; width: 32px; height: 32px; padding: 0;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); border-radius: 6px;
+            color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; transition: all 0.2s ease; z-index: 100;
         }
-        .fullscreen-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text-main);
-            border-color: var(--text-muted);
-        }
+        .fullscreen-btn:hover { background: rgba(255, 255, 255, 0.1); color: var(--text-main); border-color: var(--text-muted); }
 
         .mode-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
         .mode-btn { background: none; border: none; color: var(--text-muted); padding: 10px 20px; cursor: pointer; border-bottom: 2px solid transparent; font-weight: 600;}
         .mode-btn.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
 
         .input-group { margin-bottom: 1.5rem; position: relative; }
-        
-        .label-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem; }
-        label { display: block; font-size: 0.875rem; font-weight: 500; color: var(--text-muted); margin: 0; }
-        
-        .api-help-link {
-            font-size: 0.8rem; color: var(--primary); text-decoration: none; cursor: pointer; transition: color 0.2s;
-        }
-        .api-help-link:hover { color: var(--primary-hover); text-decoration: underline; }
+        label { display: block; font-size: 0.875rem; font-weight: 500; color: var(--text-muted); margin-bottom: 0.5rem; }
 
         input[type="text"], input[type="password"], select, textarea {
             width: 100%; padding: 0.75rem 1rem; background: var(--input-bg); border: 1px solid var(--border);
@@ -132,156 +97,69 @@
         }
         input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); }
 
-        .model-info {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 8px;
-            padding: 8px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 6px;
-            border: 1px solid var(--border);
-        }
+        .api-help-link { font-size: 0.8rem; color: var(--primary); text-decoration: none; cursor: pointer; }
+
+        .model-info { font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 6px; border: 1px solid var(--border); }
         .model-info span { color: var(--accent); font-weight: 600; }
 
-        details.advanced-settings {
-            background: rgba(0, 0, 0, 0.2); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; overflow: hidden;
-        }
-        details.advanced-settings summary {
-            padding: 1rem; cursor: pointer; font-size: 0.9rem; font-weight: 600; color: var(--text-muted); user-select: none;
-        }
-        details.advanced-settings summary:hover { color: var(--text-main); }
+        details.advanced-settings { background: rgba(0, 0, 0, 0.2); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; overflow: hidden; }
+        details.advanced-settings summary { padding: 1rem; cursor: pointer; font-size: 0.9rem; font-weight: 600; color: var(--text-muted); user-select: none; }
         .prompt-editor { padding: 1rem; }
         textarea.prompt-box { font-family: 'Courier New', monospace; font-size: 0.85rem; height: 160px; resize: vertical; line-height: 1.4; }
 
-        button {
-            width: 100%; padding: 1rem; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer;
-            transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
+        button { width: 100%; padding: 1rem; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 8px; }
         button:disabled { opacity: 0.6; cursor: not-allowed; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
-        
-        .btn-file-select { background: #334155; color: #e2e8f0; border: 1px solid #475569; }
-        .btn-file-select:hover { background: #475569; color: white; }
-        
-        .btn-danger { background: var(--danger); color: white; }
+        .btn-secondary { background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); margin-top: 1rem;}
         .btn-warning { background: var(--scribe); color: #000; }
+        .btn-danger { background: var(--danger); color: white; }
         .btn-accent { background: var(--accent); color: white; width: auto; padding: 0.5rem 1rem; font-size: 0.9rem;}
         .btn-scribe { background: var(--scribe); color: #000; width: auto; padding: 0.5rem 1rem; font-size: 0.9rem;}
         .btn-cards { background: var(--success); color: #000; width: auto; padding: 0.5rem 1rem; font-size: 0.9rem;}
-        .btn-secondary { background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); margin-top: 1rem;}
+        .btn-file-select { background: #334155; color: #e2e8f0; border: 1px solid #475569; }
         .btn-mini { padding: 0.5rem; font-size: 0.8rem; background: #334155; color: #cbd5e1; width: auto; margin-top: 8px; }
 
-        /* Review Button Styling */
-        .review-mode-container {
-            border: 1px dashed var(--border);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            background: rgba(255,255,255,0.02);
-            text-align: center;
-        }
+        .review-mode-container { border: 1px dashed var(--border); padding: 15px; border-radius: 8px; margin-bottom: 25px; background: rgba(255,255,255,0.02); text-align: center; }
 
-        .recording-ui {
-            background: #000; border-radius: 12px; padding: 1.5rem; text-align: center; border: 1px solid var(--border); margin-bottom: 1.5rem;
-        }
+        .recording-ui { background: #000; border-radius: 12px; padding: 1.5rem; text-align: center; border: 1px solid var(--border); margin-bottom: 1.5rem; }
         .timer { font-family: 'Courier New', monospace; font-size: 2.5rem; color: var(--success); font-weight: 700; margin-bottom: 0.5rem; }
-        .status-badge {
-            display: inline-block; padding: 4px 12px; border-radius: 99px; font-size: 0.75rem; background: rgba(239, 68, 68, 0.2);
-            color: var(--danger); animation: pulse 2s infinite;
-        }
+        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 99px; font-size: 0.75rem; background: rgba(239, 68, 68, 0.2); color: var(--danger); animation: pulse 2s infinite; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
-        .quota-alert {
-            display: none;
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid var(--danger);
-            color: #fca5a5;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            text-align: center;
-            font-size: 0.9rem;
-        }
+        .quota-alert { display: none; background: rgba(239, 68, 68, 0.1); border: 1px solid var(--danger); color: #fca5a5; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; text-align: center; font-size: 0.9rem; }
         .quota-alert strong { color: var(--danger); }
         
-        /* New Protocol Alert */
-        .protocol-alert {
-            display: none;
-            background: rgba(245, 158, 11, 0.1);
-            border: 1px solid var(--scribe);
-            color: #fcd34d;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            text-align: center;
-            font-size: 0.9rem;
-        }
+        .protocol-alert { display: none; background: rgba(245, 158, 11, 0.1); border: 1px solid var(--scribe); color: #fcd34d; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; text-align: center; font-size: 0.9rem; }
 
         .result-tabs { display: flex; gap: 5px; background: #000; padding: 5px; border-radius: 8px; margin-bottom: 10px; border: 1px solid var(--border); }
-        .result-tab-btn {
-            flex: 1; padding: 10px; background: transparent; border: none; color: #64748b; border-radius: 6px; cursor: pointer; transition: all 0.2s; position: relative;
-        }
+        .result-tab-btn { flex: 1; padding: 10px; background: transparent; border: none; color: #64748b; border-radius: 6px; cursor: pointer; transition: all 0.2s; position: relative; }
         .result-tab-btn.active { background: var(--surface); color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        .result-tab-btn.active.scribe-tab { color: var(--scribe); }
-        .result-tab-btn.active.study-tab { color: var(--accent); }
-        .result-tab-btn.active.cards-tab { color: var(--success); }
-
-        /* LOADING SPINNER ON TABS */
-        .tab-spinner {
-            display: inline-block; width: 10px; height: 10px; border: 2px solid rgba(255,255,255,0.3); border-top: 2px solid white; border-radius: 50%; animation: spin 1s linear infinite; margin-left: 8px;
-        }
+        .tab-spinner { display: inline-block; width: 10px; height: 10px; border: 2px solid rgba(255,255,255,0.3); border-top: 2px solid white; border-radius: 50%; animation: spin 1s linear infinite; margin-left: 8px; }
 
         #step-result { display: flex; flex-direction: column; flex-grow: 1; overflow: hidden; }
         .output-pane { display: none; flex-direction: column; flex-grow: 1; height: 100%; min-height: 0; }
         .output-pane.active { display: flex; }
         
-        .result-box {
-            width: 100%; flex-grow: 1; background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px;
-            color: var(--text-main); padding: 2rem; font-family: 'Georgia', 'Times New Roman', serif; line-height: 1.7;
-            font-size: 1.1rem; overflow-y: auto; box-sizing: border-box;
-        }
-
+        .result-box { width: 100%; flex-grow: 1; background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); padding: 2rem; font-family: 'Georgia', serif; line-height: 1.7; font-size: 1.1rem; overflow-y: auto; box-sizing: border-box; }
+        
         /* LOADING SKELETON STYLES */
         .skeleton-container { padding: 1rem; width: 100%; box-sizing: border-box; }
-        .skeleton-line {
-            height: 16px; background: #334155; margin-bottom: 12px; border-radius: 4px;
-            animation: pulse-skeleton 1.5s infinite ease-in-out;
-        }
-        .skeleton-line.short { width: 60%; }
-        .skeleton-line.medium { width: 80%; }
-        .skeleton-line.header { height: 28px; width: 40%; margin-bottom: 20px; background: #475569; }
-        
-        @keyframes pulse-skeleton {
-            0% { opacity: 0.5; }
-            50% { opacity: 0.8; }
-            100% { opacity: 0.5; }
-        }
+        .skeleton-line { height: 16px; background: #334155; margin-bottom: 12px; border-radius: 4px; animation: pulse-skeleton 1.5s infinite ease-in-out; }
+        @keyframes pulse-skeleton { 0% { opacity: 0.5; } 50% { opacity: 0.8; } 100% { opacity: 0.5; } }
 
         .result-box h1, .result-box h2, .result-box h3 { color: #ffffff; margin-top: 1.5em; margin-bottom: 0.5em; border-bottom: 1px solid #334155; padding-bottom: 5px; }
         .result-box h1 { font-size: 1.8em; }
-        .result-box h2 { font-size: 1.5em; }
         .result-box strong { color: var(--success); }
         .result-box table { width: 100%; border-collapse: collapse; margin: 1em 0; }
         .result-box th, .result-box td { border: 1px solid #475569; padding: 8px; text-align: left; }
         .result-box th { background: #1e293b; color: var(--scribe); }
-        .result-box ul { padding-left: 20px; }
-        .result-box li { margin-bottom: 5px; }
         
-        .flashcard-container {
-            flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; padding: 2rem;
-            position: relative;
-        }
+        .flashcard-container { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; padding: 2rem; position: relative; }
         .flashcard { width: 100%; max-width: 600px; height: 350px; perspective: 1000px; cursor: pointer; }
         .flashcard-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; }
         .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
-        .flashcard-front, .flashcard-back {
-            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
-            display: flex; align-items: center; justify-content: center; padding: 2rem; box-sizing: border-box;
-            border-radius: 12px; border: 1px solid var(--border); font-size: 1.4rem; line-height: 1.6;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-        }
+        .flashcard-front, .flashcard-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; padding: 2rem; box-sizing: border-box; border-radius: 12px; border: 1px solid var(--border); font-size: 1.4rem; line-height: 1.6; }
         .flashcard-front { background: var(--surface); color: var(--text-main); }
         .flashcard-back { background: var(--bg); color: var(--accent); transform: rotateY(180deg); border-color: var(--accent); }
         
@@ -289,37 +167,16 @@
         .card-counter { font-family: monospace; color: var(--text-muted); }
 
         .hidden { display: none !important; }
-        .spinner {
-            width: 40px; height: 40px; border: 4px solid var(--border); border-top: 4px solid var(--primary);
-            border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto;
-        }
+        .spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7);
-            display: flex; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(4px);
-        }
-        .modal-content {
-            background: var(--surface); border: 1px solid var(--border); padding: 2rem; border-radius: 12px;
-            max-width: 450px; width: 90%; color: var(--text-main); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);
-        }
-        .modal-title { font-size: 1.25rem; font-weight: bold; margin-bottom: 1rem; color: var(--primary); }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(4px); }
+        .modal-content { background: var(--surface); border: 1px solid var(--border); padding: 2rem; border-radius: 12px; max-width: 450px; width: 90%; color: var(--text-main); }
         .step-list { margin: 0; padding-left: 1.2rem; line-height: 1.6; color: #cbd5e1; font-size: 0.95rem; }
-        .step-list li { margin-bottom: 0.8rem; }
-        .copy-icon {
-            display: inline-block; width: 14px; height: 14px; border: 2px solid currentColor; border-radius: 3px; position: relative; top: 2px;
-        }
-        .copy-icon::after {
-            content: ''; position: absolute; width: 100%; height: 100%; top: -4px; left: 2px; border: 2px solid currentColor; border-radius: 3px; border-left: none; border-bottom: none;
-        }
+        
+        .copy-icon { display: inline-block; width: 14px; height: 14px; border: 2px solid currentColor; border-radius: 3px; position: relative; top: 2px; }
+        .copy-icon::after { content: ''; position: absolute; width: 100%; height: 100%; top: -4px; left: 2px; border: 2px solid currentColor; border-radius: 3px; border-left: none; border-bottom: none; }
         .modal-actions { margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 10px; }
-
-        .recording-controls {
-            display: flex;
-            gap: 12px;
-            width: 100%;
-        }
-        .recording-controls button { flex: 1; }
     </style>
 </head>
 <body>
@@ -328,24 +185,21 @@
 <div id="login-view">
     <div class="login-logo">Lecture Scribe Pro</div>
     <div class="login-tagline">Network Validation Required</div>
-    
     <div class="input-group">
         <label>User Email</label>
         <input type="text" id="login-email" placeholder="email@example.com">
     </div>
-    
     <div class="input-group">
         <label>Verification U-CODE</label>
         <input type="text" id="login-ucode" placeholder="XXXX" maxlength="16" style="text-align: center; font-family: monospace; letter-spacing: 0.3em; text-transform: uppercase;">
     </div>
-    
     <button id="btn-login" class="btn-primary">Verify Access</button>
     <div id="login-status" style="margin-top: 1rem; font-size: 0.8rem; min-height: 1.2rem;"></div>
 </div>
 
 <div id="helpModal" class="modal-overlay hidden">
     <div class="modal-content">
-        <div class="modal-title">How to Get a Free API Key</div>
+        <div class="modal-title" style="font-weight:bold; margin-bottom:1rem; color:var(--primary);">How to Get a Free API Key</div>
         <ol class="step-list">
             <li><strong>Sign In:</strong> Log in to your Google account if you haven't already.</li>
             <li><strong>Create Key:</strong> Click the blue <strong>"Create API key"</strong> button.</li>
@@ -353,7 +207,7 @@
             <li><strong>Copy It:</strong> Look for the key on the right side. Click the <strong>Copy Icon</strong> <span class="copy-icon"></span> next to the billing section.</li>
             <li><strong>Paste:</strong> Come back here and paste the key.</li>
         </ol>
-        <div class="modal-actions">
+        <div class="modal-actions" style="margin-top:20px; display:flex; justify-content:flex-end; gap:10px;">
             <button id="btnCloseModal" class="btn-secondary" style="width: auto; margin:0;">Close</button>
             <a href="https://aistudio.google.com/api-keys" target="_blank" style="text-decoration: none;">
                 <button class="btn-primary" style="width: auto; margin:0;">Open Google AI Studio</button>
@@ -364,20 +218,17 @@
 
 <div id="mainContainer" class="container hidden">
     <button id="btnFullscreen" class="fullscreen-btn" title="Toggle Fullscreen Mode">⛶</button>
-
     <h1>Lecture Scribe Pro</h1>
     <p class="subtitle">Triple-Engine: Study Guide + Transcription + Interactive Flashcards</p>
 
     <div id="quotaAlert" class="quota-alert"></div>
-    <!-- Protocol Alert for File:// Usage -->
     <div id="protocolAlert" class="protocol-alert">
         <strong>⚠️ Mobile Permission Warning</strong><br>
         Mobile browsers block microphone access for local files.<br>
-        Please upload this HTML file to a secure website (HTTPS) to enable recording.
+        Please upload this HTML file to a secure website (HTTPS).
     </div>
 
     <div id="step-setup">
-        <!-- NEW: DIRECT REVIEW MODE -->
         <div class="review-mode-container">
             <p style="margin:0 0 10px 0; color:var(--success); font-weight:600;">Already have a deck?</p>
             <input type="file" id="directReviewInput" accept=".csv" class="hidden">
@@ -389,7 +240,7 @@
         <div style="width:100%; height:1px; background:var(--border); margin: 20px 0;"></div>
 
         <div class="input-group">
-            <div class="label-row">
+            <div class="label-row" style="display:flex; justify-content: space-between;">
                 <label for="apiKey">Gemini API Key</label>
                 <a id="btnOpenHelp" class="api-help-link">Make/Get API Key here</a>
             </div>
@@ -405,20 +256,16 @@
             </select>
             <div id="quotaInfo" class="model-info">
                 Google API Quota: <span>~500 recordings/day</span> (1500 req/day).<br>
-                Speed Limit: <span>5 recordings/minute</span> (15 req/min).<br>
-                <em>Note: This is a limit of the Google Free Tier, not this tool.</em>
+                Speed Limit: <span>5 recordings/minute</span> (15 req/min).
             </div>
         </div>
         
-        <!-- MICROPHONE SELECTION -->
         <div class="input-group">
-            <div class="label-row">
+            <div class="label-row" style="display:flex; justify-content: space-between;">
                 <label for="micSelect">Select Microphone</label>
                 <a id="btnRefreshMics" class="api-help-link" style="font-size:0.8rem; cursor:pointer;">Grant Permission / Refresh List</a>
             </div>
-            <select id="micSelect">
-                <option value="">Default Microphone (System)</option>
-            </select>
+            <select id="micSelect"><option value="">Default Microphone (System)</option></select>
             <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 5px;">
                 Note: If you don't see your specific device (like AirPods/Blue Yeti), click "Grant Permission / Refresh List".
             </p>
@@ -427,8 +274,8 @@
         <div class="input-group">
             <label for="micQuality">Recording Quality</label>
             <select id="micQuality">
-                <option value="32000">Standard (32 kbps) - Best for long lectures</option>
-                <option value="128000">High Quality (128 kbps) - Best for clear audio</option>
+                <option value="32000">Standard (32 kbps)</option>
+                <option value="128000">High Quality (128 kbps)</option>
             </select>
         </div>
 
@@ -443,9 +290,7 @@
         </div>
 
         <div id="modeRecord">
-            <button id="btnStart" class="btn-primary">
-                <span>Start Recording Session</span>
-            </button>
+            <button id="btnStart" class="btn-primary"><span>Start Recording Session</span></button>
             <p style="font-size: 0.75rem; color: #64748b; text-align: center; margin-top: 1rem;">
                 Features: IndexedDB Storage + Wake Lock + 99.5MB Auto-Stop
             </p>
@@ -458,13 +303,9 @@
                 <button id="btnSelectFile" class="btn-file-select">
                     <span style="font-size: 1.2rem;">📂</span> <span>Choose Audio File</span>
                 </button>
-                <div id="fileNameDisplay" style="margin-top: 10px; text-align: center; font-size: 0.9rem; color: var(--text-muted); font-style: italic;">
-                    No file selected <span style="font-size: 0.8em; opacity: 0.7; margin-left: 5px;">(Supports: .mp3, .wav, .m4a, .aac, .flac, .ogg)</span>
-                </div>
+                <div id="fileNameDisplay" style="margin-top: 10px; text-align: center; font-size: 0.9rem; color: var(--text-muted); font-style: italic;">No file selected</div>
             </div>
-            <button id="btnUploadProcess" class="btn-primary" style="margin-top: 20px;">
-                <span>Process Uploaded File</span>
-            </button>
+            <button id="btnUploadProcess" class="btn-primary" style="margin-top: 20px;"><span>Process Uploaded File</span></button>
         </div>
 
         <div style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 10px;">
@@ -495,7 +336,6 @@ Structure:
 (List specific dates. If none, state "No due dates detected").</textarea>
                 </div>
             </details>
-
             <details class="advanced-settings">
                 <summary>Engine 2: Scribe Note-Taker Prompt</summary>
                 <div class="prompt-editor">
@@ -519,7 +359,6 @@ Constraints:
 - Use headers (##) to denote topic shifts.</textarea>
                 </div>
             </details>
-
             <details class="advanced-settings">
                 <summary>Engine 3: Flashcard Generator Prompt</summary>
                 <div class="prompt-editor">
@@ -557,9 +396,7 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
         <div style="text-align: center;">
             <p id="processStatus" style="font-weight:bold; font-size:1.1rem;">Initializing...</p>
             <div class="spinner"></div>
-            <p id="processSubStatus" style="font-size: 0.8rem; color: #64748b; margin-top: 10px;">
-                Please wait. Do not close this tab.
-            </p>
+            <p id="processSubStatus" style="font-size: 0.8rem; color: #64748b; margin-top: 10px;">Please wait. Do not close this tab.</p>
         </div>
     </div>
 
@@ -601,16 +438,11 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
                 </div>
             </div>
             <div style="display:flex; gap:10px; margin-top:10px; justify-content: space-between;">
-                 <!-- IMPORT FEATURE -->
                  <input type="file" id="importCardsInput" accept=".csv" class="hidden">
                  <button id="btnImportCards" class="btn-secondary" style="width:auto;">Import Deck (.csv)</button>
-
                 <button id="btnDlCards" onclick="downloadFlashcards()" class="btn-cards" disabled>Download Anki Deck (.csv)</button>
                 <button onclick="location.reload()" class="btn-mini" style="width:auto;">New Session</button>
             </div>
-            <p style="text-align:center; font-size:0.8rem; color:#64748b; margin-top:10px;">
-                Import CSV into Anki, Quizlet, or Brainscape. (Format: Front,Back)
-            </p>
         </div>
     </div>
 </div>
@@ -620,12 +452,12 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
     const REPO_OWNER = "Cleo876";
     const REPO_NAME = "lsp-data";
     const FILE_PATH = "lsp-data.json";
-    const ENCRYPTED_PAT = "Z2l0aHViX3BhdF8xMUFHQVhHQkkwYXJ3ZHZJMGdpTEYyX3N2cHJ1S09iVWJ6a1E5eHdFcWZ0TUJBOHd4d2xNM2xDRnpTSU9ZaDZobnlENVVOUUpMQ044YkZDQURk";
+    // UPDATED TOKEN (User Provided)
+    const ENCRYPTED_PAT = "Z2l0aHViX3BhdF8xMUFHQVhHQkkwMm5IcHZscnhMaW5KX0poZU00VHZTSml6aTFScm9tdnBrZUJ6Z1VtVU1USFNDZFloVWJWVTBsUjFRQjRKWEhQVkdPaHY1emow";
     
-    // --- OBFUSCATION ENGINE (1:1 from Dashboard) ---
+    // --- OBFUSCATION ENGINE ---
     const deobfuscate = (str) => {
         try {
-            // Decode Base64 then unshift characters by -2
             const decoded = atob(str);
             return decoded.split('').map(c => String.fromCharCode(c.charCodeAt(0) - 2)).join('');
         } catch (e) { return "{}"; }
@@ -672,12 +504,14 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
             try {
                 const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`;
                 const token = getDecryptedToken();
-                const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+                const res = await fetch(url, { headers: { 'Authorization': `token ${token}` } });
                 
                 if (!res.ok) throw new Error("Could not reach network database.");
                 
                 const data = await res.json();
-                const content = atob(data.content); 
+                // IMPORTANT: Sanitize newlines from GitHub API blob before decoding
+                const sanitizedContent = data.content.replace(/\n/g, '');
+                const content = atob(sanitizedContent); 
                 
                 let db;
                 try {
@@ -691,26 +525,18 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
                     }
                 }
 
-                // Master Overwrite for Mr. Williams
                 if (emailInput === "cleowillo@gmail.com" && codeInput === "K9W2") {
                     loginSuccess(loginView, mainContainer, loginStatus, btnLogin);
                     return;
                 }
 
-                // Universal Check (Distributors AND Customers)
                 let authorized = false;
                 if (db.distributors) {
                     db.distributors.forEach(dist => {
-                        // Check Distributor Creds
-                        if (dist.email.toLowerCase() === emailInput && dist.u_code.toUpperCase() === codeInput) {
-                            authorized = true;
-                        }
-                        // Check Customer Creds
+                        if (dist.email.toLowerCase() === emailInput && dist.u_code.toUpperCase() === codeInput) authorized = true;
                         if (dist.customers) {
                             dist.customers.forEach(cust => {
-                                if (cust.email.toLowerCase() === emailInput && cust.u_code.toUpperCase() === codeInput) {
-                                    authorized = true;
-                                }
+                                if (cust.email.toLowerCase() === emailInput && cust.u_code.toUpperCase() === codeInput) authorized = true;
                             });
                         }
                     });
@@ -729,7 +555,7 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
                 loginStatus.innerText = "✗ Network Error - Try Again";
                 loginStatus.style.color = "var(--danger)";
                 btnLogin.disabled = false;
-                
+
                 // Fallback for development
                 if (isDevMode) {
                     setTimeout(() => {
@@ -742,7 +568,6 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
             }
         };
 
-        // Allow Enter key to submit
         loginUcode.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') btnLogin.click();
         });
@@ -759,7 +584,7 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
         }, 800);
     }
 
-    // --- MAIN APPLICATION LOGIC (after authentication) ---
+    // --- MAIN APPLICATION LOGIC ---
     import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
     import { marked } from "https://esm.run/marked";
 
@@ -768,9 +593,7 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
     
     class AudioDB {
         constructor(dbName = 'LectureScribePro', storeName = 'audioChunks') {
-            this.dbName = dbName;
-            this.storeName = storeName;
-            this.db = null;
+            this.dbName = dbName; this.storeName = storeName; this.db = null;
         }
         async open() {
             return new Promise((resolve, reject) => {
@@ -808,17 +631,9 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
         }
     }
 
-    let mediaRecorder;
-    let startTime;
-    let timerInterval;
-    let currentBlob = null;
-    let rawStudyMarkdown = "";
-    let rawScribeMarkdown = "";
-    let flashcardsData = [];
-    let currentCardIndex = 0;
-    let debounceTimer; 
-    let elapsedMs = 0; 
-    let totalSize = 0;
+    let mediaRecorder, startTime, timerInterval, currentBlob = null;
+    let rawStudyMarkdown = "", rawScribeMarkdown = "", flashcardsData = [];
+    let currentCardIndex = 0, debounceTimer, elapsedMs = 0, totalSize = 0;
     const audioDB = new AudioDB();
 
     const els = {
@@ -834,50 +649,39 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
         sizeMonitor: document.getElementById('sizeMonitor'),
         status: document.getElementById('processStatus'),
         subStatus: document.getElementById('processSubStatus'),
-        
         outputStudy: document.getElementById('outputStudy'),
         outputScribe: document.getElementById('outputScribe'),
         flashcardContainer: document.getElementById('flashcardContainer'),
-        
         spinStudy: document.getElementById('spinStudy'),
         spinScribe: document.getElementById('spinScribe'),
         spinCards: document.getElementById('spinCards'),
-        
         btnDlStudy: document.getElementById('btnDlStudy'),
         btnDlScribe: document.getElementById('btnDlScribe'),
         btnDlCards: document.getElementById('btnDlCards'),
-
         modelLoadStatus: document.getElementById('modelLoadStatus'),
         quotaAlert: document.getElementById('quotaAlert'), 
         protocolAlert: document.getElementById('protocolAlert'),
         btnFullscreen: document.getElementById('btnFullscreen'),
         btnPause: document.getElementById('btnPause'),
         recordingStatus: document.getElementById('recordingStatus'),
-        
         promptStudy: document.getElementById('promptStudy'),
         promptScribe: document.getElementById('promptScribe'),
         promptCards: document.getElementById('promptCards'),
-        
         tabRecord: document.getElementById('tabRecord'),
         tabUpload: document.getElementById('tabUpload'),
         modeRecord: document.getElementById('modeRecord'),
         modeUpload: document.getElementById('modeUpload'),
         fileUpload: document.getElementById('fileUpload'),
-        
         btnSelectFile: document.getElementById('btnSelectFile'),
         fileNameDisplay: document.getElementById('fileNameDisplay'),
-        
-        // Direct Review Elements
         btnDirectReview: document.getElementById('btnDirectReview'),
         directReviewInput: document.getElementById('directReviewInput'),
-
         btnTabStudy: document.getElementById('btnTabStudy'),
         btnTabScribe: document.getElementById('btnTabScribe'),
         btnTabCards: document.getElementById('btnTabCards'),
         paneStudy: document.getElementById('paneStudy'),
         paneScribe: document.getElementById('paneScribe'),
         paneCards: document.getElementById('paneCards'),
-        
         activeCard: document.getElementById('activeCard'),
         cardFront: document.getElementById('cardFront'),
         cardBack: document.getElementById('cardBack'),
@@ -886,13 +690,12 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
         cardCounter: document.getElementById('cardCounter'),
         importCardsInput: document.getElementById('importCardsInput'),
         btnImportCards: document.getElementById('btnImportCards'),
-        
         btnOpenHelp: document.getElementById('btnOpenHelp'),
         helpModal: document.getElementById('helpModal'),
         btnCloseModal: document.getElementById('btnCloseModal')
     };
     
-    // CHECK PROTOCOL ON LOAD (after auth)
+    // CHECK PROTOCOL ON LOAD
     setTimeout(() => {
         if (window.location.protocol === 'file:') {
             els.protocolAlert.style.display = 'block';
@@ -900,14 +703,11 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
             document.getElementById('btnStart').innerText = "Blocked (HTTPS Required)";
             document.getElementById('btnStart').style.background = "#334155";
         }
-
-        // AUTO-LOAD SAVED KEY
         const savedKey = localStorage.getItem('lsp_gemini_key');
         if (savedKey) {
             els.apiKey.value = savedKey;
             if (savedKey.length > 20) loadModels(savedKey);
         }
-
         loadMicrophones();
     }, 100);
 
@@ -1202,7 +1002,7 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
         processMultiEngine();
     };
 
-    // --- MAIN GENERATION LOGIC WITH IMMEDIATE UI & CONCURRENCY ---
+    // --- MAIN GENERATION LOGIC ---
     async function processMultiEngine() {
         els.quotaAlert.style.display = 'none';
         
@@ -1240,7 +1040,6 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
         
         els.outputStudy.innerHTML = loadingHTML;
         els.outputScribe.innerHTML = loadingHTML;
-        // Flashcard specific loading state in its specific container is already handled by default text, but we can enhance it
         els.flashcardContainer.style.opacity = "0.6"; 
         
         els.spinStudy.classList.remove('hidden');
@@ -1301,15 +1100,11 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
             }
         };
 
-        // Execution Logic: Parallel for Flash, Sequential for Pro (to respect Rate Limits)
         if (modelName.includes("pro")) {
-            // Sequential for safety
             await runStudy();
             await runScribe();
             await runCards();
         } else {
-            // Parallel for speed (Fire and forget style)
-            // We do NOT await Promise.all() because we want them to populate independently as they finish
             runStudy();
             runScribe();
             runCards();
