@@ -320,7 +320,126 @@
             width: 100%;
         }
         .recording-controls button { flex: 1; }
+        
+        /* AUDIO PLAYER STYLES */
+        .audio-player-controls {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            border: 1px solid var(--border);
+        }
+        /* --- VIDEO MODAL ENHANCEMENTS --- */
+        #tutorialVideo {
+            background-color: #000;
+        }
+
+        /* Style the native video controls to match app theme */
+        #tutorialVideo::-webkit-media-controls-panel {
+            background: linear-gradient(to top, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.95));
+        }
+
+        #tutorialVideo::-webkit-media-controls-play-button,
+        #tutorialVideo::-webkit-media-controls-volume-slider,
+        #tutorialVideo::-webkit-media-controls-timeline {
+            filter: invert(0.8);
+        }
+        
     </style>
+    <!-- GLOBAL SCRIPTS (Non-Module) to ensure availability -->
+    <script>
+        // --- TEXT TO SPEECH LOGIC (Browser Native) ---
+        function speakText(elementId) {
+            // 1. Browser Support Check
+            if (!('speechSynthesis' in window)) {
+                alert("Text-to-speech is not supported in this browser/environment.");
+                return;
+            }
+
+            // 2. Safe DOM Access
+            const el = document.getElementById(elementId);
+            if (!el) {
+                console.error("Target element not found: " + elementId);
+                return;
+            }
+            
+            // 3. Get Text
+            const text = el.innerText;
+            if (!text || text.length < 5) {
+                alert("No text to speak yet. Please wait for generation.");
+                return;
+            }
+
+            // 4. Reset & Cleanup
+            window.speechSynthesis.cancel(); 
+
+            // 5. Create Utterance
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 1.0; 
+            utterance.pitch = 1.0;
+
+            // 6. Voice Selection (Optional but good)
+            const voices = window.speechSynthesis.getVoices();
+            const preferred = voices.find(v => 
+                v.name.includes("Google US English") || 
+                v.name.includes("Microsoft Zira") || 
+                v.name.includes("Samantha")
+            );
+            if (preferred) utterance.voice = preferred;
+
+            // 7. UI Feedback / Error Handling
+            const btn = document.activeElement; 
+            let originalText = "";
+            if (btn && btn.tagName === "BUTTON") {
+                originalText = btn.innerText;
+                btn.innerText = "🔊 Speaking...";
+                // Disable temporarily to prevent spam clicks
+                btn.disabled = true;
+            }
+
+            utterance.onend = function() {
+                if (btn && btn.tagName === "BUTTON") {
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                }
+            };
+
+            utterance.onerror = function(e) {
+                console.error("Speech Error:", e);
+                // If blocked by sandbox, this often fires
+                if (btn && btn.tagName === "BUTTON") {
+                    btn.innerText = "❌ Audio Blocked";
+                    setTimeout(() => {
+                        btn.innerText = originalText;
+                        btn.disabled = false;
+                    }, 2000);
+                }
+            };
+
+            // 8. Speak
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function stopSpeech() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                // Reset buttons manually if needed, though onend usually handles it
+                const buttons = document.querySelectorAll('button');
+                buttons.forEach(b => {
+                    if (b.innerText === "🔊 Speaking...") {
+                         // We don't easily know original text here without storing it, 
+                         // but we can guess based on context or just leave it. 
+                         // Simpler to just let them click 'Stop' which works.
+                         b.disabled = false;
+                         b.innerText = "▶ Listen to Notes (Podcast Mode)";
+                    }
+                });
+            }
+        }
+    </script>
 </head>
 <body>
 
@@ -365,7 +484,13 @@
 <div id="mainContainer" class="container hidden">
     <button id="btnFullscreen" class="fullscreen-btn" title="Toggle Fullscreen Mode">⛶</button>
 
-    <h1>Lecture Scribe Pro</h1>
+    <!-- Container for header and button -->
+    <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 0.5rem; flex-wrap: wrap;">
+        <h1 style="margin: 0;">Lecture Scribe Pro</h1>
+        <button id="btnWatchTutorial" class="btn-primary" style="width: auto; padding: 0.5rem 1.5rem;">
+            ▶ Watch Tutorial
+        </button>
+    </div>
     <p class="subtitle">Triple-Engine: Study Guide + Transcription + Interactive Flashcards</p>
 
     <div id="quotaAlert" class="quota-alert"></div>
@@ -382,7 +507,7 @@
             <p style="margin:0 0 10px 0; color:var(--success); font-weight:600;">Already have a deck?</p>
             <input type="file" id="directReviewInput" accept=".csv" class="hidden">
             <button id="btnDirectReview" class="btn-secondary" style="background: rgba(34, 197, 94, 0.1); color: var(--success); border-color: var(--success);">
-                📂 Load Flashcards & Skip AI
+                📂 Load Flashcards
             </button>
         </div>
 
@@ -571,6 +696,12 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
         </div>
 
         <div id="paneStudy" class="output-pane active">
+            <!-- AUDIO PLAYER FOR STUDY MODE -->
+            <div class="audio-player-controls">
+                 <button onclick="speakText('outputStudy')" class="btn-mini" style="margin:0; width:auto; flex:1;">▶ Listen to Notes (Podcast Mode)</button>
+                 <button onclick="stopSpeech()" class="btn-mini" style="margin:0; width:auto; background:var(--danger); color:white;">■</button>
+            </div>
+            
             <div id="outputStudy" class="result-box"></div>
             <div style="display:flex; gap:10px; margin-top:10px; justify-content: space-between;">
                 <button id="btnDlStudy" onclick="downloadRTF('study')" class="btn-accent" disabled>Download Study Guide (.rtf)</button>
@@ -579,6 +710,12 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
         </div>
 
         <div id="paneScribe" class="output-pane">
+             <!-- AUDIO PLAYER FOR SCRIBE MODE -->
+             <div class="audio-player-controls">
+                 <button onclick="speakText('outputScribe')" class="btn-mini" style="margin:0; width:auto; flex:1;">▶ Listen to Notes (Podcast Mode)</button>
+                 <button onclick="stopSpeech()" class="btn-mini" style="margin:0; width:auto; background:var(--danger); color:white;">■</button>
+            </div>
+            
             <div id="outputScribe" class="result-box"></div>
             <div style="display:flex; gap:10px; margin-top:10px; justify-content: space-between;">
                 <button id="btnDlScribe" onclick="downloadRTF('scribe')" class="btn-scribe" disabled>Download Scribe Notes (.rtf)</button>
@@ -616,6 +753,10 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
 </div>
 
 <script type="module">
+    // --- TUTORIAL VIDEO CONFIG ---
+    const TUTORIAL_VIDEO_URL = "https://github.com/Cleo876/lecture-scribe-pro/raw/refs/heads/main/Tutorial_Lecture%20Scribe%20Pro.mp4";
+    let tutorialVideoPreloaded = false;
+
     // --- SECURITY & NETWORK CONFIG ---
     const REPO_OWNER = "Cleo876";
     const REPO_NAME = "lsp-data";
@@ -771,7 +912,53 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
             mainContainer.classList.remove('hidden');
             document.body.style.userSelect = "auto";
             btnLogin.disabled = false;
+
+            // --- START TUTORIAL VIDEO PRELOAD HERE ---
+            preloadTutorialVideo();
         }, 800);
+    }
+    
+    // --- TUTORIAL VIDEO FUNCTIONS ---
+    function preloadTutorialVideo() {
+        if (tutorialVideoPreloaded) return;
+        
+        const videoEl = document.getElementById('tutorialVideo');
+        videoEl.src = TUTORIAL_VIDEO_URL;
+        // Set preload attribute to start downloading metadata
+        videoEl.preload = 'metadata';
+        
+        videoEl.addEventListener('loadeddata', () => {
+            console.log("✓ Tutorial video preloaded (metadata ready)");
+            tutorialVideoPreloaded = true;
+        });
+        
+        videoEl.load(); // Initiate the download
+    }
+
+    function openTutorialModal() {
+        const modal = document.getElementById('tutorialModal');
+        const videoEl = document.getElementById('tutorialVideo');
+        
+        modal.classList.remove('hidden');
+        
+        // Ensure video source is set and play from the beginning
+        if (!videoEl.src) {
+            videoEl.src = TUTORIAL_VIDEO_URL;
+        }
+        videoEl.currentTime = 0;
+        
+        // Play only if the user explicitly clicks, but ensure it's loaded
+        if (tutorialVideoPreloaded) {
+            videoEl.play().catch(e => console.log("Playback requires user interaction:", e));
+        }
+    }
+
+    function closeTutorialModal() {
+        const modal = document.getElementById('tutorialModal');
+        const videoEl = document.getElementById('tutorialVideo');
+        
+        modal.classList.add('hidden');
+        videoEl.pause();
     }
 
     // --- MAIN APPLICATION LOGIC (after authentication) ---
@@ -1021,6 +1208,29 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
 
     els.btnOpenHelp.onclick = (e) => { e.preventDefault(); els.helpModal.classList.remove('hidden'); };
     els.btnCloseModal.onclick = () => { els.helpModal.classList.add('hidden'); };
+
+    // --- TUTORIAL VIDEO EVENT LISTENERS ---
+    document.getElementById('btnWatchTutorial').onclick = openTutorialModal;
+    document.getElementById('btnCloseTutorial').onclick = closeTutorialModal;
+
+    // Fullscreen button for the video
+    document.getElementById('btnFullscreenVideo').onclick = () => {
+        const videoEl = document.getElementById('tutorialVideo');
+        if (videoEl.requestFullscreen) {
+            videoEl.requestFullscreen();
+        } else if (videoEl.webkitRequestFullscreen) { /* Safari */
+            videoEl.webkitRequestFullscreen();
+        } else if (videoEl.msRequestFullscreen) { /* IE11 */
+            videoEl.msRequestFullscreen();
+        }
+    };
+
+    // Also close modal when clicking the background overlay
+    document.getElementById('tutorialModal').onclick = (e) => {
+        if (e.target.id === 'tutorialModal') {
+            closeTutorialModal();
+        }
+    };
 
     els.tabRecord.onclick = () => {
         els.tabRecord.classList.add('active'); els.tabUpload.classList.remove('active');
@@ -1421,6 +1631,32 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
             reader.readAsDataURL(blob);
         });
     }
+
+    
 </script>
+<!-- Video Tutorial Modal -->
+    <div id="tutorialModal" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width: 95vw; width: 400px; background: var(--surface); border-color: var(--primary);">
+            <!-- Modal Header -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem;">
+                <div class="modal-title" style="color: var(--primary);">Lecture Scribe Pro Tutorial</div>
+                <button id="btnCloseTutorial" class="fullscreen-btn" style="position: static; border: none; background: transparent; font-size: 1.5rem; color: var(--text-muted);">×</button>
+            </div>
+            
+            <!-- Video Container -->
+            <div style="position: relative; width: 100%; padding-top: 177.78%; /* 9:16 aspect ratio for mobile */ background: #000; border-radius: 8px; overflow: hidden;">
+                <video id="tutorialVideo" controls style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            
+            <!-- Modal Footer -->
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 1rem;">
+                <button id="btnFullscreenVideo" class="btn-secondary" style="width: auto;">
+                    ⛶ Fullscreen
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
