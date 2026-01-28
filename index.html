@@ -760,8 +760,76 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
     // --- SECURITY & NETWORK CONFIG ---
     const REPO_OWNER = "Cleo876";
     const REPO_NAME = "lsp-data";
-    // NOTE: This assumes your file is in the 'main' branch. If it's 'master', change 'main' to 'master' in the Fetch URL below.
     const FILE_PATH = "lsp-data.json";
+    
+    // --- CORS PROXY CONFIGURATION ---
+    // Using a CORS proxy that properly handles CORS headers for WebView environments
+    const CORS_PROXY_URL = "https://corsproxy.io/?";
+    // Alternative CORS proxy in case the primary fails
+    const CORS_PROXY_ALT = "https://api.allorigins.win/raw?url=";
+    
+    // Function to fetch with CORS handling
+    async function fetchWithCORS(url, options = {}) {
+        // Use CORS proxy for GitHub raw content when not on HTTPS
+        if (window.location.protocol === 'file:' || 
+            window.location.protocol === 'http:' ||
+            url.includes('raw.githubusercontent.com')) {
+            
+            // Encode the URL for the proxy
+            const encodedUrl = encodeURIComponent(url);
+            
+            // Try primary proxy first
+            try {
+                const proxyUrl = `${CORS_PROXY_URL}${encodedUrl}`;
+                const response = await fetch(proxyUrl, {
+                    ...options,
+                    mode: 'cors',
+                    headers: {
+                        ...options.headers,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Proxy fetch failed: ${response.status}`);
+                }
+                
+                return response;
+            } catch (proxyError) {
+                console.warn('Primary proxy failed, trying alternative:', proxyError);
+                
+                // Fallback to alternative proxy
+                try {
+                    const altProxyUrl = `${CORS_PROXY_ALT}${encodedUrl}`;
+                    const response = await fetch(altProxyUrl, {
+                        ...options,
+                        mode: 'cors'
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`Alternative proxy failed: ${response.status}`);
+                    }
+                    
+                    return response;
+                } catch (altError) {
+                    console.error('All CORS proxies failed:', altError);
+                    throw new Error('Network request failed. Please check your connection.');
+                }
+            }
+        }
+        
+        // For HTTPS environments, use direct fetch with CORS headers
+        return fetch(url, {
+            ...options,
+            mode: 'cors',
+            headers: {
+                ...options.headers,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        });
+    }
     
     // --- OBFUSCATION ENGINE (1:1 from Dashboard) ---
     const deobfuscate = (str) => {
@@ -772,7 +840,7 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
         } catch (e) { return "{}"; }
     };
 
-    // --- LOGIN LOGIC (Safe-Parse) ---
+    // --- LOGIN LOGIC (Safe-Parse with CORS Fix) ---
     window.addEventListener('DOMContentLoaded', () => {
         const loginView = document.getElementById('login-view');
         const mainContainer = document.getElementById('mainContainer');
@@ -824,9 +892,11 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
             btnLogin.disabled = true;
 
             try {
-                // MODIFIED: Use Raw GitHub Content (No Token Required)
-                const url = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${FILE_PATH}`;
-                const res = await fetch(url);
+                // MODIFIED: Use CORS proxy for WebView compatibility
+                const rawUrl = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${FILE_PATH}`;
+                
+                // Use our CORS-enabled fetch function
+                const res = await fetchWithCORS(rawUrl);
                 
                 if (!res.ok) throw new Error("Could not reach network database.");
                 
@@ -1162,7 +1232,15 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
 
     async function loadModels(key) {
         try {
-            const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`);
+            const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${key}`;
+            const resp = await fetch(url, {
+                mode: 'cors',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+            
             if (resp.status === 400 || resp.status === 403) throw new Error("Invalid API Key");
             const data = await resp.json();
             const models = (data.models || []).filter(m => m.supportedGenerationMethods?.includes("generateContent"))
