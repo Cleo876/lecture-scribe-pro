@@ -1,0 +1,7 @@
+{
+  "id": 1,
+  "title": "New Feature Alert!",
+  "message": "We have added a new export tool. Click to see.",
+  "link": "https://google.com",
+  "repeat": false
+}
