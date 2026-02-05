@@ -1162,6 +1162,13 @@
             }
         }
 
+        /* CUSTOM UTILITY CLASS: hides element on medium (≥768px) and larger screens */
+        @media (min-width: 768px) {
+            .md\:hidden {
+                display: none !important;
+            }
+        }
+
         @media (max-width: 480px) {
             .app-header {
                 flex-wrap: wrap;
@@ -1394,7 +1401,7 @@
             <div class="header-right">
                 <!-- DOWNLOAD BUTTON (Hidden by default, shown via JS if not in App) -->
                 <!-- REPLACE THE HREF WITH YOUR ACTUAL APK LINK -->
-                <a href="https://raw.githubusercontent.com/Cleo876/lecture-scribe-pro/refs/heads/main/app/lecture-scribe-pro.apk" id="btnDownloadApp" class="btn btn-app-dl btn-sm hidden" download>
+                <a href="https://raw.githubusercontent.com/Cleo876/lecture-scribe-pro/refs/heads/main/app/lecture-scribe-pro.apk" id="btnDownloadApp" class="btn btn-app-dl btn-sm hidden md:hidden" download>
                     <i class="fab fa-android"></i> Get App
                 </a>
 
