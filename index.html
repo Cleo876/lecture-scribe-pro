@@ -47,6 +47,9 @@
             overflow-x: hidden;
             position: relative;
             padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         /* Background animation */
@@ -163,6 +166,7 @@
             border-bottom: 1px solid var(--border);
             position: relative;
             min-height: 60px;
+            flex-wrap: wrap;
         }
 
         /* Left section of header */
@@ -171,7 +175,7 @@
             align-items: center;
             gap: 15px;
             flex: 1;
-            min-width: 0; /* Allow shrinking */
+            min-width: 0;
         }
 
         /* History button in header - FIXED POSITION */
@@ -458,7 +462,14 @@
             position: relative;
             overflow: hidden;
             font-size: 0.9rem;
-            white-space: nowrap;
+            white-space: normal;
+            word-break: break-word;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            text-align: center;
         }
         
         .mode-btn::after {
@@ -571,6 +582,12 @@
             gap: 8px;
             position: relative;
             overflow: hidden;
+            white-space: normal;
+            word-break: break-word;
+            text-align: center;
+            min-height: 44px;
+            flex-wrap: wrap;
+            text-decoration: none; /* For download links */
         }
 
         .btn::before {
@@ -646,10 +663,23 @@
             color: #000; 
         }
 
+        /* --- DOWNLOAD BUTTON STYLE --- */
+        .btn-app-dl {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-app-dl:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+
         .btn-sm {
             padding: 0.5rem 0.8rem;
             font-size: 0.85rem;
             width: auto;
+            min-height: 36px;
         }
 
         /* Recording UI */
@@ -733,7 +763,11 @@
             font-size: 0.85rem;
             min-width: 0;
             overflow: hidden;
-            white-space: nowrap;
+            white-space: normal;
+            word-break: break-word;
+            text-align: center;
+            min-height: 44px;
+            flex-wrap: wrap;
         }
         
         .result-tab-btn.active { 
@@ -810,6 +844,13 @@
             margin-bottom: 0.5em; 
             border-bottom: 1px solid #334155; 
             padding-bottom: 5px; 
+        }
+
+        /* Math symbol styling */
+        .math-symbol {
+            font-family: "Cambria Math", "Symbol", "STIXGeneral", serif;
+            font-style: normal;
+            display: inline-block;
         }
 
         /* Progress Bar */
@@ -1063,6 +1104,7 @@
         @media (max-width: 768px) {
             body {
                 padding: 10px;
+                display: block;
             }
             
             .container {
@@ -1102,6 +1144,7 @@
             .result-tab-btn {
                 font-size: 0.8rem;
                 padding: 8px 10px;
+                min-height: 40px;
             }
             
             .flashcard {
@@ -1111,6 +1154,11 @@
             .flashcard-front, .flashcard-back {
                 font-size: 1rem;
                 padding: 1rem;
+            }
+            
+            .mode-btn, .btn {
+                font-size: 0.85rem;
+                padding: 0.8rem 1rem;
             }
         }
 
@@ -1135,11 +1183,17 @@
             .mode-btn {
                 font-size: 0.8rem;
                 padding: 8px 10px;
+                min-height: 40px;
             }
             
             .btn {
                 padding: 0.8rem 1rem;
                 font-size: 0.9rem;
+            }
+            
+            #login-view {
+                padding: 1.5rem;
+                margin: 1rem auto;
             }
         }
 
@@ -1333,10 +1387,17 @@
                 </button>
                 <div class="header-title">
                     <h1>Lecture Scribe Pro</h1>
-                    <span class="header-badge">v2.0</span>
+                    <span class="header-badge">v2.1.0</span>
                 </div>
             </div>
+            
             <div class="header-right">
+                <!-- DOWNLOAD BUTTON (Hidden by default, shown via JS if not in App) -->
+                <!-- REPLACE THE HREF WITH YOUR ACTUAL APK LINK -->
+                <a href="https://raw.githubusercontent.com/Cleo876/lecture-scribe-pro/refs/heads/main/app/lecture-scribe-pro.apk" id="btnDownloadApp" class="btn btn-app-dl btn-sm hidden" download>
+                    <i class="fab fa-android"></i> Get App
+                </a>
+
                 <button id="btnWatchTutorial" class="btn btn-primary btn-sm">
                     <i class="fas fa-play-circle"></i> Tutorial
                 </button>
@@ -1498,7 +1559,7 @@
                             <span>Choose Audio File</span>
                         </button>
                         <div id="fileNameDisplay" style="margin-top: 12px; text-align: center; padding: 8px; 
-                                                    background: rgba(59, 130, 246, 0.05); border-radius: var(--radius-sm); font-size: 0.9rem;">
+                                                        background: rgba(59, 130, 246, 0.05); border-radius: var(--radius-sm); font-size: 0.9rem;">
                             <i class="fas fa-music"></i> No file selected
                             <div style="font-size: 0.75rem; opacity: 0.7; margin-top: 4px;">
                                 Supports: MP3, WAV, M4A, AAC, FLAC, OGG
@@ -1528,7 +1589,7 @@
 Course: "[COURSE_NAME]".
 
 Goal: Don't just summarize. Explain the material with deep understanding and offer a unique perspective that might not be obvious from the lesson alone.
-CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (e.g. use "A ∪ B" not "$A \cup B$").
+CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (e.g. use "A ∪ B" not "$A \cup B$", use "α, β, γ" not "$\alpha, \beta, \gamma$", use "∑" not "$\sum$", use "∫" not "$\int$", use "√" not "$\sqrt{}$").
 
 Structure:
 # 1. THE CLASS NAME
@@ -1593,8 +1654,7 @@ Format:
   { "front": "Question? (e.g. Define X, What is Y?, How does Z work?)", "back": "Clear Answer or Definition" }
 ]
 IMPORTANT: The 'front' MUST be a specific Question or a Term to define. Do not use random statements. The 'back' must be the direct answer.
-CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (e.g. use "A ∪ B" not "$A \cup B$").
-</textarea>
+CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (e.g. use "A ∪ B" not "$A \cup B$", use "α, β, γ" not "$\alpha, \beta, \gamma$", use "∑" not "$\sum$", use "∫" not "$\int$").</textarea>
                     </div>
                 </details>
             </div>
@@ -1695,7 +1755,7 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
                 </div>
                 
                 <div id="outputStudy" class="result-box"></div>
-                <div style="display: flex; justify-content: space-between; margin-top: 15px; gap: 10px;">
+                <div style="display: flex; justify-content: space-between; margin-top: 15px; gap: 10px; flex-wrap: wrap;">
                     <button id="btnDlStudy" onclick="downloadRTF('study')" class="btn btn-accent" disabled>
                         <i class="fas fa-download"></i> Download Study Guide
                     </button>
@@ -1720,7 +1780,7 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
                 </div>
                 
                 <div id="outputScribe" class="result-box"></div>
-                <div style="display: flex; justify-content: space-between; margin-top: 15px; gap: 10px;">
+                <div style="display: flex; justify-content: space-between; margin-top: 15px; gap: 10px; flex-wrap: wrap;">
                     <button id="btnDlScribe" onclick="downloadRTF('scribe')" class="btn btn-warning" disabled>
                         <i class="fas fa-download"></i> Download Scribe Notes
                     </button>
@@ -1762,7 +1822,7 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
                         </div>
                     </div>
                     
-                    <div class="card-controls" style="display: flex; gap: 15px; margin-top: 20px; align-items: center;">
+                    <div class="card-controls" style="display: flex; gap: 15px; margin-top: 20px; align-items: center; flex-wrap: wrap;">
                         <button class="btn btn-secondary btn-sm" id="btnPrevCard" style="width: auto;">
                             <i class="fas fa-arrow-left"></i> Previous
                         </button>
@@ -1776,7 +1836,7 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
                 </div>
                 
                 <div style="display: flex; gap: 8px; margin-top: 20px; justify-content: space-between; flex-wrap: wrap;">
-                    <div style="display: flex; gap: 8px;">
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                         <input type="file" id="importCardsInput" accept=".csv" class="hidden">
                         <button id="btnImportCards" class="btn btn-secondary btn-sm">
                             <i class="fas fa-file-import"></i> Import Deck
@@ -1839,97 +1899,6 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
     </div>
 
 <!-- GLOBAL SCRIPTS (Non-Module) to ensure availability -->
-<script>
-// --- TEXT TO SPEECH LOGIC (Browser Native) ---
-function speakText(elementId) {
-    // 1. Browser Support Check
-    if (!('speechSynthesis' in window)) {
-        alert("Text-to-speech is not supported in this browser/environment.");
-        return;
-    }
-
-    // 2. Safe DOM Access
-    const el = document.getElementById(elementId);
-    if (!el) {
-        console.error("Target element not found: " + elementId);
-        return;
-    }
-    
-    // 3. Get Text
-    const text = el.innerText;
-    if (!text || text.length < 5) {
-        alert("No text to speak yet. Please wait for generation.");
-        return;
-    }
-
-    // 4. Reset & Cleanup
-    window.speechSynthesis.cancel(); 
-
-    // 5. Create Utterance
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 1.0; 
-    utterance.pitch = 1.0;
-
-    // 6. Voice Selection (Optional but good)
-    const voices = window.speechSynthesis.getVoices();
-    const preferred = voices.find(v => 
-        v.name.includes("Google US English") || 
-        v.name.includes("Microsoft Zira") || 
-        v.name.includes("Samantha")
-    );
-    if (preferred) utterance.voice = preferred;
-
-    // 7. UI Feedback / Error Handling
-    const btn = document.activeElement; 
-    let originalText = "";
-    if (btn && btn.tagName === "BUTTON") {
-        originalText = btn.innerText;
-        btn.innerText = "🔊 Speaking...";
-        // Disable temporarily to prevent spam clicks
-        btn.disabled = true;
-    }
-
-    utterance.onend = function() {
-        if (btn && btn.tagName === "BUTTON") {
-            btn.innerText = originalText;
-            btn.disabled = false;
-        }
-    };
-
-    utterance.onerror = function(e) {
-        console.error("Speech Error:", e);
-        // If blocked by sandbox, this often fires
-        if (btn && btn.tagName === "BUTTON") {
-            btn.innerText = "❌ Audio Blocked";
-            setTimeout(() => {
-                btn.innerText = originalText;
-                btn.disabled = false;
-            }, 2000);
-        }
-    };
-
-    // 8. Speak
-    window.speechSynthesis.speak(utterance);
-}
-
-function stopSpeech() {
-    if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        // Reset buttons manually if needed, though onend usually handles it
-        const buttons = document.querySelectorAll('button');
-        buttons.forEach(b => {
-            if (b.innerText === "🔊 Speaking...") {
-                 // We don't easily know original text here without storing it, 
-                 // but we can guess based on context or just leave it. 
-                 // Simpler to just let them click 'Stop' which works.
-                 b.disabled = false;
-                 b.innerText = "▶ Listen to Notes (Podcast Mode)";
-            }
-        });
-    }
-}
-</script>
-
 <script>
 // --- TEXT TO SPEECH LOGIC (Enhanced) ---
 function speakText(elementId) {
@@ -2033,24 +2002,152 @@ function initBackgroundAnimation() {
     }
 }
 
+// --- LATEX TO UNICODE CONVERSION ---
+function convertLatexToUnicode(text) {
+    if (!text) return text;
+    
+    const latexMap = {
+        // Greek letters
+        '\\alpha': 'α', '\\beta': 'β', '\\gamma': 'γ', '\\Gamma': 'Γ',
+        '\\delta': 'δ', '\\Delta': 'Δ', '\\epsilon': 'ε', '\\varepsilon': 'ε',
+        '\\zeta': 'ζ', '\\eta': 'η', '\\theta': 'θ', '\\Theta': 'Θ',
+        '\\iota': 'ι', '\\kappa': 'κ', '\\lambda': 'λ', '\\Lambda': 'Λ',
+        '\\mu': 'μ', '\\nu': 'ν', '\\xi': 'ξ', '\\Xi': 'Ξ',
+        '\\pi': 'π', '\\Pi': 'Π', '\\rho': 'ρ', '\\sigma': 'σ', '\\Sigma': 'Σ',
+        '\\tau': 'τ', '\\upsilon': 'υ', '\\phi': 'φ', '\\Phi': 'Φ',
+        '\\chi': 'χ', '\\psi': 'ψ', '\\Psi': 'Ψ', '\\omega': 'ω', '\\Omega': 'Ω',
+        
+        // Mathematical operators
+        '\\sum': '∑', '\\prod': '∏', '\\int': '∫', '\\oint': '∮',
+        '\\partial': '∂', '\\nabla': '∇', '\\infty': '∞',
+        
+        // Set theory
+        '\\cup': '∪', '\\cap': '∩', '\\subset': '⊂', '\\subseteq': '⊆',
+        '\\supset': '⊃', '\\supseteq': '⊇', '\\in': '∈', '\\notin': '∉',
+        '\\emptyset': '∅', '\\varnothing': '∅',
+        
+        // Logic
+        '\\wedge': '∧', '\\vee': '∨', '\\neg': '¬', '\\forall': '∀',
+        '\\exists': '∃', '\\nexists': '∄',
+        
+        // Relations
+        '\\leq': '≤', '\\geq': '≥', '\\neq': '≠', '\\approx': '≈',
+        '\\sim': '∼', '\\simeq': '≃', '\\cong': '≅', '\\equiv': '≡',
+        '\\propto': '∝',
+        
+        // Arrows
+        '\\rightarrow': '→', '\\leftarrow': '←', '\\Rightarrow': '⇒',
+        '\\Leftarrow': '⇐', '\\leftrightarrow': '↔', '\\Leftrightarrow': '⇔',
+        
+        // Other symbols
+        '\\times': '×', '\\div': '÷', '\\pm': '±', '\\mp': '∓',
+        '\\cdot': '·', '\\circ': '∘', '\\bullet': '•', '\\ast': '∗',
+        '\\sqrt': '√', '\\angle': '∠', '\\triangle': '△', '\\perp': '⊥',
+        '\\parallel': '∥', '\\ldots': '…', '\\cdots': '⋯',
+        '\\vdots': '⋮', '\\ddots': '⋱'
+    };
+    
+    let result = text;
+    
+    // First, replace common LaTeX commands with Unicode
+    for (const [latex, unicode] of Object.entries(latexMap)) {
+        const regex = new RegExp(latex.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+        result = result.replace(regex, unicode);
+    }
+    
+    // Handle simple inline math: $...$ or $$...$$
+    result = result.replace(/\$\$([^$]+)\$\$/g, '$1');
+    result = result.replace(/\$([^$]+)\$/g, '$1');
+    
+    // Handle superscripts: ^{...} or ^x
+    result = result.replace(/\^{(\w+)}/g, (match, p1) => {
+        const superscripts = {'0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', 
+                             '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹',
+                             '+': '⁺', '-': '⁻', '=': '⁼', '(': '⁽', ')': '⁾',
+                             'n': 'ⁿ', 'i': 'ⁱ'};
+        return p1.split('').map(c => superscripts[c] || c).join('');
+    });
+    
+    // Handle subscripts: _{...} or _x
+    result = result.replace(/_{(\w+)}/g, (match, p1) => {
+        const subscripts = {'0': '₀', '1': '₁', '2': '₂', '3': '₃', '4': '₄',
+                           '5': '₅', '6': '₆', '7': '₇', '8': '₈', '9': '₉',
+                           '+': '₊', '-': '₋', '=': '₌', '(': '₍', ')': '₎',
+                           'a': 'ₐ', 'e': 'ₑ', 'h': 'ₕ', 'i': 'ᵢ', 'k': 'ₖ',
+                           'l': 'ₗ', 'm': 'ₘ', 'n': 'ₙ', 'o': 'ₒ', 'p': 'ₚ',
+                           'r': 'ᵣ', 's': 'ₛ', 't': 'ₜ', 'u': 'ᵤ', 'v': 'ᵥ',
+                           'x': 'ₓ'};
+        return p1.split('').map(c => subscripts[c] || c).join('');
+    });
+    
+    // Handle fractions: \frac{a}{b}
+    result = result.replace(/\\frac{([^}]+)}{([^}]+)}/g, '$1/$2');
+    
+    return result;
+}
+
+// --- ENHANCED MARKDOWN PARSER WITH MATH SUPPORT ---
+function parseMarkdownWithMath(markdown) {
+    if (!markdown) return '';
+    
+    // Convert LaTeX to Unicode first
+    const processedMarkdown = convertLatexToUnicode(markdown);
+    
+    // Simple markdown parser for headings, bold, italic, lists
+    let html = processedMarkdown
+        .replace(/^### (.*$)/gm, '<h3>$1</h3>')
+        .replace(/^## (.*$)/gm, '<h2>$1</h2>')
+        .replace(/^# (.*$)/gm, '<h1>$1</h1>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/`(.*?)`/g, '<code>$1</code>')
+        .replace(/^- (.*$)/gm, '<li>$1</li>')
+        .replace(/^\d+\. (.*$)/gm, '<li>$1</li>');
+    
+    // Wrap lists
+    html = html.replace(/(<li>.*<\/li>)/g, '<ul>$1</ul>');
+    
+    // Convert line breaks to paragraphs
+    const lines = html.split('\n');
+    let inList = false;
+    let result = '';
+    
+    for (const line of lines) {
+        if (line.startsWith('<ul>') || line.startsWith('<li>') || line.startsWith('</ul>')) {
+            result += line + '\n';
+            inList = line.startsWith('<ul>') || line.startsWith('<li>');
+        } else if (line.trim() === '') {
+            if (!inList) result += '<br>\n';
+        } else if (!line.startsWith('<h') && !line.startsWith('<ul') && !line.startsWith('</ul')) {
+            result += '<p>' + line + '</p>\n';
+        } else {
+            result += line + '\n';
+        }
+    }
+    
+    return result;
+}
+
 // --- SESSION HISTORY MANAGER ---
 class SessionHistory {
     constructor() {
         this.dbName = 'LectureScribeProSessions';
         this.storeName = 'sessions';
+        this.version = 1; // Increment if schema changes
         this.db = null;
         this.initDB();
     }
 
     async initDB() {
         return new Promise((resolve, reject) => {
-            const request = indexedDB.open(this.dbName, 1);
+            const request = indexedDB.open(this.dbName, this.version);
             request.onupgradeneeded = (e) => {
                 const db = e.target.result;
                 if (!db.objectStoreNames.contains(this.storeName)) {
                     const store = db.createObjectStore(this.storeName, { keyPath: 'id', autoIncrement: true });
                     store.createIndex('timestamp', 'timestamp', { unique: false });
                     store.createIndex('course', 'course', { unique: false });
+                    store.createIndex('version', 'version', { unique: false });
                 }
             };
             request.onsuccess = (e) => {
@@ -2070,6 +2167,7 @@ class SessionHistory {
             
             sessionData.timestamp = Date.now();
             sessionData.lastAccessed = Date.now();
+            sessionData.version = '2.1.0'; // Mark with current version
             
             const request = store.add(sessionData);
             request.onsuccess = () => {
@@ -2279,19 +2377,24 @@ async function loadSession(sessionId) {
         }
         
         if (session.study) {
-            document.getElementById('outputStudy').innerHTML = session.study;
+            const processedStudy = parseMarkdownWithMath(session.study);
+            document.getElementById('outputStudy').innerHTML = processedStudy;
             document.getElementById('btnDlStudy').disabled = false;
             rawStudyMarkdown = session.rawStudy || '';
         }
         
         if (session.scribe) {
-            document.getElementById('outputScribe').innerHTML = session.scribe;
+            const processedScribe = parseMarkdownWithMath(session.scribe);
+            document.getElementById('outputScribe').innerHTML = processedScribe;
             document.getElementById('btnDlScribe').disabled = false;
             rawScribeMarkdown = session.rawScribe || '';
         }
         
         if (session.flashcards) {
-            flashcardsData = session.flashcards;
+            flashcardsData = session.flashcards.map(card => ({
+                front: convertLatexToUnicode(card.front),
+                back: convertLatexToUnicode(card.back)
+            }));
             renderCard(0);
             document.getElementById('btnDlCards').disabled = false;
             document.getElementById('cardsBadge').textContent = `${flashcardsData.length} cards`;
@@ -2512,6 +2615,29 @@ function loginSuccess(loginView, mainContainer, loginStatus, btnLogin) {
 
 // --- ENHANCED INITIALIZATION ---
 document.addEventListener('DOMContentLoaded', () => {
+    // --- APP DETECTION LOGIC (APK HIDE/SHOW) ---
+    // Determine if we are running in an app wrapper or regular browser
+    const isRunningInApp = () => {
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        // 1. Check for standard Android WebView indicator 'wv'
+        if (/android/i.test(userAgent) && /wv/i.test(userAgent)) return true;
+        // 2. Check for iOS standalone mode (Added to Home Screen)
+        if (window.navigator.standalone === true) return true;
+        // 3. Check for modern PWA standalone mode
+        if (window.matchMedia('(display-mode: standalone)').matches) return true;
+        // 4. Check for custom 'app' parameter in URL (e.g. ?app=true)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('app')) return true;
+        
+        return false;
+    };
+
+    // Only show download button if NOT in app
+    if (!isRunningInApp()) {
+        const btnDownload = document.getElementById('btnDownloadApp');
+        if (btnDownload) btnDownload.classList.remove('hidden');
+    }
+
     // These will be set up after login, but we define them here
     document.getElementById('btnOpenHistory')?.addEventListener('click', () => {
         document.getElementById('historySidebar').classList.add('active');
@@ -3139,7 +3265,10 @@ function parseAndLoadCards(text) {
                 if (parts.length >= 2) {
                     front = parts[0].replace(/^"|"$/g, '').replace(/""/g, '"').trim();
                     let back = parts[1].replace(/^"|"$/g, '').replace(/""/g, '"').trim();
-                    newCards.push({ front, back });
+                    newCards.push({ 
+                        front: convertLatexToUnicode(front),
+                        back: convertLatexToUnicode(back)
+                    });
                 }
             }
         }
@@ -3378,9 +3507,10 @@ async function processMultiEngine() {
                 els.promptStudy.value.replace("[COURSE_NAME]", course)
             ]);
             rawStudyMarkdown = await res.response.text();
+            const processedStudy = convertLatexToUnicode(rawStudyMarkdown);
             
             if (els.outputStudy) {
-                els.outputStudy.innerHTML = marked.parse(rawStudyMarkdown);
+                els.outputStudy.innerHTML = marked.parse(processedStudy);
             }
             
             if (els.spinStudy) els.spinStudy.classList.add('hidden');
@@ -3408,9 +3538,10 @@ async function processMultiEngine() {
                 els.promptScribe.value.replace("[COURSE_NAME]", course)
             ]);
             rawScribeMarkdown = await res.response.text();
+            const processedScribe = convertLatexToUnicode(rawScribeMarkdown);
             
             if (els.outputScribe) {
-                els.outputScribe.innerHTML = marked.parse(rawScribeMarkdown);
+                els.outputScribe.innerHTML = marked.parse(processedScribe);
             }
             
             if (els.spinScribe) els.spinScribe.classList.add('hidden');
@@ -3437,7 +3568,11 @@ async function processMultiEngine() {
             const t3 = await res.response.text();
             
             try { 
-                flashcardsData = JSON.parse(t3.replace(/```json/g, '').replace(/```/g, '').trim()); 
+                const parsedCards = JSON.parse(t3.replace(/```json/g, '').replace(/```/g, '').trim());
+                flashcardsData = parsedCards.map(card => ({
+                    front: convertLatexToUnicode(card.front),
+                    back: convertLatexToUnicode(card.back)
+                }));
                 renderCard(0); 
             } catch (e) { 
                 flashcardsData = [{front: "Error generating cards", back: "Raw: " + t3}]; 
@@ -3504,7 +3639,7 @@ window.downloadRTF = (type) => {
         return;
     }
     
-    let rtfBody = markdownToRTF(markdown);
+    let rtfBody = markdownToRTF(convertLatexToUnicode(markdown));
     let rtf = `{\\rtf1\\ansi\\ansicpg1252\\deff0{\\fonttbl{\\f0 Arial;}}\\f0\\fs24 \n`;
     rtf += `{\\colortbl;\\red0\\green0\\blue0;\\red59\\green130\\blue246;}\n`; 
     rtf += `\\pard\\sa200\\sl276\\slmult1\\b\\fs36 ${course} - ${title.replace('_', ' ')}\\b0\\fs24 \\par \n`;
