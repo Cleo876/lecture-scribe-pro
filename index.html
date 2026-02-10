@@ -1035,7 +1035,7 @@
             flex-shrink: 0;
         }
 
-        /* Modals - FIXED: Added max-height and overflow handling */
+        /* Modals */
         .modal-overlay {
             position: fixed; 
             top: 0; 
@@ -1049,25 +1049,18 @@
             z-index: 3000; 
             backdrop-filter: blur(5px);
             animation: fadeIn 0.3s ease;
-            padding: 20px; /* Add padding for mobile */
-            box-sizing: border-box;
         }
         
         .modal-content {
             background: var(--surface); 
             border: 1px solid var(--border); 
-            padding: 1.5rem; 
+            padding: 2rem; 
             border-radius: var(--radius-lg);
             max-width: 500px; 
-            width: 100%; 
+            width: 90%; 
             color: var(--text-main); 
             box-shadow: var(--shadow-lg);
             animation: modalSlideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            max-height: 85vh; /* FIXED: Limit height relative to viewport */
-            overflow-y: auto; /* FIXED: Enable scrolling for tall content */
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
         }
 
         @keyframes modalSlideUp {
@@ -1167,19 +1160,6 @@
                 font-size: 0.85rem;
                 padding: 0.8rem 1rem;
             }
-            
-            /* FIXED: Modal adjustments for mobile */
-            .modal-overlay {
-                padding: 15px;
-                align-items: flex-start; /* Start from top on mobile */
-                padding-top: 40px; /* Add top padding */
-            }
-            
-            .modal-content {
-                max-height: 80vh;
-                padding: 1.2rem;
-                max-width: 100% !important; /* Override inline styles on mobile */
-            }
         }
 
         /* CUSTOM UTILITY CLASS: hides element on medium (≥768px) and larger screens */
@@ -1221,12 +1201,6 @@
             #login-view {
                 padding: 1.5rem;
                 margin: 1rem auto;
-            }
-            
-            /* FIXED: Further modal adjustments for very small screens */
-            .modal-content {
-                padding: 1rem;
-                max-height: 75vh;
             }
         }
 
@@ -1392,7 +1366,7 @@
                     <i class="fas fa-info-circle"></i> Free tier provides ~500 requests/day. Perfect for student use!
                 </p>
             </div>
-            <div class="modal-actions" style="display: flex; gap: 8px; justify-content: flex-end; margin-top: auto;">
+            <div class="modal-actions" style="display: flex; gap: 8px; justify-content: flex-end;">
                 <button id="btnCloseModal" class="btn btn-secondary btn-sm">
                     Close
                 </button>
@@ -1425,10 +1399,11 @@
             </div>
             
             <div class="header-right">
-                <!-- CHANGED: Get App button now triggers modal instead of direct download -->
-                <button id="btnDownloadApp" class="btn btn-app-dl btn-sm md:hidden">
+                <!-- DOWNLOAD BUTTON (Hidden by default, shown via JS if not in App) -->
+                <!-- REPLACE THE HREF WITH YOUR ACTUAL APK LINK -->
+                <a href="https://raw.githubusercontent.com/Cleo876/lecture-scribe-pro/refs/heads/main/app/lecture-scribe-pro.apk" id="btnDownloadApp" class="btn btn-app-dl btn-sm hidden md:hidden" download>
                     <i class="fab fa-android"></i> Get App
-                </button>
+                </a>
 
                 <button id="btnWatchTutorial" class="btn btn-primary btn-sm">
                     <i class="fas fa-play-circle"></i> Tutorial
@@ -1890,7 +1865,7 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
 
     <!-- Tutorial Video Modal -->
     <div id="tutorialModal" class="modal-overlay hidden">
-        <div class="modal-content" style="max-width: 700px; max-height: 85vh; overflow-y: auto;">
+        <div class="modal-content" style="max-width: 700px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
                 <h2 style="margin: 0; color: var(--primary); font-size: 1.3rem;">
                     <i class="fas fa-graduation-cap"></i> Lecture Scribe Pro Tutorial
@@ -1916,63 +1891,6 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
                     <li>Name your courses clearly for easy organization</li>
                     <li>Export flashcards regularly for spaced repetition</li>
                 </ul>
-            </div>
-        </div>
-    </div>
-
-    <!-- Installation Help Modal (UPDATED) -->
-    <div id="installHelpModal" class="modal-overlay hidden">
-        <div class="modal-content" style="max-width: 450px; max-height: 85vh; overflow-y: auto;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <h3 style="margin: 0; color: var(--primary); font-size: 1.2rem;">
-                    <i class="fas fa-mobile-alt"></i> App Installation Guide
-                </h3>
-                <button class="icon-btn" id="btnCloseInstallHelp">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <div style="margin-bottom: 1.2rem;">
-                <div style="background: rgba(59, 130, 246, 0.1); padding: 0.9rem; border-radius: var(--radius-md); margin-bottom: 1rem;">
-                    <p style="margin: 0; font-size: 0.9rem; color: var(--text-main); line-height: 1.5;">
-                        <strong>Installation Note:</strong> Since this is a specialized tool not on the Play Store, your phone will ask for permission.
-                    </p>
-                </div>
-                
-                <ol style="margin: 0; padding-left: 1.5rem; color: var(--text-main); line-height: 1.6;">
-                    <li style="margin-bottom: 0.8rem;">
-                        <strong>Download:</strong> Tap the "Download APK" button below
-                    </li>
-                    <li style="margin-bottom: 0.8rem;">
-                        <strong>Permission:</strong> If prompted, tap <span style="color: var(--success); font-weight: 600;">"Download Anyway"</span> or <span style="color: var(--success); font-weight: 600;">"Keep"</span>
-                    </li>
-                    <li style="margin-bottom: 0.8rem;">
-                        <strong>Install:</strong> Open the downloaded file from your Downloads folder
-                    </li>
-                    <li>
-                        <strong>Security:</strong> If needed, go to <span style="color: var(--primary); font-weight: 600;">Settings → Security</span> and enable <span style="color: var(--primary); font-weight: 600;">"Install from unknown sources"</span>
-                    </li>
-                </ol>
-            </div>
-            
-            <div style="background: rgba(16, 185, 129, 0.1); padding: 0.8rem; border-radius: var(--radius-md); border-left: 4px solid var(--success); margin-bottom: 1.2rem;">
-                <div style="display: flex; align-items: flex-start; gap: 8px;">
-                    <i class="fas fa-shield-alt" style="color: var(--success); font-size: 1rem; margin-top: 2px;"></i>
-                    <div>
-                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">
-                            <strong>This app is safe:</strong> Signed with a developer certificate and built for privacy. No ads, no tracking.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="modal-actions" style="display: flex; gap: 8px; justify-content: flex-end; margin-top: auto;">
-                <button id="btnCancelInstall" class="btn btn-secondary btn-sm">
-                    <i class="fas fa-times"></i> Cancel
-                </button>
-                <button id="btnDownloadApk" class="btn btn-primary btn-sm">
-                    <i class="fas fa-download"></i> Download APK
-                </button>
             </div>
         </div>
     </div>
@@ -2052,28 +1970,6 @@ function stopSpeech() {
         window.speechSynthesis.cancel();
         showToast("Speech stopped", "info");
     }
-}
-
-// --- APK DOWNLOAD FUNCTION ---
-function downloadApk() {
-    const apkUrl = "https://github.com/Cleo876/lecture-scribe-pro/raw/refs/heads/main/lecture-scribe-pro.apk";
-    
-    // Create a temporary anchor element to trigger download
-    const downloadLink = document.createElement('a');
-    downloadLink.href = apkUrl;
-    downloadLink.download = 'lecture-scribe-pro.apk';
-    downloadLink.style.display = 'none';
-    
-    // Append to body, click, and remove
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
-    
-    // Show download confirmation
-    showToast("APK download started. Check your notifications/downloads.", "success");
-    
-    // Close the modal
-    document.getElementById('installHelpModal').classList.add('hidden');
 }
 
 // --- TOAST NOTIFICATION SYSTEM ---
@@ -2749,31 +2645,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (btnDownload) btnDownload.classList.remove('hidden');
     }
 
-    // APK Download Button Event Listener
-    document.getElementById('btnDownloadApp')?.addEventListener('click', () => {
-        document.getElementById('installHelpModal').classList.remove('hidden');
-    });
-
-    // APK Download from Modal
-    document.getElementById('btnDownloadApk')?.addEventListener('click', downloadApk);
-
-    // Cancel Install
-    document.getElementById('btnCancelInstall')?.addEventListener('click', () => {
-        document.getElementById('installHelpModal').classList.add('hidden');
-    });
-
-    // Close Install Help Modal
-    document.getElementById('btnCloseInstallHelp')?.addEventListener('click', () => {
-        document.getElementById('installHelpModal').classList.add('hidden');
-    });
-
-    // Close modal when clicking outside
-    document.getElementById('installHelpModal')?.addEventListener('click', (e) => {
-        if (e.target.id === 'installHelpModal') {
-            document.getElementById('installHelpModal').classList.add('hidden');
-        }
-    });
-
     // These will be set up after login, but we define them here
     document.getElementById('btnOpenHistory')?.addEventListener('click', () => {
         document.getElementById('historySidebar').classList.add('active');
@@ -2810,7 +2681,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     document.getElementById('btnCloseTutorial')?.addEventListener('click', () => {
-        document.getElementById('tutorialModal').classList.add('hidden');
+        document.getElementById('tutorialModal')?.classList.add('hidden');
     });
     
     // Help modal controls
@@ -2916,7 +2787,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// --- FIXED DOWNLOAD FUNCTIONS ---
+// --- ORIGINAL DOWNLOAD FUNCTIONS (Placeholders - will be replaced by module) ---
 window.downloadFlashcards = () => {
     if (!flashcardsData.length) {
         showToast("No flashcards generated.", "error");
@@ -2931,78 +2802,18 @@ window.downloadFlashcards = () => {
     });
     
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
-    link.href = url;
+    link.href = URL.createObjectURL(blob);
     const course = document.getElementById('courseName')?.value || "Class";
     link.download = `${course.replace(/\s+/g,'_')}_AnkiDeck.csv`;
     link.click();
-    
-    // Revoke the object URL after download
-    setTimeout(() => {
-        URL.revokeObjectURL(url);
-    }, 100);
-    
     showToast("Flashcards downloaded successfully!", "success");
 };
 
-// FIXED: Updated downloadRTF function to properly handle blob URLs
 window.downloadRTF = (type) => {
-    const course = document.getElementById('courseName')?.value || "Class";
-    const title = type === 'study' ? "Study_Guide" : "Scribe_Notes";
-    const markdown = type === 'study' ? rawStudyMarkdown : rawScribeMarkdown;
-    
-    if(!markdown) {
-        showToast("Content not ready yet.", "warning");
-        return;
-    }
-    
-    // Use the existing markdownToRTF function from the module
-    if (typeof markdownToRTF !== 'function') {
-        // Fallback if module hasn't loaded
-        showToast("Please wait for content to finish processing.", "warning");
-        return;
-    }
-    
-    let rtfBody = markdownToRTF(convertLatexToUnicode(markdown));
-    let rtf = `{\\rtf1\\ansi\\ansicpg1252\\deff0{\\fonttbl{\\f0 Arial;}}\\f0\\fs24 \n`;
-    rtf += `{\\colortbl;\\red0\\green0\\blue0;\\red59\\green130\\blue246;}\n`; 
-    rtf += `\\pard\\sa200\\sl276\\slmult1\\b\\fs36 ${course} - ${title.replace('_', ' ')}\\b0\\fs24 \\par \n`;
-    rtf += `Generated: ${new Date().toLocaleString()} \\par \\par \n`;
-    rtf += `-------------------------------------------------- \\par \\par \n`;
-    rtf += rtfBody;
-    rtf += `\n}`;
-    
-    const blob = new Blob([rtf], { type: "application/rtf" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${course.replace(/\s+/g,'_')}_${title}.rtf`;
-    link.click();
-    
-    // Revoke the object URL after download
-    setTimeout(() => {
-        URL.revokeObjectURL(url);
-    }, 100);
-    
-    showToast(`${title} downloaded successfully!`, "success");
+    showToast("This function will be fully implemented in the module", "info");
+    // This will be properly implemented in the module script
 };
-
-// Simple fallback markdownToRTF function if module isn't loaded
-function markdownToRTF(md) {
-    if (typeof window.markdownToRTF === 'function') {
-        return window.markdownToRTF(md);
-    }
-    
-    // Basic fallback
-    return md
-        .replace(/^# (.*$)/gm, '\\b\\fs32 $1\\b0\\fs24\\par ')
-        .replace(/^## (.*$)/gm, '\\b\\fs28 $1\\b0\\fs24\\par ')
-        .replace(/^### (.*$)/gm, '\\b\\i $1\\i0\\b0\\par ')
-        .replace(/\*\*(.*?)\*\*/g, '\\b $1\\b0 ')
-        .replace(/\*(.*?)\*/g, '\\i $1\\i0 ')
-        .replace(/\n/g, '\\par ');
-}
 
 // --- SET ACTIVE TAB FUNCTION ---
 function setActiveTab(tabName) {
@@ -3824,7 +3635,7 @@ function blobToBase64(blob) {
     });
 }
 
-// FIXED: Proper downloadRTF implementation with blob URL cleanup
+// Override the global downloadRTF function with proper implementation
 window.downloadRTF = (type) => {
     const course = els.courseName?.value || "Class";
     const title = type === 'study' ? "Study_Guide" : "Scribe_Notes";
@@ -3845,26 +3656,13 @@ window.downloadRTF = (type) => {
     rtf += `\n}`;
     
     const blob = new Blob([rtf], { type: "application/rtf" });
-    const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
-    link.href = url;
+    link.href = URL.createObjectURL(blob);
     link.download = `${course.replace(/\s+/g,'_')}_${title}.rtf`;
-    
-    // Append to body, trigger download, and clean up
-    document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
-    
-    // Revoke the object URL after download
-    setTimeout(() => {
-        URL.revokeObjectURL(url);
-    }, 100);
     
     showToast(`${title} downloaded successfully!`, "success");
 };
-
-// Export markdownToRTF function globally for fallback
-window.markdownToRTF = markdownToRTF;
 
 function markdownToRTF(md) {
     let lines = md.split('\n');
