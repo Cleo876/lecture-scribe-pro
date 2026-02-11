@@ -1401,7 +1401,7 @@
             <div class="header-right">
                 <!-- DOWNLOAD BUTTON (Hidden by default, shown via JS if not in App) -->
                 <!-- REPLACE THE HREF WITH YOUR ACTUAL APK LINK -->
-                <a href="https://raw.githubusercontent.com/Cleo876/lecture-scribe-pro/refs/heads/main/app/lecture-scribe-pro.apk" id="btnDownloadApp" class="btn btn-app-dl btn-sm hidden md:hidden" download>
+                <a href="https://raw.githubusercontent.com/Cleo876/lecture-scribe-pro/refs/heads/main/app/lecture-scribe-pro.apk" id="btnDownloadApp" class="btn btn-app-dl btn-sm md:hidden" download>
                     <i class="fab fa-android"></i> Get App
                 </a>
 
@@ -1945,10 +1945,10 @@ const isRunningInApp = () => {
 
 function adjustButtonsForApp() {
     if (isRunningInApp()) {
+        // Hide BOTH buttons in app
         const btnFullscreen = document.getElementById('btnFullscreen');
-        if (btnFullscreen) btnFullscreen.classList.add('hidden');
-        
         const btnDownloadApp = document.getElementById('btnDownloadApp');
+        if (btnFullscreen) btnFullscreen.classList.add('hidden');
         if (btnDownloadApp) btnDownloadApp.classList.add('hidden');
     }
 }
