@@ -1162,13 +1162,6 @@
             }
         }
 
-        /* CUSTOM UTILITY CLASS: hides element on medium (≥768px) and larger screens */
-        @media (min-width: 768px) {
-            .md\:hidden {
-                display: none !important;
-            }
-        }
-
         @media (max-width: 480px) {
             .app-header {
                 flex-wrap: wrap;
@@ -1401,7 +1394,7 @@
             <div class="header-right">
                 <!-- DOWNLOAD BUTTON (Hidden by default, shown via JS if not in App) -->
                 <!-- REPLACE THE HREF WITH YOUR ACTUAL APK LINK -->
-                <a href="https://raw.githubusercontent.com/Cleo876/lecture-scribe-pro/refs/heads/main/app/lecture-scribe-pro.apk" id="btnDownloadApp" class="btn btn-app-dl btn-sm md:hidden" download>
+                <a href="https://raw.githubusercontent.com/Cleo876/lecture-scribe-pro/refs/heads/main/app/lecture-scribe-pro.apk" id="btnDownloadApp" class="btn btn-app-dl btn-sm hidden md:hidden" download>
                     <i class="fab fa-android"></i> Get App
                 </a>
 
@@ -1907,52 +1900,6 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
 
 <!-- GLOBAL SCRIPTS (Non-Module) to ensure availability -->
 <script>
-// --- BACKGROUND ANIMATION ---
-function initBackgroundAnimation() {
-    const bgAnimation = document.getElementById('bgAnimation');
-    for (let i = 0; i < 15; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'bg-particle';
-        particle.style.width = Math.random() * 100 + 50 + 'px';
-        particle.style.height = particle.style.width;
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.top = Math.random() * 100 + '%';
-        particle.style.background = `radial-gradient(circle, 
-            rgba(${Math.random() * 100 + 155}, ${Math.random() * 100 + 155}, 255, 0.1),
-            transparent 70%)`;
-        particle.style.animationDelay = Math.random() * 20 + 's';
-        particle.style.animationDuration = Math.random() * 30 + 30 + 's';
-        bgAnimation.appendChild(particle);
-    }
-}
-
-// --- APP DETECTION LOGIC (APK HIDE/SHOW) ---
-// Determine if we are running in an app wrapper or regular browser
-const isRunningInApp = () => {
-    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    // 1. Check for standard Android WebView indicator 'wv'
-    if (/android/i.test(userAgent) && /wv/i.test(userAgent)) return true;
-    // 2. Check for iOS standalone mode (Added to Home Screen)
-    if (window.navigator.standalone === true) return true;
-    // 3. Check for modern PWA standalone mode
-    if (window.matchMedia('(display-mode: standalone)').matches) return true;
-    // 4. Check for custom 'app' parameter in URL (e.g. ?app=true)
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('app')) return true;
-    
-    return false;
-};
-
-function adjustButtonsForApp() {
-    if (isRunningInApp()) {
-        // Hide BOTH buttons in app
-        const btnFullscreen = document.getElementById('btnFullscreen');
-        const btnDownloadApp = document.getElementById('btnDownloadApp');
-        if (btnFullscreen) btnFullscreen.classList.add('hidden');
-        if (btnDownloadApp) btnDownloadApp.classList.add('hidden');
-    }
-}
-
 // --- TEXT TO SPEECH LOGIC (Enhanced) ---
 function speakText(elementId) {
     if (!('speechSynthesis' in window)) {
@@ -2034,6 +1981,25 @@ function showToast(message, type = "info") {
         toast.classList.remove('show');
         setTimeout(() => toast.remove(), 300);
     }, 3000);
+}
+
+// --- BACKGROUND ANIMATION ---
+function initBackgroundAnimation() {
+    const bgAnimation = document.getElementById('bgAnimation');
+    for (let i = 0; i < 15; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'bg-particle';
+        particle.style.width = Math.random() * 100 + 50 + 'px';
+        particle.style.height = particle.style.width;
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.background = `radial-gradient(circle, 
+            rgba(${Math.random() * 100 + 155}, ${Math.random() * 100 + 155}, 255, 0.1),
+            transparent 70%)`;
+        particle.style.animationDelay = Math.random() * 20 + 's';
+        particle.style.animationDuration = Math.random() * 30 + 30 + 's';
+        bgAnimation.appendChild(particle);
+    }
 }
 
 // --- LATEX TO UNICODE CONVERSION ---
@@ -2522,8 +2488,6 @@ document.addEventListener('DOMContentLoaded', () => {
             loginView.style.display = 'none';
             mainContainer.classList.remove('hidden');
             document.body.style.userSelect = "auto";
-            // Adjust buttons for app
-            adjustButtonsForApp();
             // Note: We don't return here so that event listeners below still attach correctly
         } else {
             // Session Expired
@@ -2535,7 +2499,6 @@ document.addEventListener('DOMContentLoaded', () => {
         loginView.style.display = 'none';
         mainContainer.classList.remove('hidden');
         document.body.style.userSelect = "auto";
-        adjustButtonsForApp();
         return;
     }
 
@@ -2643,9 +2606,6 @@ function loginSuccess(loginView, mainContainer, loginStatus, btnLogin) {
         document.body.style.userSelect = "auto";
         btnLogin.disabled = false;
 
-        // Adjust buttons for app
-        adjustButtonsForApp();
-
         // Load session history after successful login
         setTimeout(() => {
             loadSessionHistory();
@@ -2655,6 +2615,29 @@ function loginSuccess(loginView, mainContainer, loginStatus, btnLogin) {
 
 // --- ENHANCED INITIALIZATION ---
 document.addEventListener('DOMContentLoaded', () => {
+    // --- APP DETECTION LOGIC (APK HIDE/SHOW) ---
+    // Determine if we are running in an app wrapper or regular browser
+    const isRunningInApp = () => {
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        // 1. Check for standard Android WebView indicator 'wv'
+        if (/android/i.test(userAgent) && /wv/i.test(userAgent)) return true;
+        // 2. Check for iOS standalone mode (Added to Home Screen)
+        if (window.navigator.standalone === true) return true;
+        // 3. Check for modern PWA standalone mode
+        if (window.matchMedia('(display-mode: standalone)').matches) return true;
+        // 4. Check for custom 'app' parameter in URL (e.g. ?app=true)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('app')) return true;
+        
+        return false;
+    };
+
+    // Only show download button if NOT in app
+    if (!isRunningInApp()) {
+        const btnDownload = document.getElementById('btnDownloadApp');
+        if (btnDownload) btnDownload.classList.remove('hidden');
+    }
+
     // These will be set up after login, but we define them here
     document.getElementById('btnOpenHistory')?.addEventListener('click', () => {
         document.getElementById('historySidebar').classList.add('active');
@@ -3102,24 +3085,81 @@ function setupEventListeners() {
     // API Key input
     if (els.apiKey) {
         els.apiKey.addEventListener('input', (e) => {
-            const key = e.target.value.trim();
-            localStorage.setItem('lsp_gemini_key', key);
-            clearTimeout(debounceTimer);
-            if (key.length > 20) { 
-                if (els.modelLoadStatus) {
-                    els.modelLoadStatus.textContent = "Checking key...";
-                    els.modelLoadStatus.style.color = "var(--text-muted)";
-                }
-                debounceTimer = setTimeout(() => { loadModels(key); }, 800); 
-            } else { 
-                if (els.modelLoadStatus) els.modelLoadStatus.textContent = ""; 
+        const key = e.target.value.trim();
+        localStorage.setItem('lsp_gemini_key', key);
+        clearTimeout(debounceTimer);
+        if (key.length > 20) { 
+            if (els.modelLoadStatus) {
+                els.modelLoadStatus.textContent = "Checking key...";
+                els.modelLoadStatus.style.color = "var(--text-muted)";
             }
-        });
+            debounceTimer = setTimeout(() => { loadModels(key); }, 800); 
+        } else { 
+            if (els.modelLoadStatus) els.modelLoadStatus.textContent = ""; 
+        }
+    });
+
+    async function loadModels(key) {
+        try {
+            const cleanKey = key.trim();
+            const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${cleanKey}`);
+            
+            if (!resp.ok) {
+                let errText = `HTTP Error ${resp.status}`;
+                try {
+                    const errData = await resp.json();
+                    if (errData.error && errData.error.message) errText = errData.error.message;
+                } catch(e) {}
+                throw new Error(errText);
+            }
+            
+            const data = await resp.json();
+            const models = (data.models || []).filter(m => m.supportedGenerationMethods?.includes("generateContent"))
+                .map(m => m.name.replace('models/', '')).sort();
+            
+            if (els.modelSelect && models.length > 0) {
+                const currentVal = els.modelSelect.value;
+                els.modelSelect.innerHTML = "";
+                
+                let hasFlash = false;
+                models.forEach(m => {
+                    const opt = document.createElement("option");
+                    opt.value = m; 
+                    
+                    if (m.includes("flash")) opt.textContent = `🚀 ${m} (Fast & Free)`;
+                    else if (m.includes("pro")) opt.textContent = `🧠 ${m} (Advanced)`;
+                    else opt.textContent = m;
+                    
+                    els.modelSelect.appendChild(opt);
+                    if (m.includes("flash") && !m.includes("8b")) hasFlash = true;
+                });
+                
+                if (models.includes(currentVal)) {
+                    els.modelSelect.value = currentVal;
+                } else if (hasFlash) {
+                    const defaultModel = models.find(m => m.includes("flash") && !m.includes("8b"));
+                    if (defaultModel) els.modelSelect.value = defaultModel;
+                }
+            }
+            
+            if (els.modelLoadStatus) {
+                els.modelLoadStatus.textContent = "✓ Key Valid & Models Loaded"; 
+                els.modelLoadStatus.style.color = "var(--success)";
+            }
+            updateQuotaDisplay();
+        } catch (e) {
+            if (els.modelLoadStatus) {
+                let displayError = e.message;
+                if (displayError.includes('Failed to fetch')) {
+                    displayError = "Network error. Check internet or extensions blocking APIs.";
+                }
+                els.modelLoadStatus.textContent = "✗ Error: " + displayError;
+                els.modelLoadStatus.style.color = "var(--danger)";
+            }
+        }
     }
 
-    // Model select change
-    if (els.modelSelect) {
-        els.modelSelect.addEventListener('change', updateQuotaDisplay);
+    els.modelSelect.addEventListener('change', updateQuotaDisplay);
     }
 
     // File upload
