@@ -1341,22 +1341,22 @@
         </div>
     </div>
 
-    <!-- API Key Help Modal -->
+    <!-- API Key Help Modal (Updated Terminology) -->
     <div id="helpModal" class="modal-overlay hidden">
         <div class="modal-content">
             <div class="modal-title" style="font-size: 1.3rem; margin-bottom: 1rem; color: var(--primary);">
-                <i class="fas fa-key"></i> Get Your Free API Key
+                <i class="fas fa-key"></i> Get Your Free Gemini API Key
             </div>
             <ol class="step-list" style="margin: 1.2rem 0; padding-left: 1.5rem; line-height: 1.6; font-size: 0.9rem;">
                 <li><strong>Sign In:</strong> Log in to your Google account</li>
-                <li><strong>Create Key:</strong> Click the blue "Create API key" button</li>
+                <li><strong>Create Key:</strong> Click the blue "Create API key" button in Google AI Studio</li>
                 <li><strong>Select Project:</strong> Choose "Create new project"</li>
                 <li><strong>Copy Key:</strong> Click the <i class="fas fa-copy"></i> copy icon</li>
                 <li><strong>Paste Here:</strong> Return and paste in the API Key field</li>
             </ol>
             <div style="background: rgba(59, 130, 246, 0.1); padding: 0.9rem; border-radius: var(--radius-md); margin: 1.2rem 0;">
                 <p style="margin: 0; font-size: 0.85rem; color: #93c5fd;">
-                    <i class="fas fa-info-circle"></i> Free tier provides ~500 requests/day. Perfect for student use!
+                    <i class="fas fa-info-circle"></i> Free tier provides ~1,500 requests/day. Perfect for student use!
                 </p>
             </div>
             <div class="modal-actions" style="display: flex; gap: 8px; justify-content: flex-end;">
@@ -1455,7 +1455,7 @@
                 </span>
             </div>
 
-            <!-- API Configuration -->
+            <!-- API Configuration (Updated terminology & defaults) -->
             <div class="card">
                 <div class="input-group">
                     <div class="label-row">
@@ -1465,15 +1465,17 @@
                         </a>
                     </div>
                     <input type="password" id="apiKey" class="form-control" 
-                           placeholder="Paste your AI Studio Key here (Auto-saves)">
+                           placeholder="Paste your Gemini API Key here (Auto-saves)">
                     <span id="modelLoadStatus" style="font-size: 0.8rem; margin-top: 6px; display: block; height: 1.2rem;"></span>
                 </div>
                 
                 <div class="input-group">
                     <label for="modelSelect"><i class="fas fa-robot"></i> AI Model</label>
                     <select id="modelSelect" class="form-control">
-                        <option value="gemini-1.5-flash">🚀 Gemini 1.5 Flash (Fast & Free)</option>
-                        <option value="gemini-1.5-pro">🧠 Gemini 1.5 Pro (Advanced)</option>
+                        <option value="gemini-2.0-flash">🚀 Gemini 2.0 Flash (Fast & Free)</option>
+                        <option value="gemini-2.0-pro-exp">🧠 Gemini 2.0 Pro (Advanced)</option>
+                        <option value="gemini-1.5-flash">⚡ Gemini 1.5 Flash (Legacy Fast)</option>
+                        <option value="gemini-1.5-pro">🧠 Gemini 1.5 Pro (Legacy Pro)</option>
                     </select>
                     <div class="model-info" style="margin-top: 8px; padding: 8px; background: rgba(59, 130, 246, 0.05); 
                                                 border-radius: var(--radius-sm); border: 1px solid rgba(59, 130, 246, 0.2); font-size: 0.8rem;">
@@ -1481,10 +1483,8 @@
                             <i class="fas fa-chart-line" style="color: var(--primary); font-size: 0.9rem;"></i>
                             <span style="font-weight: 600; color: var(--primary);">Free Tier Limits:</span>
                         </div>
-                        <div style="line-height: 1.4; color: var(--text-muted);">
-                            • Flash: ~500 recordings/day<br>
-                            • Pro: ~16 recordings/day<br>
-                            • Speed limit: 1-5 recordings/minute
+                        <div id="quotaInfo" style="line-height: 1.4; color: var(--text-muted);">
+                            Google API Quota: <span>~500 recordings/day</span> (1500 req/day).<br>Speed Limit: <span>15 recordings/minute</span>.
                         </div>
                     </div>
                 </div>
@@ -1534,7 +1534,7 @@
 
             <!-- Record Mode -->
             <div id="modeRecord">
-                <button id="btnStart" class="btn btn-primary" style="font-size: 1rem; padding: 1rem;">
+                <button id="btnStart" class="btn btn-primary" style="font-size: 1rem; padding: 1rem; width: 100%;">
                     <i class="fas fa-circle"></i> Start Recording Session
                 </button>
                 <div style="text-align: center; margin-top: 1.2rem; color: var(--text-muted); font-size: 0.8rem;">
@@ -1567,7 +1567,7 @@
                         </div>
                     </div>
                 </div>
-                <button id="btnUploadProcess" class="btn btn-primary" style="margin-top: 8px;">
+                <button id="btnUploadProcess" class="btn btn-primary" style="margin-top: 8px; width: 100%;">
                     <i class="fas fa-cogs"></i> Process Uploaded File
                 </button>
             </div>
@@ -1879,7 +1879,7 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
                     <i class="fas fa-tips"></i> Quick Tips
                 </h4>
                 <ul style="margin: 0; padding-left: 1.2rem; color: var(--text-muted); line-height: 1.5; font-size: 0.9rem;">
-                    <li>Save your API key for automatic login next time</li>
+                    <li>Save your Gemini API key for automatic login next time</li>
                     <li>Use headphones for better recording quality</li>
                     <li>Name your courses clearly for easy organization</li>
                     <li>Export flashcards regularly for spaced repetition</li>
@@ -2259,7 +2259,6 @@ class SessionHistory {
     }
 }
 
-// Initialize session history manager
 const sessionHistory = new SessionHistory();
 
 // --- ENHANCED UI FUNCTIONS ---
@@ -3126,18 +3125,21 @@ function setupEventListeners() {
                     const opt = document.createElement("option");
                     opt.value = m; 
                     
-                    if (m.includes("flash")) opt.textContent = `🚀 ${m} (Fast & Free)`;
-                    else if (m.includes("pro")) opt.textContent = `🧠 ${m} (Advanced)`;
+                    if (m.includes("2.0-flash")) opt.textContent = `🚀 ${m} (Fast & Free)`;
+                    else if (m.includes("2.0-pro")) opt.textContent = `🧠 ${m} (Advanced)`;
+                    else if (m.includes("flash")) opt.textContent = `⚡ ${m} (Legacy Fast)`;
+                    else if (m.includes("pro")) opt.textContent = `🧠 ${m} (Legacy Pro)`;
                     else opt.textContent = m;
                     
                     els.modelSelect.appendChild(opt);
                     if (m.includes("flash") && !m.includes("8b")) hasFlash = true;
                 });
                 
+                // Prioritize 2.0 flash over older variants
                 if (models.includes(currentVal)) {
                     els.modelSelect.value = currentVal;
                 } else if (hasFlash) {
-                    const defaultModel = models.find(m => m.includes("flash") && !m.includes("8b"));
+                    const defaultModel = models.find(m => m.includes("2.0-flash") && !m.includes("8b")) || models.find(m => m.includes("flash") && !m.includes("8b"));
                     if (defaultModel) els.modelSelect.value = defaultModel;
                 }
             }
@@ -3278,7 +3280,7 @@ async function loadModels(key) {
                 const opt = document.createElement("option");
                 opt.value = m; 
                 opt.textContent = m;
-                if(m.includes("flash") && !m.includes("8b")) opt.selected = true;
+                if(m.includes("2.0-flash") && !m.includes("8b")) opt.selected = true;
                 els.modelSelect.appendChild(opt);
             });
         }
@@ -3301,9 +3303,9 @@ function updateQuotaDisplay() {
     
     const model = els.modelSelect.value;
     if (model.includes("flash")) {
-        els.quotaInfo.innerHTML = `Google API Quota: <span>~500 recordings/day</span> (1500 req/day).<br>Speed Limit: <span>5 recordings/minute</span> (15 req/min).`;
+        els.quotaInfo.innerHTML = `Google API Quota: <span>~1500 req/day</span>.<br>Speed Limit: <span>15 req/minute</span>.`;
     } else if (model.includes("pro")) {
-         els.quotaInfo.innerHTML = `Google API Quota: <span>~16 recordings/day</span> (50 req/day).<br>Speed Limit: <span>~1 recording/minute</span> (2 req/min).`;
+         els.quotaInfo.innerHTML = `Google API Quota: <span>~50 req/day</span>.<br>Speed Limit: <span>2 req/minute</span>.`;
     }
 }
 
@@ -3346,7 +3348,7 @@ function parseAndLoadCards(text) {
 
 async function startRecording() {
     if (!els.apiKey.value) {
-        showToast("Please enter your API Key.", "error");
+        showToast("Please enter your Gemini API Key.", "error");
         return;
     }
     
@@ -3468,7 +3470,7 @@ async function stopRecording() {
 
 async function processUploadedFile() {
     if (!els.apiKey.value) {
-        showToast("Please enter your API Key.", "error");
+        showToast("Please enter your Gemini API Key.", "error");
         return;
     }
     
