@@ -340,6 +340,11 @@
             position: relative;
             overflow: hidden;
         }
+        
+        .session-item.failed {
+            border-color: rgba(239, 68, 68, 0.5);
+            background: rgba(239, 68, 68, 0.05);
+        }
 
         .session-item::before {
             content: '';
@@ -1345,18 +1350,18 @@
     <div id="helpModal" class="modal-overlay hidden">
         <div class="modal-content">
             <div class="modal-title" style="font-size: 1.3rem; margin-bottom: 1rem; color: var(--primary);">
-                <i class="fas fa-key"></i> Get Your Free Gemini API Key
+                <i class="fas fa-key"></i> Get Your Free API Key
             </div>
             <ol class="step-list" style="margin: 1.2rem 0; padding-left: 1.5rem; line-height: 1.6; font-size: 0.9rem;">
                 <li><strong>Sign In:</strong> Log in to your Google account</li>
-                <li><strong>Create Key:</strong> Click the blue "Create API key" button in Google AI Studio</li>
+                <li><strong>Create Key:</strong> Click the blue "Create API key" button</li>
                 <li><strong>Select Project:</strong> Choose "Create new project"</li>
                 <li><strong>Copy Key:</strong> Click the <i class="fas fa-copy"></i> copy icon</li>
                 <li><strong>Paste Here:</strong> Return and paste in the API Key field</li>
             </ol>
             <div style="background: rgba(59, 130, 246, 0.1); padding: 0.9rem; border-radius: var(--radius-md); margin: 1.2rem 0;">
                 <p style="margin: 0; font-size: 0.85rem; color: #93c5fd;">
-                    <i class="fas fa-info-circle"></i> Free tier provides ~1,500 requests/day. Perfect for student use!
+                    <i class="fas fa-info-circle"></i> Free tier provides ~500 requests/day. Perfect for student use!
                 </p>
             </div>
             <div class="modal-actions" style="display: flex; gap: 8px; justify-content: flex-end;">
@@ -1465,7 +1470,7 @@
                         </a>
                     </div>
                     <input type="password" id="apiKey" class="form-control" 
-                           placeholder="Paste your Gemini API Key here (Auto-saves)">
+                           placeholder="Paste your AI Studio Key here (Auto-saves)">
                     <span id="modelLoadStatus" style="font-size: 0.8rem; margin-top: 6px; display: block; height: 1.2rem;"></span>
                 </div>
                 
@@ -1484,7 +1489,9 @@
                             <span style="font-weight: 600; color: var(--primary);">Free Tier Limits:</span>
                         </div>
                         <div id="quotaInfo" style="line-height: 1.4; color: var(--text-muted);">
-                            Google API Quota: <span>~1500 req/day</span>.<br>Speed Limit: <span>15 req/minute</span>.
+                            • Flash: ~500 recordings/day<br>
+                            • Pro: ~16 recordings/day<br>
+                            • Speed limit: 1-5 recordings/minute
                         </div>
                     </div>
                 </div>
@@ -1553,7 +1560,7 @@
                         <label style="margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
                             <i class="fas fa-file-audio"></i> Select Audio File
                         </label>
-                        <!-- Added extensive formats to ensure webviews handle intents properly -->
+                        <!-- FIXED: Enhanced accept attribute to support all Android intent mechanisms via WV -->
                         <input type="file" id="fileUpload" accept="audio/*, .mp3, .wav, .m4a, .aac, .flac, .ogg, video/*" class="hidden">
                         <button id="btnSelectFile" class="btn btn-secondary" style="width: 100%; padding: 0.9rem;">
                             <i class="fas fa-folder-open" style="font-size: 1.1rem;"></i>
@@ -1880,7 +1887,7 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
                     <i class="fas fa-tips"></i> Quick Tips
                 </h4>
                 <ul style="margin: 0; padding-left: 1.2rem; color: var(--text-muted); line-height: 1.5; font-size: 0.9rem;">
-                    <li>Save your Gemini API key for automatic login next time</li>
+                    <li>Save your API key for automatic login next time</li>
                     <li>Use headphones for better recording quality</li>
                     <li>Name your courses clearly for easy organization</li>
                     <li>Export flashcards regularly for spaced repetition</li>
@@ -2129,12 +2136,12 @@ function parseMarkdownWithMath(markdown) {
     return result;
 }
 
-// --- SESSION HISTORY MANAGER ---
+// --- SESSION HISTORY MANAGER (ENHANCED FOR RETRIES) ---
 class SessionHistory {
     constructor() {
         this.dbName = 'LectureScribeProSessions';
         this.storeName = 'sessions';
-        this.version = 1; // Increment if schema changes
+        this.version = 2; // Incremented for blob feature
         this.db = null;
         this.initDB();
     }
@@ -2166,13 +2173,13 @@ class SessionHistory {
             const tx = this.db.transaction(this.storeName, 'readwrite');
             const store = tx.objectStore(this.storeName);
             
-            sessionData.timestamp = Date.now();
             sessionData.lastAccessed = Date.now();
-            sessionData.version = '2.1.0'; // Mark with current version
+            sessionData.version = '2.2.0'; 
             
-            const request = store.add(sessionData);
+            const request = sessionData.id ? store.put(sessionData) : store.add(sessionData);
             request.onsuccess = () => {
-                resolve(request.result);
+                sessionData.id = request.result;
+                resolve(sessionData.id);
                 showToast("Session saved successfully!", "success");
             };
             request.onerror = (e) => reject(e.target.error);
@@ -2260,6 +2267,7 @@ class SessionHistory {
     }
 }
 
+// Initialize session history manager
 const sessionHistory = new SessionHistory();
 
 // --- ENHANCED UI FUNCTIONS ---
@@ -2308,7 +2316,8 @@ async function loadSessionHistory() {
         
         sessions.forEach(session => {
             const sessionItem = document.createElement('div');
-            sessionItem.className = 'session-item';
+            const isFailed = session.status === 'failed';
+            sessionItem.className = `session-item ${isFailed ? 'failed' : ''}`;
             sessionItem.dataset.id = session.id;
             
             sessionItem.innerHTML = `
@@ -2316,7 +2325,8 @@ async function loadSessionHistory() {
                 <div class="session-date">
                     <i class="far fa-calendar"></i>
                     ${formatDate(session.timestamp)}
-                    ${session.flashcards ? `<span style="margin-left: 8px;"><i class="fas fa-layer-group"></i> ${session.flashcards.length} cards</span>` : ''}
+                    ${isFailed ? `<span style="color: var(--danger); margin-left: 8px;"><i class="fas fa-exclamation-triangle"></i> Failed - Click to Retry</span>` :
+                    (session.flashcards ? `<span style="margin-left: 8px;"><i class="fas fa-layer-group"></i> ${session.flashcards.length} cards</span>` : '')}
                 </div>
                 <div class="session-actions">
                     <button class="session-action-btn delete-session" title="Delete">
@@ -2327,7 +2337,20 @@ async function loadSessionHistory() {
             
             sessionItem.addEventListener('click', async (e) => {
                 if (!e.target.closest('.session-action-btn')) {
-                    await loadSession(session.id);
+                    if (isFailed && session.audioBlob) {
+                        if (confirm('Retry processing this failed session?')) {
+                            document.getElementById('historySidebar').classList.remove('active');
+                            document.getElementById('courseName').value = session.course || '';
+                            
+                            // Using a Custom Event to pass data to the module script
+                            const retryEvent = new CustomEvent('retrySession', { 
+                                detail: { blob: session.audioBlob, id: session.id } 
+                            });
+                            document.dispatchEvent(retryEvent);
+                        }
+                    } else {
+                        await loadSession(session.id);
+                    }
                 }
             });
             
@@ -2404,6 +2427,9 @@ async function loadSession(sessionId) {
         document.getElementById('studyBadge').textContent = session.study ? '✓ Ready' : 'Empty';
         document.getElementById('scribeBadge').textContent = session.scribe ? '✓ Ready' : 'Empty';
         
+        // Let the module know which ID is currently loaded
+        document.dispatchEvent(new CustomEvent('sessionLoaded', { detail: { id: session.id } }));
+        
         // Switch to result view
         switchView('result');
         setActiveTab('Study');
@@ -2418,34 +2444,6 @@ async function loadSession(sessionId) {
         showToast('Failed to load session', 'error');
     } finally {
         document.getElementById('loadingOverlay').classList.add('hidden');
-    }
-}
-
-async function saveCurrentSession() {
-    const course = document.getElementById('courseName').value || 'Unnamed Lecture';
-    const studyHTML = document.getElementById('outputStudy').innerHTML;
-    const scribeHTML = document.getElementById('outputScribe').innerHTML;
-    
-    if (!studyHTML.includes('skeleton') && !scribeHTML.includes('skeleton') && flashcardsData.length > 0) {
-        const sessionData = {
-            course: course,
-            timestamp: Date.now(),
-            study: studyHTML,
-            scribe: scribeHTML,
-            flashcards: flashcardsData,
-            rawStudy: rawStudyMarkdown,
-            rawScribe: rawScribeMarkdown
-        };
-        
-        try {
-            await sessionHistory.saveSession(sessionData);
-            await loadSessionHistory();
-        } catch (error) {
-            console.error('Error saving session:', error);
-            showToast('Failed to save session', 'error');
-        }
-    } else {
-        showToast('Please wait for all content to generate before saving', 'warning');
     }
 }
 
@@ -2665,9 +2663,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('activeCard').classList.toggle('flipped');
     });
     
-    // Enhanced save session function
-    window.saveSession = saveCurrentSession;
-    
     // Tutorial modal controls
     document.getElementById('btnWatchTutorial')?.addEventListener('click', () => {
         document.getElementById('tutorialModal')?.classList.remove('hidden');
@@ -2862,6 +2857,55 @@ let currentBlob = null;
 let debounceTimer; 
 let elapsedMs = 0; 
 let totalSize = 0;
+
+// Added for retry logic
+let currentSessionId = null;
+
+// Allow HTML button to trigger save function explicitly
+window.saveSession = async () => {
+    const course = document.getElementById('courseName').value || 'Unnamed Lecture';
+    const studyHTML = document.getElementById('outputStudy').innerHTML;
+    const scribeHTML = document.getElementById('outputScribe').innerHTML;
+    
+    if (!studyHTML.includes('skeleton') && !scribeHTML.includes('skeleton') && flashcardsData.length > 0) {
+        const sessionData = {
+            course: course,
+            timestamp: Date.now(),
+            status: 'completed',
+            study: studyHTML,
+            scribe: scribeHTML,
+            flashcards: flashcardsData,
+            rawStudy: rawStudyMarkdown,
+            rawScribe: rawScribeMarkdown
+        };
+        
+        if (currentSessionId) {
+            sessionData.id = currentSessionId;
+        }
+        
+        try {
+            currentSessionId = await sessionHistory.saveSession(sessionData);
+            await loadSessionHistory();
+        } catch (error) {
+            console.error('Error saving session:', error);
+            showToast('Failed to save session', 'error');
+        }
+    } else {
+        showToast('Please wait for all content to generate before saving', 'warning');
+    }
+};
+
+// Listen for Session Loading from JS
+document.addEventListener('sessionLoaded', (e) => {
+    currentSessionId = e.detail.id;
+});
+
+// Listen for Retry events from the History Menu
+document.addEventListener('retrySession', (e) => {
+    currentBlob = e.detail.blob;
+    currentSessionId = e.detail.id;
+    processMultiEngine(currentSessionId);
+});
 
 class AudioDB {
     constructor(dbName = 'LectureScribePro', storeName = 'audioChunks') {
@@ -3099,78 +3143,13 @@ function setupEventListeners() {
         }
     });
 
-    async function loadModels(key) {
-        try {
-            const cleanKey = key.trim();
-            const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${cleanKey}`);
-            
-            if (!resp.ok) {
-                let errText = `HTTP Error ${resp.status}`;
-                try {
-                    const errData = await resp.json();
-                    if (errData.error && errData.error.message) errText = errData.error.message;
-                } catch(e) {}
-                throw new Error(errText);
-            }
-            
-            const data = await resp.json();
-            const models = (data.models || []).filter(m => m.supportedGenerationMethods?.includes("generateContent"))
-                .map(m => m.name.replace('models/', '')).sort();
-            
-            if (els.modelSelect && models.length > 0) {
-                const currentVal = els.modelSelect.value;
-                els.modelSelect.innerHTML = "";
-                
-                let hasFlash = false;
-                models.forEach(m => {
-                    const opt = document.createElement("option");
-                    opt.value = m; 
-                    
-                    if (m.includes("2.0-flash")) opt.textContent = `🚀 ${m} (Fast & Free)`;
-                    else if (m.includes("2.0-pro")) opt.textContent = `🧠 ${m} (Advanced)`;
-                    else if (m.includes("1.5-flash")) opt.textContent = `⚡ ${m} (Legacy)`;
-                    else if (m.includes("1.5-pro")) opt.textContent = `🧠 ${m} (Legacy Pro)`;
-                    else opt.textContent = m;
-                    
-                    els.modelSelect.appendChild(opt);
-                    // Identifying any flash version skipping experimental 8b params if needed
-                    if (m.includes("flash") && !m.includes("8b")) hasFlash = true;
-                });
-                
-                // Prioritize the user's previously selected value if it still exists.
-                // Otherwise default to a 2.0-flash if it's there.
-                if (models.includes(currentVal)) {
-                    els.modelSelect.value = currentVal;
-                } else if (hasFlash) {
-                    const defaultModel = models.find(m => m.includes("2.0-flash") && !m.includes("8b")) || models.find(m => m.includes("flash") && !m.includes("8b"));
-                    if (defaultModel) els.modelSelect.value = defaultModel;
-                }
-            }
-            
-            if (els.modelLoadStatus) {
-                els.modelLoadStatus.textContent = "✓ Key Valid & Models Loaded"; 
-                els.modelLoadStatus.style.color = "var(--success)";
-            }
-            updateQuotaDisplay();
-        } catch (e) {
-            if (els.modelLoadStatus) {
-                let displayError = e.message;
-                if (displayError.includes('Failed to fetch')) {
-                    displayError = "Network error. Check internet or extensions blocking APIs.";
-                }
-                els.modelLoadStatus.textContent = "✗ Error: " + displayError;
-                els.modelLoadStatus.style.color = "var(--danger)";
-            }
-        }
-    }
-
     els.modelSelect.addEventListener('change', updateQuotaDisplay);
     }
 
-    // File upload explicitly bound to proxy click function to assist android wv intent launching
+    // File upload explicitly NOT binding via prevent default so intents natively fire in wv modes. 
     if (els.btnSelectFile && els.fileUpload) {
         els.btnSelectFile.onclick = (e) => { 
-            e.preventDefault();
+            // Removed e.preventDefault(); to prevent overriding webview intent prompts
             els.fileUpload.click(); 
         };
     }
@@ -3274,21 +3253,54 @@ function setupEventListeners() {
 
 async function loadModels(key) {
     try {
-        const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`);
-        if (resp.status === 400 || resp.status === 403) throw new Error("Invalid API Key");
+        const cleanKey = key.trim();
+        const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${cleanKey}`);
+        
+        if (!resp.ok) {
+            let errText = `HTTP Error ${resp.status}`;
+            try {
+                const errData = await resp.json();
+                if (errData.error && errData.error.message) errText = errData.error.message;
+            } catch(e) {}
+            throw new Error(errText);
+        }
+        
         const data = await resp.json();
-        const models = (data.models || []).filter(m => m.supportedGenerationMethods?.includes("generateContent"))
+        
+        // **CRITICAL FIX**: Explicitly block experimental weird models by demanding "gemini" in the model name.
+        const models = (data.models || [])
+            .filter(m => m.supportedGenerationMethods?.includes("generateContent"))
+            .filter(m => m.name.includes("gemini"))
             .map(m => m.name.replace('models/', '')).sort();
         
-        if (els.modelSelect) {
+        if (els.modelSelect && models.length > 0) {
+            const currentVal = els.modelSelect.value;
             els.modelSelect.innerHTML = "";
+            
+            let hasFlash = false;
             models.forEach(m => {
                 const opt = document.createElement("option");
                 opt.value = m; 
-                opt.textContent = m;
-                if(m.includes("2.0-flash") && !m.includes("8b")) opt.selected = true;
+                
+                if (m.includes("2.0-flash")) opt.textContent = `🚀 ${m} (Fast & Free)`;
+                else if (m.includes("2.0-pro")) opt.textContent = `🧠 ${m} (Advanced)`;
+                else if (m.includes("1.5-flash")) opt.textContent = `⚡ ${m} (Legacy)`;
+                else if (m.includes("1.5-pro")) opt.textContent = `🧠 ${m} (Legacy Pro)`;
+                else opt.textContent = m;
+                
                 els.modelSelect.appendChild(opt);
+                // Identifying any flash version skipping experimental 8b params if needed
+                if (m.includes("flash") && !m.includes("8b")) hasFlash = true;
             });
+            
+            // Prioritize the user's previously selected value if it still exists.
+            // Otherwise default to a 2.0-flash if it's there.
+            if (models.includes(currentVal)) {
+                els.modelSelect.value = currentVal;
+            } else if (hasFlash) {
+                const defaultModel = models.find(m => m.includes("2.0-flash") && !m.includes("8b")) || models.find(m => m.includes("flash") && !m.includes("8b"));
+                if (defaultModel) els.modelSelect.value = defaultModel;
+            }
         }
         
         if (els.modelLoadStatus) {
@@ -3298,7 +3310,11 @@ async function loadModels(key) {
         updateQuotaDisplay();
     } catch (e) {
         if (els.modelLoadStatus) {
-            els.modelLoadStatus.textContent = "✗ Error: " + e.message;
+            let displayError = e.message;
+            if (displayError.includes('Failed to fetch')) {
+                displayError = "Network error. Check internet or extensions blocking APIs.";
+            }
+            els.modelLoadStatus.textContent = "✗ Error: " + displayError;
             els.modelLoadStatus.style.color = "var(--danger)";
         }
     }
@@ -3309,9 +3325,9 @@ function updateQuotaDisplay() {
     
     const model = els.modelSelect.value;
     if (model.includes("flash")) {
-        els.quotaInfo.innerHTML = `Google API Quota: <span>~1500 req/day</span>.<br>Speed Limit: <span>15 req/minute</span>.`;
+        els.quotaInfo.innerHTML = `• Flash: ~500 recordings/day<br>• Speed limit: 1-5 recordings/minute`;
     } else if (model.includes("pro")) {
-         els.quotaInfo.innerHTML = `Google API Quota: <span>~50 req/day</span>.<br>Speed Limit: <span>2 req/minute</span>.`;
+         els.quotaInfo.innerHTML = `• Pro: ~16 recordings/day<br>• Speed limit: 1-5 recordings/minute`;
     }
 }
 
@@ -3357,6 +3373,9 @@ async function startRecording() {
         showToast("Please enter your Gemini API Key.", "error");
         return;
     }
+    
+    // Clear the current tracking session id since it's a new run
+    currentSessionId = null;
     
     try {
         try { 
@@ -3485,6 +3504,8 @@ async function processUploadedFile() {
         return;
     }
     
+    // Clear tracking session id as it is newly added context. 
+    currentSessionId = null;
     currentBlob = els.fileUpload.files[0];
     processMultiEngine();
 }
@@ -3510,7 +3531,7 @@ function updateSizeDisplay(bytes) {
     updateProgressBar('sizeProgress', Math.min(progress, 100));
 }
 
-async function processMultiEngine() {
+async function processMultiEngine(retrySessionId = null) {
     if (els.quotaAlert) {
         els.quotaAlert.style.display = 'none';
         els.quotaAlert.classList.add('hidden');
@@ -3525,6 +3546,24 @@ async function processMultiEngine() {
     const modelName = els.modelSelect.value;
     const model = genAI.getGenerativeModel({ model: modelName });
     const course = els.courseName.value || "General Class";
+
+    // Setup Fallback Session tracking. If generation crashes we can try again via History Sidebar!
+    currentSessionId = retrySessionId;
+    if (!currentSessionId) {
+        const newSession = {
+            course: course,
+            timestamp: Date.now(),
+            status: 'failed', // Assumes failure until generation success triggers boolean swap
+            audioBlob: currentBlob,
+            study: '',
+            scribe: '',
+            flashcards: null
+        };
+        try {
+            currentSessionId = await sessionHistory.saveSession(newSession);
+            await loadSessionHistory();
+        } catch(e) { console.error("Could not save pending session via IndexedDB", e); }
+    }
     
     // Base64 Encoding
     let base64Audio;
@@ -3561,10 +3600,9 @@ async function processMultiEngine() {
     if (els.btnDlScribe) els.btnDlScribe.disabled = true;
     if (els.btnDlCards) els.btnDlCards.disabled = true;
 
-    // Advanced dynamic MIME type resolution for Webview Fallbacks
+    // Advanced dynamic MIME type resolution for Webview Fallbacks & Native intents dropping MIME
     let finalMimeType = currentBlob.type || detectedMimeType;
     if (!finalMimeType) {
-        // Fallback checks for android file intents where the type comes back completely blank
         const name = currentBlob.name ? currentBlob.name.toLowerCase() : "";
         if (name.endsWith('.mp3')) finalMimeType = 'audio/mp3';
         else if (name.endsWith('.wav')) finalMimeType = 'audio/wav';
@@ -3575,6 +3613,9 @@ async function processMultiEngine() {
     }
 
     const payload = { inlineData: { mimeType: finalMimeType, data: base64Audio } };
+
+    // Increment tracker variables
+    let successCount = 0;
 
     // Helper functions
     const runStudy = async () => {
@@ -3596,9 +3637,7 @@ async function processMultiEngine() {
                 document.getElementById('studyBadge').textContent = '✓ Ready';
             }
             
-            // Save session after study guide is ready
-            setTimeout(saveCurrentSession, 500);
-            
+            successCount++;
         } catch(e) { 
             if (els.outputStudy) {
                 els.outputStudy.innerHTML = `<p style="color:var(--danger)">Error: ${e.message}</p>`; 
@@ -3626,7 +3665,7 @@ async function processMultiEngine() {
             if (document.getElementById('scribeBadge')) {
                 document.getElementById('scribeBadge').textContent = '✓ Ready';
             }
-            
+            successCount++;
         } catch(e) { 
             if (els.outputScribe) {
                 els.outputScribe.innerHTML = `<p style="color:var(--danger)">Error: ${e.message}</p>`; 
@@ -3664,6 +3703,7 @@ async function processMultiEngine() {
             }
             
             showToast(`Generated ${flashcardsData.length} flashcards`, "success");
+            successCount++;
             
         } catch(e) { 
             flashcardsData = [{front: "Error", back: e.message}]; 
@@ -3686,6 +3726,29 @@ async function processMultiEngine() {
         }
     } catch (error) {
         showToast("Processing failed: " + error.message, "error");
+    }
+
+    // Success Tracker updates the IndexedDB Object dynamically
+    if (successCount > 0 && currentSessionId) {
+        try {
+            const sessionToUpdate = await sessionHistory.getSession(currentSessionId);
+            if (sessionToUpdate) {
+                sessionToUpdate.status = 'completed';
+                sessionToUpdate.study = els.outputStudy.innerHTML;
+                sessionToUpdate.scribe = els.outputScribe.innerHTML;
+                sessionToUpdate.flashcards = flashcardsData;
+                sessionToUpdate.rawStudy = rawStudyMarkdown;
+                sessionToUpdate.rawScribe = rawScribeMarkdown;
+                
+                // Clear the heavy audio blob block via garbage col once complete to ensure DB space isn't wiped out!
+                delete sessionToUpdate.audioBlob; 
+                await sessionHistory.saveSession(sessionToUpdate);
+                await loadSessionHistory();
+            }
+        } catch(e) { console.error("Error updating successful session via IndexedDB", e); }
+    } else if (successCount === 0) {
+        // Leave the 'Failed' parameter active within IDB for prompt history menu retry logic
+        showToast("Processing failed. Audio saved in history list. Open Session menu to retry later.", "warning");
     }
 }
 
