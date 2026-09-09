@@ -1341,7 +1341,7 @@
         </div>
     </div>
 
-    <!-- API Key Help Modal (Updated Terminology) -->
+    <!-- API Key Help Modal -->
     <div id="helpModal" class="modal-overlay hidden">
         <div class="modal-content">
             <div class="modal-title" style="font-size: 1.3rem; margin-bottom: 1rem; color: var(--primary);">
@@ -1455,7 +1455,7 @@
                 </span>
             </div>
 
-            <!-- API Configuration (Updated terminology & defaults) -->
+            <!-- API Configuration -->
             <div class="card">
                 <div class="input-group">
                     <div class="label-row">
@@ -1474,7 +1474,7 @@
                     <select id="modelSelect" class="form-control">
                         <option value="gemini-2.0-flash">🚀 Gemini 2.0 Flash (Fast & Free)</option>
                         <option value="gemini-2.0-pro-exp">🧠 Gemini 2.0 Pro (Advanced)</option>
-                        <option value="gemini-1.5-flash">⚡ Gemini 1.5 Flash (Legacy Fast)</option>
+                        <option value="gemini-1.5-flash">⚡ Gemini 1.5 Flash (Legacy)</option>
                         <option value="gemini-1.5-pro">🧠 Gemini 1.5 Pro (Legacy Pro)</option>
                     </select>
                     <div class="model-info" style="margin-top: 8px; padding: 8px; background: rgba(59, 130, 246, 0.05); 
@@ -1484,7 +1484,7 @@
                             <span style="font-weight: 600; color: var(--primary);">Free Tier Limits:</span>
                         </div>
                         <div id="quotaInfo" style="line-height: 1.4; color: var(--text-muted);">
-                            Google API Quota: <span>~500 recordings/day</span> (1500 req/day).<br>Speed Limit: <span>15 recordings/minute</span>.
+                            Google API Quota: <span>~1500 req/day</span>.<br>Speed Limit: <span>15 req/minute</span>.
                         </div>
                     </div>
                 </div>
@@ -1553,7 +1553,8 @@
                         <label style="margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
                             <i class="fas fa-file-audio"></i> Select Audio File
                         </label>
-                        <input type="file" id="fileUpload" accept="audio/*" class="hidden">
+                        <!-- Added extensive formats to ensure webviews handle intents properly -->
+                        <input type="file" id="fileUpload" accept="audio/*, .mp3, .wav, .m4a, .aac, .flac, .ogg, video/*" class="hidden">
                         <button id="btnSelectFile" class="btn btn-secondary" style="width: 100%; padding: 0.9rem;">
                             <i class="fas fa-folder-open" style="font-size: 1.1rem;"></i>
                             <span>Choose Audio File</span>
@@ -3127,15 +3128,17 @@ function setupEventListeners() {
                     
                     if (m.includes("2.0-flash")) opt.textContent = `🚀 ${m} (Fast & Free)`;
                     else if (m.includes("2.0-pro")) opt.textContent = `🧠 ${m} (Advanced)`;
-                    else if (m.includes("flash")) opt.textContent = `⚡ ${m} (Legacy Fast)`;
-                    else if (m.includes("pro")) opt.textContent = `🧠 ${m} (Legacy Pro)`;
+                    else if (m.includes("1.5-flash")) opt.textContent = `⚡ ${m} (Legacy)`;
+                    else if (m.includes("1.5-pro")) opt.textContent = `🧠 ${m} (Legacy Pro)`;
                     else opt.textContent = m;
                     
                     els.modelSelect.appendChild(opt);
+                    // Identifying any flash version skipping experimental 8b params if needed
                     if (m.includes("flash") && !m.includes("8b")) hasFlash = true;
                 });
                 
-                // Prioritize 2.0 flash over older variants
+                // Prioritize the user's previously selected value if it still exists.
+                // Otherwise default to a 2.0-flash if it's there.
                 if (models.includes(currentVal)) {
                     els.modelSelect.value = currentVal;
                 } else if (hasFlash) {
@@ -3164,9 +3167,12 @@ function setupEventListeners() {
     els.modelSelect.addEventListener('change', updateQuotaDisplay);
     }
 
-    // File upload
+    // File upload explicitly bound to proxy click function to assist android wv intent launching
     if (els.btnSelectFile && els.fileUpload) {
-        els.btnSelectFile.onclick = () => { els.fileUpload.click(); };
+        els.btnSelectFile.onclick = (e) => { 
+            e.preventDefault();
+            els.fileUpload.click(); 
+        };
     }
     
     if (els.fileUpload) {
@@ -3555,7 +3561,19 @@ async function processMultiEngine() {
     if (els.btnDlScribe) els.btnDlScribe.disabled = true;
     if (els.btnDlCards) els.btnDlCards.disabled = true;
 
-    const finalMimeType = currentBlob.type || detectedMimeType || 'audio/webm';
+    // Advanced dynamic MIME type resolution for Webview Fallbacks
+    let finalMimeType = currentBlob.type || detectedMimeType;
+    if (!finalMimeType) {
+        // Fallback checks for android file intents where the type comes back completely blank
+        const name = currentBlob.name ? currentBlob.name.toLowerCase() : "";
+        if (name.endsWith('.mp3')) finalMimeType = 'audio/mp3';
+        else if (name.endsWith('.wav')) finalMimeType = 'audio/wav';
+        else if (name.endsWith('.m4a')) finalMimeType = 'audio/m4a';
+        else if (name.endsWith('.aac')) finalMimeType = 'audio/aac';
+        else if (name.endsWith('.ogg')) finalMimeType = 'audio/ogg';
+        else finalMimeType = 'audio/webm'; // Ultra safe ultimate fallback
+    }
+
     const payload = { inlineData: { mimeType: finalMimeType, data: base64Audio } };
 
     // Helper functions
