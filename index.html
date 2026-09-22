@@ -372,18 +372,6 @@
             opacity: 1;
         }
 
-        /* Pending audio items get the scribe (amber) treatment */
-        .session-item.pending-item::before {
-            background: var(--gradient-2);
-        }
-        .session-item.pending-item:hover {
-            border-color: var(--scribe);
-            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.15);
-        }
-        .session-item.pending-item:hover::before {
-            opacity: 1;
-        }
-
         .session-course {
             font-weight: 600;
             font-size: 1.1rem;
@@ -438,12 +426,6 @@
             border-color: var(--danger);
         }
 
-        .session-action-btn.retry-action:hover {
-            background: var(--success);
-            border-color: var(--success);
-            color: #000;
-        }
-
         .empty-history {
             text-align: center;
             padding: 3rem 1rem;
@@ -454,24 +436,6 @@
             font-size: 3rem;
             margin-bottom: 1rem;
             opacity: 0.5;
-        }
-
-        .empty-pending {
-            text-align: center;
-            padding: 0.8rem 0.5rem;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-        }
-
-        .pending-section-title {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            margin-bottom: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-weight: 700;
         }
 
         /* Mode Tabs */
@@ -623,7 +587,7 @@
             text-align: center;
             min-height: 44px;
             flex-wrap: wrap;
-            text-decoration: none; /* For download links */
+            text-decoration: none;
         }
 
         .btn::before {
@@ -872,6 +836,7 @@
             overflow-y: auto; 
             box-sizing: border-box;
             min-height: 300px;
+            position: relative;
         }
 
         .result-box h1, .result-box h2, .result-box h3 { 
@@ -1324,6 +1289,17 @@
             align-items: center;
             border: 1px solid var(--border);
         }
+        
+        /* Inline Retry Container styling */
+        .retry-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1rem;
+            text-align: center;
+            height: 100%;
+        }
     </style>
 </head>
 <body>
@@ -1361,28 +1337,7 @@
             </button>
         </div>
         <div class="history-content">
-            <!-- Pending / Unprocessed Audio Section -->
-            <div class="pending-section-title" style="color: var(--scribe);">
-                <i class="fas fa-cloud-upload-alt"></i> Pending Uploads
-                <span id="pendingCount" style="margin-left:auto; font-weight:500; text-transform:none; letter-spacing:0;">0</span>
-            </div>
-            <p style="font-size:0.75rem; color: var(--text-muted); margin-bottom: 0.8rem; line-height:1.4;">
-                Audio that hasn't been fully processed yet. Click any item to retry when your connection is back.
-            </p>
-            <div class="session-list" id="pendingList"></div>
-            <div class="empty-pending" id="emptyPending">
-                <i class="fas fa-check-circle" style="color: var(--success); opacity:0.7; margin-right:4px;"></i>
-                No pending uploads — you're all caught up.
-            </div>
-
-            <hr style="border:none; border-top:1px solid var(--border); margin:1.5rem 0;">
-
-            <!-- Completed Sessions Section -->
-            <div class="pending-section-title" style="color: var(--success);">
-                <i class="fas fa-check-circle"></i> Completed Sessions
-                <span id="sessionCount" style="margin-left:auto; font-weight:500; text-transform:none; letter-spacing:0;">0</span>
-            </div>
-            <div class="session-list" id="sessionList" style="margin-top: 0.8rem;">
+            <div class="session-list" id="sessionList">
                 <!-- Session items will be populated here -->
             </div>
             <div class="empty-history hidden" id="emptyHistory">
@@ -1444,7 +1399,7 @@
                 </button>
                 <div class="header-title">
                     <h1>Lecture Scribe Pro</h1>
-                    <span class="header-badge">v2.1.0</span>
+                    <span class="header-badge">v2.2.0</span>
                 </div>
             </div>
             
@@ -1529,17 +1484,22 @@
                 <div class="input-group">
                     <label for="modelSelect"><i class="fas fa-robot"></i> AI Model</label>
                     <select id="modelSelect" class="form-control">
-                        <option value="__loading__" disabled selected>Loading current models...</option>
+                        <!-- Updated to newest model naming conventions -->
+                        <option value="gemini-2.0-flash">🚀 Gemini 2.0 Flash (Fast & Free)</option>
+                        <option value="gemini-2.0-pro-exp">🧠 Gemini 2.0 Pro Exp (Advanced)</option>
+                        <option value="gemini-1.5-flash">🚀 Gemini 1.5 Flash (Legacy Fast)</option>
+                        <option value="gemini-1.5-pro">🧠 Gemini 1.5 Pro (Legacy Pro)</option>
                     </select>
                     <div class="model-info" style="margin-top: 8px; padding: 8px; background: rgba(59, 130, 246, 0.05); 
                                                 border-radius: var(--radius-sm); border: 1px solid rgba(59, 130, 246, 0.2); font-size: 0.8rem;">
                         <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-                            <i class="fas fa-sync-alt" style="color: var(--primary); font-size: 0.9rem;"></i>
-                            <span style="font-weight: 600; color: var(--primary);">Self-Healing Model Discovery:</span>
+                            <i class="fas fa-chart-line" style="color: var(--primary); font-size: 0.9rem;"></i>
+                            <span style="font-weight: 600; color: var(--primary);">Free Tier Limits:</span>
                         </div>
                         <div style="line-height: 1.4; color: var(--text-muted);">
-                            The model list is fetched live from your API key each time you load the app.<br>
-                            If a model gets retired mid-session, the app auto-switches to the next available one.
+                            • Flash: ~500 recordings/day<br>
+                            • Pro: ~16 recordings/day<br>
+                            • Speed limit: 1-5 recordings/minute
                         </div>
                     </div>
                 </div>
@@ -1608,7 +1568,8 @@
                         <label style="margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
                             <i class="fas fa-file-audio"></i> Select Audio File
                         </label>
-                        <input type="file" id="fileUpload" accept="audio/*" class="hidden">
+                        <!-- FIXED: Enhanced accept attributes to ensure Android WV storage intent launches correctly -->
+                        <input type="file" id="fileUpload" accept="audio/*, .mp3, .wav, .m4a, .aac, .flac, .ogg, video/*" class="hidden">
                         <button id="btnSelectFile" class="btn btn-secondary" style="width: 100%; padding: 0.9rem;">
                             <i class="fas fa-folder-open" style="font-size: 1.1rem;"></i>
                             <span>Choose Audio File</span>
@@ -1617,7 +1578,7 @@
                                                         background: rgba(59, 130, 246, 0.05); border-radius: var(--radius-sm); font-size: 0.9rem;">
                             <i class="fas fa-music"></i> No file selected
                             <div style="font-size: 0.75rem; opacity: 0.7; margin-top: 4px;">
-                                Supports: MP3, WAV, M4A, AAC, FLAC, OGG • File API uploads up to 2 GB
+                                Supports: MP3, WAV, M4A, AAC, FLAC, OGG
                             </div>
                         </div>
                     </div>
@@ -1753,7 +1714,7 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
                     <div class="progress-bar" id="processProgress"></div>
                 </div>
                 <p id="processSubStatus" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 1.2rem;">
-                    <i class="fas fa-sync fa-spin"></i> Processing audio with Gemini AI...
+                    <i class="fas fa-sync fa-spin"></i> Queuing requests dynamically...
                 </p>
                 <div style="display: flex; justify-content: center; gap: 15px; margin-top: 1.5rem; flex-wrap: wrap;">
                     <div style="text-align: center;">
@@ -1847,6 +1808,16 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
 
             <!-- Flashcards Pane -->
             <div id="paneCards" class="output-pane">
+                
+                <!-- Error State Container (Added for Retry feature) -->
+                <div id="flashcardErrorState" class="hidden retry-container">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 2.5rem; color: var(--danger); margin-bottom: 1rem;"></i>
+                    <p id="flashcardErrorText" style="color: var(--danger); margin-bottom: 1.5rem; font-weight: 600;">Failed to generate flashcards.</p>
+                    <button onclick="window.retryCards()" class="btn btn-primary" style="margin: 0 auto;">
+                        <i class="fas fa-sync-alt"></i> Retry Flashcards
+                    </button>
+                </div>
+
                 <div id="flashcardContainer" class="flashcard-container">
                     <div class="flashcard" id="activeCard">
                         <div class="flashcard-inner">
@@ -1900,8 +1871,9 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
                             <i class="fas fa-download"></i> Export to Anki
                         </button>
                     </div>
-                    <button onclick="location.reload()" class="btn btn-secondary btn-sm">
-                        <i class="fas fa-plus"></i> New Session
+                    <!-- Moved save button to flashcards to ensure consistency -->
+                    <button onclick="saveSession()" class="btn btn-success btn-sm" style="width: auto;">
+                        <i class="fas fa-save"></i> Save All
                     </button>
                 </div>
                 <p style="text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 12px;">
@@ -1953,7 +1925,6 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
         </div>
     </div>
 
-<!-- GLOBAL SCRIPTS (Non-Module) to ensure availability -->
 <script>
 // --- TEXT TO SPEECH LOGIC (Enhanced) ---
 function speakText(elementId) {
@@ -2057,14 +2028,6 @@ function initBackgroundAnimation() {
     }
 }
 
-// --- SIMPLE HTML ESCAPER ---
-function escapeHtml(str) {
-    if (str == null) return '';
-    const div = document.createElement('div');
-    div.textContent = String(str);
-    return div.innerHTML;
-}
-
 // --- LATEX TO UNICODE CONVERSION ---
 function convertLatexToUnicode(text) {
     if (!text) return text;
@@ -2149,14 +2112,10 @@ function convertLatexToUnicode(text) {
     return result;
 }
 
-// --- ENHANCED MARKDOWN PARSER WITH MATH SUPPORT ---
+// --- LIGHTWEIGHT MARKDOWN PARSER ---
 function parseMarkdownWithMath(markdown) {
     if (!markdown) return '';
-    
-    // Convert LaTeX to Unicode first
     const processedMarkdown = convertLatexToUnicode(markdown);
-    
-    // Simple markdown parser for headings, bold, italic, lists
     let html = processedMarkdown
         .replace(/^### (.*$)/gm, '<h3>$1</h3>')
         .replace(/^## (.*$)/gm, '<h2>$1</h2>')
@@ -2167,10 +2126,8 @@ function parseMarkdownWithMath(markdown) {
         .replace(/^- (.*$)/gm, '<li>$1</li>')
         .replace(/^\d+\. (.*$)/gm, '<li>$1</li>');
     
-    // Wrap lists
     html = html.replace(/(<li>.*<\/li>)/g, '<ul>$1</ul>');
     
-    // Convert line breaks to paragraphs
     const lines = html.split('\n');
     let inList = false;
     let result = '';
@@ -2187,16 +2144,15 @@ function parseMarkdownWithMath(markdown) {
             result += line + '\n';
         }
     }
-    
     return result;
 }
 
-// --- SESSION HISTORY MANAGER ---
+// --- STREAMING_CHUNK:Setting up IndexedDB Session Manager ---
 class SessionHistory {
     constructor() {
         this.dbName = 'LectureScribeProSessions';
         this.storeName = 'sessions';
-        this.version = 1; // Increment if schema changes
+        this.version = 1;
         this.db = null;
         this.initDB();
     }
@@ -2223,14 +2179,12 @@ class SessionHistory {
 
     async saveSession(sessionData) {
         if (!this.db) await this.initDB();
-        
         return new Promise((resolve, reject) => {
             const tx = this.db.transaction(this.storeName, 'readwrite');
             const store = tx.objectStore(this.storeName);
-            
             sessionData.timestamp = Date.now();
             sessionData.lastAccessed = Date.now();
-            sessionData.version = '2.1.0'; // Mark with current version
+            sessionData.version = '2.2.0'; 
             
             const request = store.add(sessionData);
             request.onsuccess = () => {
@@ -2243,7 +2197,6 @@ class SessionHistory {
 
     async getAllSessions() {
         if (!this.db) await this.initDB();
-        
         return new Promise((resolve, reject) => {
             const tx = this.db.transaction(this.storeName, 'readonly');
             const store = tx.objectStore(this.storeName);
@@ -2260,12 +2213,10 @@ class SessionHistory {
 
     async getSession(id) {
         if (!this.db) await this.initDB();
-        
         return new Promise((resolve, reject) => {
             const tx = this.db.transaction(this.storeName, 'readonly');
             const store = tx.objectStore(this.storeName);
             const request = store.get(parseInt(id));
-            
             request.onsuccess = () => resolve(request.result);
             request.onerror = (e) => reject(e.target.error);
         });
@@ -2273,12 +2224,10 @@ class SessionHistory {
 
     async deleteSession(id) {
         if (!this.db) await this.initDB();
-        
         return new Promise((resolve, reject) => {
             const tx = this.db.transaction(this.storeName, 'readwrite');
             const store = tx.objectStore(this.storeName);
             const request = store.delete(parseInt(id));
-            
             request.onsuccess = () => {
                 resolve();
                 showToast("Session deleted", "success");
@@ -2289,12 +2238,10 @@ class SessionHistory {
 
     async clearAllSessions() {
         if (!this.db) await this.initDB();
-        
         return new Promise((resolve, reject) => {
             const tx = this.db.transaction(this.storeName, 'readwrite');
             const store = tx.objectStore(this.storeName);
             const request = store.clear();
-            
             request.onsuccess = () => {
                 resolve();
                 showToast("All sessions cleared", "success");
@@ -2305,16 +2252,13 @@ class SessionHistory {
 
     async updateSessionAccess(id) {
         if (!this.db) await this.initDB();
-        
         const session = await this.getSession(id);
         if (session) {
             session.lastAccessed = Date.now();
-            
             return new Promise((resolve, reject) => {
                 const tx = this.db.transaction(this.storeName, 'readwrite');
                 const store = tx.objectStore(this.storeName);
                 const request = store.put(session);
-                
                 request.onsuccess = () => resolve();
                 request.onerror = (e) => reject(e.target.error);
             });
@@ -2322,223 +2266,12 @@ class SessionHistory {
     }
 }
 
-// Initialize session history manager
 const sessionHistory = new SessionHistory();
-
-// --- PENDING AUDIO STORAGE (for retry-on-failure) ---
-// Stores the raw audio Blob + associated metadata BEFORE processing starts.
-// If processing fails (network, Google outage, tab closed, etc.), the record
-// stays in IndexedDB so the user can retry from the history sidebar.
-class PendingAudioDB {
-    constructor() {
-        this.dbName = 'LectureScribeProPending';
-        this.storeName = 'pendingAudio';
-        this.db = null;
-        this.initDB();
-    }
-
-    async initDB() {
-        return new Promise((resolve, reject) => {
-            const request = indexedDB.open(this.dbName, 1);
-            request.onupgradeneeded = (e) => {
-                const db = e.target.result;
-                if (!db.objectStoreNames.contains(this.storeName)) {
-                    const store = db.createObjectStore(this.storeName, { keyPath: 'id', autoIncrement: true });
-                    store.createIndex('timestamp', 'timestamp', { unique: false });
-                }
-            };
-            request.onsuccess = (e) => {
-                this.db = e.target.result;
-                resolve(this.db);
-            };
-            request.onerror = (e) => reject(e.target.error);
-        });
-    }
-
-    async savePending(record) {
-        if (!this.db) await this.initDB();
-        return new Promise((resolve, reject) => {
-            const tx = this.db.transaction(this.storeName, 'readwrite');
-            const store = tx.objectStore(this.storeName);
-            const request = store.add(record);
-            request.onsuccess = async () => {
-                try { await this._softCleanup(); } catch (e) { /* ignore */ }
-                resolve(request.result);
-            };
-            request.onerror = (e) => reject(e.target.error);
-        });
-    }
-
-    async getAllPending() {
-        if (!this.db) await this.initDB();
-        return new Promise((resolve, reject) => {
-            const tx = this.db.transaction(this.storeName, 'readonly');
-            const store = tx.objectStore(this.storeName);
-            const index = store.index('timestamp');
-            const request = index.getAll();
-            request.onsuccess = () => {
-                const items = request.result.sort((a, b) => b.timestamp - a.timestamp);
-                resolve(items);
-            };
-            request.onerror = (e) => reject(e.target.error);
-        });
-    }
-
-    async getPending(id) {
-        if (!this.db) await this.initDB();
-        return new Promise((resolve, reject) => {
-            const tx = this.db.transaction(this.storeName, 'readonly');
-            const store = tx.objectStore(this.storeName);
-            const request = store.get(parseInt(id));
-            request.onsuccess = () => resolve(request.result);
-            request.onerror = (e) => reject(e.target.error);
-        });
-    }
-
-    async deletePending(id) {
-        if (!this.db) await this.initDB();
-        return new Promise((resolve, reject) => {
-            const tx = this.db.transaction(this.storeName, 'readwrite');
-            const store = tx.objectStore(this.storeName);
-            const request = store.delete(parseInt(id));
-            request.onsuccess = () => resolve();
-            request.onerror = (e) => reject(e.target.error);
-        });
-    }
-
-    async clearAllPending() {
-        if (!this.db) await this.initDB();
-        return new Promise((resolve, reject) => {
-            const tx = this.db.transaction(this.storeName, 'readwrite');
-            const store = tx.objectStore(this.storeName);
-            const request = store.clear();
-            request.onsuccess = () => resolve();
-            request.onerror = (e) => reject(e.target.error);
-        });
-    }
-
-    // Soft cap: keep the 8 newest pending items to bound storage growth.
-    async _softCleanup(maxItems = 8) {
-        const all = await this.getAllPending();
-        if (all.length <= maxItems) return;
-        const toDelete = all.slice(maxItems);
-        for (const item of toDelete) {
-            try { await this.deletePending(item.id); } catch (e) { /* ignore */ }
-        }
-    }
-}
-
-// Expose globally so the module script can use it too.
-window.pendingAudioDB = new PendingAudioDB();
-
-// --- PENDING LIST RENDERER ---
-// Renders the "Pending Uploads" section inside the history sidebar.
-// The click handlers call window.retryPending(id) which is defined in the
-// module script (it needs access to processMultiEngine, currentBlob, etc.).
-async function renderPendingList() {
-    const pendingList = document.getElementById('pendingList');
-    const emptyPending = document.getElementById('emptyPending');
-    const pendingCount = document.getElementById('pendingCount');
-    if (!pendingList || !emptyPending) return;
-
-    pendingList.innerHTML = '';
-
-    try {
-        const items = await window.pendingAudioDB.getAllPending();
-
-        if (pendingCount) pendingCount.textContent = items.length;
-
-        if (items.length === 0) {
-            emptyPending.classList.remove('hidden');
-            return;
-        }
-
-        emptyPending.classList.add('hidden');
-
-        items.forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'session-item pending-item';
-            div.dataset.id = item.id;
-
-            const sizeMB = (item.size / 1048576).toFixed(1);
-            const courseLabel = escapeHtml(item.course || 'Unnamed Recording');
-
-            div.innerHTML = `
-                <div class="session-course">
-                    <i class="fas fa-clock" style="color:var(--scribe); margin-right:4px; font-size:0.9rem;"></i>
-                    ${courseLabel}
-                </div>
-                <div class="session-date">
-                    <i class="far fa-calendar"></i> ${formatDate(item.timestamp)}
-                    <span style="margin-left:8px;"><i class="fas fa-hdd"></i> ${sizeMB} MB</span>
-                </div>
-                <div class="session-actions" style="opacity:1;">
-                    <button class="session-action-btn retry-action retry-pending" title="Retry Processing">
-                        <i class="fas fa-redo"></i>
-                    </button>
-                    <button class="session-action-btn delete-pending" title="Delete">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            `;
-
-            // Clicking the item itself triggers retry.
-            div.addEventListener('click', async (e) => {
-                if (e.target.closest('.session-action-btn')) return;
-                if (typeof window.retryPending === 'function') {
-                    await window.retryPending(item.id);
-                } else {
-                    showToast('Retry handler not ready yet — please wait a moment.', 'warning');
-                }
-            });
-
-            pendingList.appendChild(div);
-        });
-
-        // Bind explicit retry buttons.
-        pendingList.querySelectorAll('.retry-pending').forEach(btn => {
-            btn.addEventListener('click', async (e) => {
-                e.stopPropagation();
-                const id = btn.closest('.session-item').dataset.id;
-                if (typeof window.retryPending === 'function') {
-                    await window.retryPending(id);
-                } else {
-                    showToast('Retry handler not ready yet — please wait a moment.', 'warning');
-                }
-            });
-        });
-
-        // Bind delete buttons.
-        pendingList.querySelectorAll('.delete-pending').forEach(btn => {
-            btn.addEventListener('click', async (e) => {
-                e.stopPropagation();
-                const id = btn.closest('.session-item').dataset.id;
-                if (confirm('Delete this pending recording? This cannot be undone.')) {
-                    try {
-                        await window.pendingAudioDB.deletePending(id);
-                        renderPendingList();
-                        showToast('Pending recording deleted', 'success');
-                    } catch (err) {
-                        showToast('Delete failed: ' + err.message, 'error');
-                    }
-                }
-            });
-        });
-
-    } catch (error) {
-        console.error('Error rendering pending list:', error);
-    }
-}
-
-// Expose so the module can trigger a refresh after saving/deleting.
-window.renderPendingList = renderPendingList;
 
 // --- ENHANCED UI FUNCTIONS ---
 function updateProgressBar(progressId, percentage) {
     const progressBar = document.getElementById(progressId);
-    if (progressBar) {
-        progressBar.style.width = `${percentage}%`;
-    }
+    if (progressBar) progressBar.style.width = `${percentage}%`;
 }
 
 function formatDate(timestamp) {
@@ -2553,86 +2286,74 @@ function formatDate(timestamp) {
     if (diffMins < 60) return `${diffMins}m ago`;
     if (diffHours < 24) return `${diffHours}h ago`;
     if (diffDays < 7) return `${diffDays}d ago`;
-    
-    return date.toLocaleDateString('en-US', { 
-        month: 'short', 
-        day: 'numeric',
-        year: diffDays < 365 ? undefined : 'numeric'
-    });
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: diffDays < 365 ? undefined : 'numeric' });
 }
 
+// --- STREAMING_CHUNK:Loading Session UI logic... ---
 async function loadSessionHistory() {
     const sessionList = document.getElementById('sessionList');
     const emptyHistory = document.getElementById('emptyHistory');
-    const sessionCount = document.getElementById('sessionCount');
-    
     sessionList.innerHTML = '';
     
     try {
         const sessions = await sessionHistory.getAllSessions();
-
-        if (sessionCount) sessionCount.textContent = sessions.length;
-        
         if (sessions.length === 0) {
             emptyHistory.classList.remove('hidden');
-        } else {
-            emptyHistory.classList.add('hidden');
+            return;
+        }
+        emptyHistory.classList.add('hidden');
+        
+        sessions.forEach(session => {
+            const sessionItem = document.createElement('div');
+            sessionItem.className = 'session-item';
+            if (session.failed) sessionItem.classList.add('failed'); // We can style this later if we want
+            sessionItem.dataset.id = session.id;
             
-            sessions.forEach(session => {
-                const sessionItem = document.createElement('div');
-                sessionItem.className = 'session-item';
-                sessionItem.dataset.id = session.id;
-                
-                sessionItem.innerHTML = `
-                    <div class="session-course">${escapeHtml(session.course || 'Unnamed Lecture')}</div>
-                    <div class="session-date">
-                        <i class="far fa-calendar"></i>
-                        ${formatDate(session.timestamp)}
-                        ${session.flashcards ? `<span style="margin-left: 8px;"><i class="fas fa-layer-group"></i> ${session.flashcards.length} cards</span>` : ''}
-                    </div>
-                    <div class="session-actions">
-                        <button class="session-action-btn delete-session" title="Delete">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                `;
-                
-                sessionItem.addEventListener('click', async (e) => {
-                    if (!e.target.closest('.session-action-btn')) {
+            const cardCount = session.flashcards ? session.flashcards.length : 0;
+            const statusIcon = session.failed ? '<span style="color:var(--danger); margin-left:5px;"><i class="fas fa-exclamation-triangle"></i> Failed (Click Retry)</span>' : '';
+
+            sessionItem.innerHTML = `
+                <div class="session-course">${session.course || 'Unnamed Lecture'}</div>
+                <div class="session-date">
+                    <i class="far fa-calendar"></i>
+                    ${formatDate(session.timestamp)}
+                    ${cardCount > 0 ? `<span style="margin-left: 8px;"><i class="fas fa-layer-group"></i> ${cardCount} cards</span>` : ''}
+                    ${statusIcon}
+                </div>
+                <div class="session-actions">
+                    <button class="session-action-btn delete-session" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            
+            sessionItem.addEventListener('click', async (e) => {
+                if (!e.target.closest('.session-action-btn')) {
+                    if (session.failed && session.rawBlob) {
+                        // Allow retrying failed ones stored as blobs
+                        retryFailedSession(session);
+                    } else {
                         await loadSession(session.id);
                     }
-                });
-                
-                sessionList.appendChild(sessionItem);
+                }
             });
-            
-            // Add delete event listeners
-            document.querySelectorAll('.delete-session').forEach(btn => {
-                btn.addEventListener('click', async (e) => {
-                    e.stopPropagation();
-                    const sessionId = btn.closest('.session-item').dataset.id;
-                    if (confirm('Delete this session?')) {
-                        await sessionHistory.deleteSession(sessionId);
-                        loadSessionHistory();
-                    }
-                });
-            });
-        }
+            sessionList.appendChild(sessionItem);
+        });
         
+        document.querySelectorAll('.delete-session').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                const sessionId = btn.closest('.session-item').dataset.id;
+                if (confirm('Delete this session?')) {
+                    await sessionHistory.deleteSession(sessionId);
+                    loadSessionHistory();
+                }
+            });
+        });
     } catch (error) {
         console.error('Error loading session history:', error);
         emptyHistory.classList.remove('hidden');
-        emptyHistory.innerHTML = `
-            <i class="fas fa-exclamation-circle"></i>
-            <p>Error loading sessions</p>
-        `;
-    }
-
-    // Always refresh the pending list too — they live in the same sidebar.
-    try {
-        await renderPendingList();
-    } catch (e) {
-        console.warn('renderPendingList failed:', e);
+        emptyHistory.innerHTML = `<i class="fas fa-exclamation-circle"></i><p>Error loading sessions</p>`;
     }
 }
 
@@ -2642,25 +2363,22 @@ async function loadSession(sessionId) {
         document.getElementById('loadingText').textContent = 'Loading session...';
         
         const session = await sessionHistory.getSession(sessionId);
-        
         if (!session) {
             showToast('Session not found', 'error');
             return;
         }
         
-        // Update session access time
         await sessionHistory.updateSessionAccess(sessionId);
         
-        // Load data into UI
-        if (session.course) {
-            document.getElementById('courseName').value = session.course;
-        }
+        if (session.course) document.getElementById('courseName').value = session.course;
         
         if (session.study) {
             const processedStudy = parseMarkdownWithMath(session.study);
             document.getElementById('outputStudy').innerHTML = processedStudy;
             document.getElementById('btnDlStudy').disabled = false;
             rawStudyMarkdown = session.rawStudy || '';
+        } else {
+            document.getElementById('outputStudy').innerHTML = "<p style='color:var(--text-muted); text-align:center;'>No Study Guide generated.</p>";
         }
         
         if (session.scribe) {
@@ -2668,9 +2386,11 @@ async function loadSession(sessionId) {
             document.getElementById('outputScribe').innerHTML = processedScribe;
             document.getElementById('btnDlScribe').disabled = false;
             rawScribeMarkdown = session.rawScribe || '';
+        } else {
+            document.getElementById('outputScribe').innerHTML = "<p style='color:var(--text-muted); text-align:center;'>No Scribe Notes generated.</p>";
         }
         
-        if (session.flashcards) {
+        if (session.flashcards && session.flashcards.length > 0) {
             flashcardsData = session.flashcards.map(card => ({
                 front: convertLatexToUnicode(card.front),
                 back: convertLatexToUnicode(card.back)
@@ -2678,19 +2398,17 @@ async function loadSession(sessionId) {
             renderCard(0);
             document.getElementById('btnDlCards').disabled = false;
             document.getElementById('cardsBadge').textContent = `${flashcardsData.length} cards`;
+        } else {
+            flashcardsData = [];
+            renderCard(0);
         }
         
-        // Update badges
         document.getElementById('studyBadge').textContent = session.study ? '✓ Ready' : 'Empty';
         document.getElementById('scribeBadge').textContent = session.scribe ? '✓ Ready' : 'Empty';
         
-        // Switch to result view
         switchView('result');
         setActiveTab('Study');
-        
-        // Close sidebar
         document.getElementById('historySidebar').classList.remove('active');
-        
         showToast(`Loaded "${session.course || 'session'}"`, 'success');
         
     } catch (error) {
@@ -2701,20 +2419,28 @@ async function loadSession(sessionId) {
     }
 }
 
+// --- STREAMING_CHUNK:Configuring Advanced Partial Saving Logic... ---
 async function saveCurrentSession() {
     const course = document.getElementById('courseName').value || 'Unnamed Lecture';
-    const studyHTML = document.getElementById('outputStudy').innerHTML;
-    const scribeHTML = document.getElementById('outputScribe').innerHTML;
     
-    if (!studyHTML.includes('skeleton') && !scribeHTML.includes('skeleton') && flashcardsData.length > 0) {
+    // Check states directly to allow partial saves. Ignore Skeletons or Error tags.
+    const outputStudy = document.getElementById('outputStudy').innerHTML;
+    const outputScribe = document.getElementById('outputScribe').innerHTML;
+    
+    const hasStudy = outputStudy && !outputStudy.includes('skeleton') && !outputStudy.includes('Retry');
+    const hasScribe = outputScribe && !outputScribe.includes('skeleton') && !outputScribe.includes('Retry');
+    const hasCards = flashcardsData.length > 0 && flashcardsData[0].front !== 'Error' && !document.getElementById('flashcardErrorState').classList.contains('hidden') === false;
+    
+    if (hasStudy || hasScribe || hasCards) {
         const sessionData = {
             course: course,
             timestamp: Date.now(),
-            study: studyHTML,
-            scribe: scribeHTML,
-            flashcards: flashcardsData,
-            rawStudy: rawStudyMarkdown,
-            rawScribe: rawScribeMarkdown
+            study: hasStudy ? outputStudy : "",
+            scribe: hasScribe ? outputScribe : "",
+            flashcards: hasCards ? flashcardsData : [],
+            rawStudy: hasStudy ? rawStudyMarkdown : "",
+            rawScribe: hasScribe ? rawScribeMarkdown : "",
+            failed: false
         };
         
         try {
@@ -2725,25 +2451,42 @@ async function saveCurrentSession() {
             showToast('Failed to save session', 'error');
         }
     } else {
-        showToast('Please wait for all content to generate before saving', 'warning');
+        showToast('No valid content available to save yet', 'warning');
     }
 }
 
-// --- RESTORED AUTHENTICATION LOGIC ---
+// Support for failed session retries from DB
+async function retryFailedSession(session) {
+    if (!session.rawBlob) {
+        showToast("Audio data lost. Cannot retry.", "error");
+        return;
+    }
+    document.getElementById('courseName').value = session.course;
+    currentBlob = session.rawBlob;
+    document.getElementById('historySidebar').classList.remove('active');
+    
+    // Reset global states
+    rawStudyMarkdown = "";
+    rawScribeMarkdown = "";
+    flashcardsData = [];
+    document.getElementById('flashcardErrorState').classList.add('hidden');
+    document.getElementById('flashcardContainer').classList.remove('hidden');
+
+    processMultiEngine();
+}
+
+// --- STREAMING_CHUNK:Authentication Logic... ---
 const REPO_OWNER = "Cleo876";
 const REPO_NAME = "lsp-data";
 const FILE_PATH = "lsp-data.json";
 
-// --- OBFUSCATION ENGINE (1:1 from Dashboard) ---
 const deobfuscate = (str) => {
     try {
-        // Decode Base64 then unshift characters by -2
         const decoded = atob(str);
         return decoded.split('').map(c => String.fromCharCode(c.charCodeAt(0) - 2)).join('');
     } catch (e) { return "{}"; }
 };
 
-// --- LOGIN LOGIC (Safe-Parse) ---
 document.addEventListener('DOMContentLoaded', () => {
     initBackgroundAnimation();
     
@@ -2754,23 +2497,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginUcode = document.getElementById('login-ucode');
     const loginStatus = document.getElementById('login-status');
 
-    // Check if user is already authenticated (for development/testing)
     const isDevMode = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     const bypassAuth = new URLSearchParams(window.location.search).has('dev');
     
-    // --- SESSION PERSISTENCE LOGIC (3 Hour Timeout) ---
     const lastActive = localStorage.getItem('lsp_last_active');
     if (lastActive && !bypassAuth) {
         const diff = Date.now() - parseInt(lastActive, 10);
-        if (diff < (3 * 60 * 60 * 1000)) { // 3 Hours
-            // Valid Session: Refresh timestamp & bypass login
+        if (diff < (3 * 60 * 60 * 1000)) { 
             localStorage.setItem('lsp_last_active', Date.now().toString()); 
             loginView.style.display = 'none';
             mainContainer.classList.remove('hidden');
             document.body.style.userSelect = "auto";
-            // Note: We don't return here so that event listeners below still attach correctly
         } else {
-            // Session Expired
             localStorage.removeItem('lsp_last_active');
         }
     }
@@ -2797,14 +2535,12 @@ document.addEventListener('DOMContentLoaded', () => {
         btnLogin.disabled = true;
 
         try {
-            // MODIFIED: Use Raw GitHub Content (No Token Required)
             const url = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${FILE_PATH}`;
             const res = await fetch(url);
             
             if (!res.ok) throw new Error("Could not reach network database.");
             
             const content = await res.text();
-            // Strip newlines just in case
             const sanitizedContent = content.replace(/\n/g, '');
             
             let db;
@@ -2819,21 +2555,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // Master Overwrite for Mr. Williams
             if (emailInput === "cleowillo@gmail.com" && codeInput === "K9W2") {
                 loginSuccess(loginView, mainContainer, loginStatus, btnLogin);
                 return;
             }
 
-            // Universal Check (Distributors AND Customers)
             let authorized = false;
             if (db.distributors) {
                 db.distributors.forEach(dist => {
-                    // Check Distributor Creds
                     if (dist.email.toLowerCase() === emailInput && dist.u_code.toUpperCase() === codeInput) {
                         authorized = true;
                     }
-                    // Check Customer Creds
                     if (dist.customers) {
                         dist.customers.forEach(cust => {
                             if (cust.email.toLowerCase() === emailInput && cust.u_code.toUpperCase() === codeInput) {
@@ -2858,7 +2590,6 @@ document.addEventListener('DOMContentLoaded', () => {
             loginStatus.style.color = "var(--danger)";
             btnLogin.disabled = false;
             
-            // Fallback for development
             if (isDevMode) {
                 setTimeout(() => {
                     loginStatus.innerText = "⚠️ Using dev fallback...";
@@ -2870,14 +2601,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Allow Enter key to submit
     loginUcode.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') btnLogin.click();
     });
 });
 
 function loginSuccess(loginView, mainContainer, loginStatus, btnLogin) {
-    localStorage.setItem('lsp_last_active', Date.now().toString()); // START SESSION TIMER
+    localStorage.setItem('lsp_last_active', Date.now().toString());
     loginStatus.innerText = "✓ Access Granted";
     loginStatus.style.color = "var(--success)";
     setTimeout(() => {
@@ -2885,40 +2615,27 @@ function loginSuccess(loginView, mainContainer, loginStatus, btnLogin) {
         mainContainer.classList.remove('hidden');
         document.body.style.userSelect = "auto";
         btnLogin.disabled = false;
-
-        // Load session history after successful login
-        setTimeout(() => {
-            loadSessionHistory();
-        }, 500);
+        setTimeout(() => { loadSessionHistory(); }, 500);
     }, 800);
 }
 
-// --- ENHANCED INITIALIZATION ---
+// --- STREAMING_CHUNK:Registering Core App Listeners (Non-Module) ---
 document.addEventListener('DOMContentLoaded', () => {
-    // --- APP DETECTION LOGIC (APK HIDE/SHOW) ---
-    // Determine if we are running in an app wrapper or regular browser
     const isRunningInApp = () => {
         const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-        // 1. Check for standard Android WebView indicator 'wv'
         if (/android/i.test(userAgent) && /wv/i.test(userAgent)) return true;
-        // 2. Check for iOS standalone mode (Added to Home Screen)
         if (window.navigator.standalone === true) return true;
-        // 3. Check for modern PWA standalone mode
         if (window.matchMedia('(display-mode: standalone)').matches) return true;
-        // 4. Check for custom 'app' parameter in URL (e.g. ?app=true)
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('app')) return true;
-        
         return false;
     };
 
-    // Only show download button if NOT in app
     if (!isRunningInApp()) {
         const btnDownload = document.getElementById('btnDownloadApp');
         if (btnDownload) btnDownload.classList.remove('hidden');
     }
 
-    // These will be set up after login, but we define them here
     document.getElementById('btnOpenHistory')?.addEventListener('click', () => {
         document.getElementById('historySidebar').classList.add('active');
         loadSessionHistory();
@@ -2929,14 +2646,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     document.getElementById('btnClearHistory')?.addEventListener('click', async () => {
-        if (confirm('Clear ALL history? This will permanently delete completed sessions AND any pending uploads awaiting retry.')) {
-            try {
-                await sessionHistory.clearAllSessions();
-                await window.pendingAudioDB.clearAllPending();
-                loadSessionHistory();
-            } catch (e) {
-                showToast('Failed to clear history: ' + e.message, 'error');
-            }
+        if (confirm('Clear all session history? This cannot be undone.')) {
+            await sessionHistory.clearAllSessions();
+            loadSessionHistory();
         }
     });
     
@@ -2945,15 +2657,12 @@ document.addEventListener('DOMContentLoaded', () => {
         loadSessionHistory();
     });
     
-    // Flashcard flip button
     document.getElementById('btnFlipCard')?.addEventListener('click', () => {
         document.getElementById('activeCard').classList.toggle('flipped');
     });
     
-    // Enhanced save session function
     window.saveSession = saveCurrentSession;
     
-    // Tutorial modal controls
     document.getElementById('btnWatchTutorial')?.addEventListener('click', () => {
         document.getElementById('tutorialModal')?.classList.remove('hidden');
     });
@@ -2962,7 +2671,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('tutorialModal')?.classList.add('hidden');
     });
     
-    // Help modal controls
     document.getElementById('btnOpenHelp')?.addEventListener('click', (e) => {
         e.preventDefault();
         document.getElementById('helpModal')?.classList.remove('hidden');
@@ -2971,28 +2679,112 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btnCloseModal')?.addEventListener('click', () => {
         document.getElementById('helpModal')?.classList.add('hidden');
     });
+
+    // Wait a bit for the main container to be shown
+    setTimeout(() => {
+        if (els.mainContainer && !els.mainContainer.classList.contains('hidden')) {
+            initializeApp();
+        }
+    }, 1000);
 });
 
-// --- GLOBAL VARIABLES FOR ORIGINAL LOGIC ---
+// Global Variables safely declared for native use
 let rawStudyMarkdown = "";
 let rawScribeMarkdown = "";
 let flashcardsData = [];
 let currentCardIndex = 0;
 
-// --- ENHANCED SWITCH VIEW FUNCTION ---
+let wakeLock = null;
+let detectedMimeType = ""; 
+let mediaRecorder;
+let startTime;
+let timerInterval;
+let currentBlob = null;
+let debounceTimer; 
+let elapsedMs = 0; 
+let totalSize = 0;
+
+// Reusable Globals for Retries
+window.currentBase64Audio = null;
+window.currentMimeType = null;
+
+// --- STREAMING_CHUNK:Configuring Robust DOM Map and View Switcher... ---
+const els = {
+    mainContainer: document.getElementById('mainContainer'),
+    apiKey: document.getElementById('apiKey'),
+    courseName: document.getElementById('courseName'),
+    modelSelect: document.getElementById('modelSelect'),
+    micQuality: document.getElementById('micQuality'),
+    micSelect: document.getElementById('micSelect'),
+    btnRefreshMics: document.getElementById('btnRefreshMics'),
+    quotaInfo: document.getElementById('quotaInfo'),
+    timer: document.getElementById('timer'),
+    sizeMonitor: document.getElementById('sizeMonitor'),
+    status: document.getElementById('processStatus'),
+    subStatus: document.getElementById('processSubStatus'),
+    
+    outputStudy: document.getElementById('outputStudy'),
+    outputScribe: document.getElementById('outputScribe'),
+    flashcardContainer: document.getElementById('flashcardContainer'),
+    
+    spinStudy: document.getElementById('spinStudy'),
+    spinScribe: document.getElementById('spinScribe'),
+    spinCards: document.getElementById('spinCards'),
+    
+    btnDlStudy: document.getElementById('btnDlStudy'),
+    btnDlScribe: document.getElementById('btnDlScribe'),
+    btnDlCards: document.getElementById('btnDlCards'),
+
+    modelLoadStatus: document.getElementById('modelLoadStatus'),
+    quotaAlert: document.getElementById('quotaAlert'), 
+    protocolAlert: document.getElementById('protocolAlert'),
+    btnFullscreen: document.getElementById('btnFullscreen'),
+    btnPause: document.getElementById('btnPause'),
+    recordingStatus: document.getElementById('recordingStatus'),
+    
+    promptStudy: document.getElementById('promptStudy'),
+    promptScribe: document.getElementById('promptScribe'),
+    promptCards: document.getElementById('promptCards'),
+    
+    tabRecord: document.getElementById('tabRecord'),
+    tabUpload: document.getElementById('tabUpload'),
+    modeRecord: document.getElementById('modeRecord'),
+    modeUpload: document.getElementById('modeUpload'),
+    fileUpload: document.getElementById('fileUpload'),
+    
+    btnSelectFile: document.getElementById('btnSelectFile'),
+    fileNameDisplay: document.getElementById('fileNameDisplay'),
+    
+    btnDirectReview: document.getElementById('btnDirectReview'),
+    directReviewInput: document.getElementById('directReviewInput'),
+
+    btnTabStudy: document.getElementById('btnTabStudy'),
+    btnTabScribe: document.getElementById('btnTabScribe'),
+    btnTabCards: document.getElementById('btnTabCards'),
+    paneStudy: document.getElementById('paneStudy'),
+    paneScribe: document.getElementById('paneScribe'),
+    paneCards: document.getElementById('paneCards'),
+    
+    activeCard: document.getElementById('activeCard'),
+    cardFront: document.getElementById('cardFrontText'),
+    cardBack: document.getElementById('cardBackText'),
+    btnPrevCard: document.getElementById('btnPrevCard'),
+    btnNextCard: document.getElementById('btnNextCard'),
+    cardCounter: document.getElementById('cardCounter'),
+    importCardsInput: document.getElementById('importCardsInput'),
+    btnImportCards: document.getElementById('btnImportCards')
+};
+
 function switchView(view) {
     ['step-setup','step-recording','step-processing','step-result'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.classList.add('hidden');
     });
     const targetEl = document.getElementById(`step-${view}`);
-    if (targetEl) {
-        targetEl.classList.remove('hidden');
-    }
+    if (targetEl) targetEl.classList.remove('hidden');
     
     if(view === 'result') {
         document.getElementById('mainContainer')?.classList.add('wide-mode');
-        // Add subtle animation
         if (document.getElementById('mainContainer')) {
             document.getElementById('mainContainer').style.animation = 'slideUp 0.5s ease';
         }
@@ -3001,7 +2793,7 @@ function switchView(view) {
     }
 }
 
-// --- ENHANCED RENDER CARD FUNCTION ---
+// --- STREAMING_CHUNK:Implementing Custom Flashcard UI Renderers... ---
 function renderCard(index) {
     if (!flashcardsData || flashcardsData.length === 0) {
         const frontText = document.getElementById('cardFrontText');
@@ -3012,10 +2804,8 @@ function renderCard(index) {
         if (backText) backText.textContent = '';
         if (counter) counter.textContent = '0 / 0';
         
-        // Update progress bar
         const progressFill = document.getElementById('cardProgress');
         if (progressFill) progressFill.style.width = '0%';
-        
         return;
     }
     
@@ -3038,19 +2828,16 @@ function renderCard(index) {
     if (btnPrevCard) btnPrevCard.disabled = index === 0;
     if (btnNextCard) btnNextCard.disabled = index === flashcardsData.length - 1;
     
-    // Update progress bar
     const progressFill = document.getElementById('cardProgress');
     if (progressFill) {
         const progress = ((index + 1) / flashcardsData.length) * 100;
         progressFill.style.width = `${progress}%`;
     }
     
-    // Update badge
     const cardsBadge = document.getElementById('cardsBadge');
     if (cardsBadge) cardsBadge.textContent = `${flashcardsData.length} cards`;
 }
 
-// Initialize card navigation
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btnPrevCard')?.addEventListener('click', () => {
         if (currentCardIndex > 0) renderCard(currentCardIndex - 1);
@@ -3065,7 +2852,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// --- ORIGINAL DOWNLOAD FUNCTIONS (Placeholders - will be replaced by module) ---
 window.downloadFlashcards = () => {
     if (!flashcardsData.length) {
         showToast("No flashcards generated.", "error");
@@ -3088,12 +2874,7 @@ window.downloadFlashcards = () => {
     showToast("Flashcards downloaded successfully!", "success");
 };
 
-window.downloadRTF = (type) => {
-    showToast("This function will be fully implemented in the module", "info");
-    // This will be properly implemented in the module script
-};
-
-// --- SET ACTIVE TAB FUNCTION ---
+// --- STREAMING_CHUNK:Configuring Device Hardware Interfaces (Mic/Tabs/WV)... ---
 function setActiveTab(tabName) {
     ['Study', 'Scribe', 'Cards'].forEach(t => {
         const btn = document.getElementById(`btnTab${t}`);
@@ -3108,15 +2889,11 @@ function setActiveTab(tabName) {
     if (pane) pane.classList.add('active');
 }
 
-// Initialize tab switching
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btnTabStudy')?.addEventListener('click', () => setActiveTab('Study'));
     document.getElementById('btnTabScribe')?.addEventListener('click', () => setActiveTab('Scribe'));
     document.getElementById('btnTabCards')?.addEventListener('click', () => setActiveTab('Cards'));
-});
 
-// Initialize mode tab switching
-document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('tabRecord')?.addEventListener('click', () => {
         document.getElementById('tabRecord').classList.add('active');
         document.getElementById('tabUpload').classList.remove('active');
@@ -3131,22 +2908,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('modeRecord').classList.add('hidden');
     });
 });
-</script>
-
-<script type="module">
-// --- ORIGINAL MODULE CODE (Preserved with enhancements) ---
-import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
-import { marked } from "https://esm.run/marked";
-
-let wakeLock = null;
-let detectedMimeType = ""; 
-let mediaRecorder;
-let startTime;
-let timerInterval;
-let currentBlob = null;
-let debounceTimer; 
-let elapsedMs = 0; 
-let totalSize = 0;
 
 class AudioDB {
     constructor(dbName = 'LectureScribePro', storeName = 'audioChunks') {
@@ -3198,342 +2959,9 @@ class AudioDB {
         });
     }
 }
-
 const audioDB = new AudioDB();
 
-// Element references
-const els = {
-    mainContainer: document.getElementById('mainContainer'),
-    apiKey: document.getElementById('apiKey'),
-    courseName: document.getElementById('courseName'),
-    modelSelect: document.getElementById('modelSelect'),
-    micQuality: document.getElementById('micQuality'),
-    micSelect: document.getElementById('micSelect'),
-    btnRefreshMics: document.getElementById('btnRefreshMics'),
-    quotaInfo: document.getElementById('quotaInfo'),
-    timer: document.getElementById('timer'),
-    sizeMonitor: document.getElementById('sizeMonitor'),
-    status: document.getElementById('processStatus'),
-    subStatus: document.getElementById('processSubStatus'),
-    
-    outputStudy: document.getElementById('outputStudy'),
-    outputScribe: document.getElementById('outputScribe'),
-    flashcardContainer: document.getElementById('flashcardContainer'),
-    
-    spinStudy: document.getElementById('spinStudy'),
-    spinScribe: document.getElementById('spinScribe'),
-    spinCards: document.getElementById('spinCards'),
-    
-    btnDlStudy: document.getElementById('btnDlStudy'),
-    btnDlScribe: document.getElementById('btnDlScribe'),
-    btnDlCards: document.getElementById('btnDlCards'),
-
-    modelLoadStatus: document.getElementById('modelLoadStatus'),
-    quotaAlert: document.getElementById('quotaAlert'), 
-    protocolAlert: document.getElementById('protocolAlert'),
-    btnFullscreen: document.getElementById('btnFullscreen'),
-    btnPause: document.getElementById('btnPause'),
-    recordingStatus: document.getElementById('recordingStatus'),
-    
-    promptStudy: document.getElementById('promptStudy'),
-    promptScribe: document.getElementById('promptScribe'),
-    promptCards: document.getElementById('promptCards'),
-    
-    tabRecord: document.getElementById('tabRecord'),
-    tabUpload: document.getElementById('tabUpload'),
-    modeRecord: document.getElementById('modeRecord'),
-    modeUpload: document.getElementById('modeUpload'),
-    fileUpload: document.getElementById('fileUpload'),
-    
-    btnSelectFile: document.getElementById('btnSelectFile'),
-    fileNameDisplay: document.getElementById('fileNameDisplay'),
-    
-    // Direct Review Elements
-    btnDirectReview: document.getElementById('btnDirectReview'),
-    directReviewInput: document.getElementById('directReviewInput'),
-
-    btnTabStudy: document.getElementById('btnTabStudy'),
-    btnTabScribe: document.getElementById('btnTabScribe'),
-    btnTabCards: document.getElementById('btnTabCards'),
-    paneStudy: document.getElementById('paneStudy'),
-    paneScribe: document.getElementById('paneScribe'),
-    paneCards: document.getElementById('paneCards'),
-    
-    activeCard: document.getElementById('activeCard'),
-    cardFront: document.getElementById('cardFrontText'),
-    cardBack: document.getElementById('cardBackText'),
-    btnPrevCard: document.getElementById('btnPrevCard'),
-    btnNextCard: document.getElementById('btnNextCard'),
-    cardCounter: document.getElementById('cardCounter'),
-    importCardsInput: document.getElementById('importCardsInput'),
-    btnImportCards: document.getElementById('btnImportCards'),
-    
-    btnOpenHelp: document.getElementById('btnOpenHelp'),
-    helpModal: document.getElementById('helpModal'),
-    btnCloseModal: document.getElementById('btnCloseModal')
-};
-
-// ============================================================
-// --- SELF-HEALING MODEL DISCOVERY HELPERS ---
-// ============================================================
-// These run on every page load and every time a key is entered.
-// They never rely on hard-coded model names, so the app stays
-// working even after Google retires old models.
-
-// Parse a version number out of a model name like "gemini-3.6-flash".
-// Returns [major, minor] as integers. Falls back to [0,0] if nothing matches.
-function parseModelVersion(name) {
-    if (!name) return [0, 0];
-    const m = name.match(/(\d+)(?:\.(\d+))?/);
-    if (!m) return [0, 0];
-    return [parseInt(m[1], 10), parseInt(m[2] || '0', 10)];
-}
-
-// Rank model "tiers" so we can prefer flash over pro at the same version.
-function modelTier(name) {
-    if (name.includes("flash") && !name.includes("8b")) return 0; // standard flash
-    if (name.includes("pro")) return 1;                            // pro
-    if (name.includes("flash")) return 2;                          // flash-8b
-    return 3;                                                       // anything else
-}
-
-// Sort models newest-version-first, then by tier, then alphabetically.
-// This is what guarantees we auto-pick the newest flash model.
-function sortModelsByPreference(models) {
-    return [...models].sort((a, b) => {
-        const [aMaj, aMin] = parseModelVersion(a);
-        const [bMaj, bMin] = parseModelVersion(b);
-        if (bMaj !== aMaj) return bMaj - aMaj;   // higher major first
-        if (bMin !== aMin) return bMin - aMin;   // higher minor first
-        const at = modelTier(a);
-        const bt = modelTier(b);
-        if (at !== bt) return at - bt;           // flash before pro before flash-8b
-        return a.localeCompare(b);               // stable tiebreak
-    });
-}
-
-// Fetch the live list of usable models for this API key.
-// This is the SINGLE source of truth — no hard-coded names anywhere else.
-async function discoverModels(apiKey) {
-    const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
-    if (!resp.ok) {
-        let errText = `HTTP ${resp.status}`;
-        try {
-            const errData = await resp.json();
-            if (errData.error && errData.error.message) errText = errData.error.message;
-        } catch(e) {}
-        throw new Error(errText);
-    }
-    const data = await resp.json();
-    const raw = (data.models || [])
-        .filter(m => m.supportedGenerationMethods?.includes("generateContent"))
-        .map(m => m.name.replace('models/', ''));
-    return sortModelsByPreference(raw);
-}
-
-// Fill the dropdown from a discovered list, preferring the newest flash.
-// Keeps the user's current selection if it's still valid.
-function populateModelDropdown(models) {
-    if (!els.modelSelect || !models || models.length === 0) return;
-
-    const currentVal = els.modelSelect.value;
-    els.modelSelect.innerHTML = "";
-
-    models.forEach(m => {
-        const opt = document.createElement("option");
-        opt.value = m;
-        if (m.includes("flash") && !m.includes("8b")) opt.textContent = `🚀 ${m} (Fast)`;
-        else if (m.includes("pro")) opt.textContent = `🧠 ${m} (Advanced)`;
-        else if (m.includes("flash")) opt.textContent = `⚡ ${m} (Lite)`;
-        else opt.textContent = m;
-        els.modelSelect.appendChild(opt);
-    });
-
-    // Prefer the previous selection if it's still present;
-    // otherwise pick the newest flash, falling back to the newest model of any kind.
-    if (currentVal && models.includes(currentVal)) {
-        els.modelSelect.value = currentVal;
-    } else {
-        const newestFlash = models.find(m => m.includes("flash") && !m.includes("8b"));
-        els.modelSelect.value = newestFlash || models[0];
-    }
-}
-
-// Detect the specific "this model is gone" class of error.
-// These are the only ones we retry automatically — rate limits, auth errors, etc.
-// are surfaced immediately so the user sees them.
-function isModelRetiredError(msg) {
-    if (!msg) return false;
-    return /no longer available|not found|404|deprecated|retired|does not exist|is not supported|not supported for|is not found/i.test(msg);
-}
-
-// Detect transient server-side errors that should be retried rather than
-// treated as a hard failure. 503/500/502/504 = Google overloaded.
-// 429 = rate limit.
-function isTransientError(msg) {
-    if (!msg) return false;
-    return /\b(429|500|502|503|504)\b|high demand|overloaded|try again|rate limit|resource_exhausted|unavailable|deadline|internal error/i.test(msg);
-}
-
-const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-
-// Wrapper around generateContent that:
-//   1. Retries transient errors (503/429/etc.) with exponential backoff.
-//   2. Walks down the model list if a model is retired.
-//   3. Re-runs discovery if the whole dropdown fails.
-//   4. Updates the UI at each step so the user sees what's happening.
-async function generateWithAutoRetry(apiKey, currentModelName, payload, prompt, onStatus) {
-    const tryModel = async (name) => {
-        const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: name });
-        const res = await model.generateContent([payload, prompt]);
-        return await res.response.text();
-    };
-
-    // Exponential backoff schedule for transient retries (per model).
-    const transientDelaysMs = [2000, 5000, 12000];
-
-    const tryModelWithRetries = async (name) => {
-        let lastErr;
-        for (let attempt = 0; attempt <= transientDelaysMs.length; attempt++) {
-            try {
-                return await tryModel(name);
-            } catch (e) {
-                lastErr = e;
-
-                // If it's a retirement error, no point retrying this model — bubble up.
-                if (isModelRetiredError(e.message)) throw e;
-
-                // If it's transient and we have retries left, wait and try again.
-                if (isTransientError(e.message) && attempt < transientDelaysMs.length) {
-                    const delay = transientDelaysMs[attempt];
-                    if (typeof onStatus === 'function') {
-                        onStatus(`Google servers busy — retrying in ${Math.round(delay/1000)}s (attempt ${attempt + 1}/${transientDelaysMs.length})...`);
-                    }
-                    await sleep(delay);
-                    continue;
-                }
-
-                // Anything else (auth error, bad request, etc.) fails immediately.
-                throw e;
-            }
-        }
-        throw lastErr;
-    };
-
-    const dropdownModels = Array.from(els.modelSelect.options)
-        .map(o => o.value)
-        .filter(v => v && !v.startsWith('__'));
-    const initialChain = [currentModelName, ...dropdownModels.filter(m => m !== currentModelName)];
-
-    let lastErr;
-
-    for (const name of initialChain) {
-        try {
-            const text = await tryModelWithRetries(name);
-            if (name !== currentModelName) {
-                if (els.modelSelect) els.modelSelect.value = name;
-                showToast(`Auto-switched to ${name}`, "info");
-            }
-            return text;
-        } catch (e) {
-            lastErr = e;
-            if (!isModelRetiredError(e.message) && !isTransientError(e.message)) throw e;
-            console.warn(`Model "${name}" failed: ${e.message}`);
-        }
-    }
-
-    // Everything in the dropdown failed — refresh the list live and try once more.
-    if (typeof onStatus === 'function') onStatus('Refreshing model list...');
-    try {
-        const fresh = await discoverModels(apiKey);
-        if (fresh && fresh.length) {
-            populateModelDropdown(fresh);
-            for (const name of fresh) {
-                try {
-                    const text = await tryModelWithRetries(name);
-                    if (els.modelSelect) els.modelSelect.value = name;
-                    showToast(`Auto-switched to ${name} after refreshing model list`, "info");
-                    return text;
-                } catch (e) {
-                    lastErr = e;
-                    if (!isModelRetiredError(e.message) && !isTransientError(e.message)) throw e;
-                }
-            }
-        }
-    } catch (discoveryErr) {
-        console.warn('Fresh model discovery failed:', discoveryErr);
-    }
-
-    throw lastErr || new Error('No available models could be reached with this API key.');
-}
-
-// ============================================================
-// --- PENDING RETRY ENTRY POINT (exposed to global script) ---
-// ============================================================
-// Called when the user clicks a pending item in the history sidebar.
-// Restores the UI state (course, prompts, model), sets currentBlob, and
-// re-runs processMultiEngine() using the SAME pending ID so we don't
-// duplicate the record.
-window.retryPending = async function(id) {
-    try {
-        const record = await window.pendingAudioDB.getPending(id);
-        if (!record) {
-            showToast('Pending recording not found', 'error');
-            if (typeof renderPendingList === 'function') renderPendingList();
-            return;
-        }
-
-        // Make sure we have an API key before starting.
-        if (!els.apiKey || !els.apiKey.value) {
-            showToast('Enter your API key first, then retry.', 'warning');
-            return;
-        }
-
-        // Restore UI state from the stored record
-        if (els.courseName && record.course != null) els.courseName.value = record.course;
-        if (els.promptStudy && record.promptStudy) els.promptStudy.value = record.promptStudy;
-        if (els.promptScribe && record.promptScribe) els.promptScribe.value = record.promptScribe;
-        if (els.promptCards && record.promptCards) els.promptCards.value = record.promptCards;
-
-        // Restore selected model if it's still in the dropdown
-        if (record.modelName && els.modelSelect) {
-            const exists = Array.from(els.modelSelect.options).some(o => o.value === record.modelName);
-            if (exists) els.modelSelect.value = record.modelName;
-        }
-
-        // Close the sidebar so the user can watch the processing UI
-        const sidebar = document.getElementById('historySidebar');
-        if (sidebar) sidebar.classList.remove('active');
-
-        showToast('Retrying pending recording...', 'info');
-
-        // Set the blob and re-run. Pass the pending ID so we don't re-queue.
-        currentBlob = record.blob;
-        // Fire and forget; processMultiEngine handles its own errors.
-        processMultiEngine(id);
-    } catch (e) {
-        console.error('Error retrying pending record:', e);
-        showToast('Retry failed: ' + e.message, 'error');
-    }
-};
-
-// ============================================================
-// --- APP INITIALIZATION ---
-// ============================================================
-
-// Initialize after login
-document.addEventListener('DOMContentLoaded', () => {
-    // Wait a bit for the main container to be shown
-    setTimeout(() => {
-        if (els.mainContainer && !els.mainContainer.classList.contains('hidden')) {
-            initializeApp();
-        }
-    }, 1000);
-});
-
 function initializeApp() {
-    // CHECK PROTOCOL ON LOAD
     if (window.location.protocol === 'file:') {
         if (els.protocolAlert) {
             els.protocolAlert.style.display = 'block';
@@ -3547,20 +2975,13 @@ function initializeApp() {
         }
     }
 
-    // AUTO-LOAD SAVED KEY AND REFRESH MODEL LIST
     const savedKey = localStorage.getItem('lsp_gemini_key');
     if (savedKey && els.apiKey) {
         els.apiKey.value = savedKey;
-        if (savedKey.length > 20) {
-            // Run self-healing discovery immediately so the dropdown is
-            // always current on every page load.
-            loadModels(savedKey);
-        }
+        if (savedKey.length > 20) loadModels(savedKey);
     }
 
     loadMicrophones();
-    
-    // Setup event listeners
     setupEventListeners();
 }
 
@@ -3580,37 +3001,26 @@ async function loadMicrophones() {
                 }
             });
         }
-    } catch(e) { 
-        console.log("Error enumerating devices:", e); 
-    }
+    } catch(e) { console.log("Error enumerating devices:", e); }
 }
 
 function setupEventListeners() {
-    // Microphone refresh
     if (els.btnRefreshMics) {
         els.btnRefreshMics.onclick = async () => {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 stream.getTracks().forEach(t => t.stop());
                 await loadMicrophones();
-            } catch (e) { 
-                showToast("Could not access microphones. Please check browser permissions.", "error"); 
-            }
+            } catch (e) { showToast("Could not access microphones.", "error"); }
         };
     }
 
-    // Fullscreen button - fullscreens the entire page
     if (els.btnFullscreen) {
         els.btnFullscreen.onclick = () => {
             if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(err => { 
-                    console.error(`Error: ${err.message}`); 
-                });
-            } else { 
-                document.exitFullscreen(); 
-            }
+                document.documentElement.requestFullscreen().catch(err => console.error(err.message));
+            } else { document.exitFullscreen(); }
         };
-
         document.addEventListener('fullscreenchange', () => {
             if (document.fullscreenElement) {
                 els.btnFullscreen.innerHTML = '<i class="fas fa-compress"></i>';
@@ -3620,7 +3030,6 @@ function setupEventListeners() {
         });
     }
 
-    // API Key input — debounced discovery using the shared helpers above
     if (els.apiKey) {
         els.apiKey.addEventListener('input', (e) => {
             const key = e.target.value.trim();
@@ -3636,11 +3045,9 @@ function setupEventListeners() {
                 if (els.modelLoadStatus) els.modelLoadStatus.textContent = ""; 
             }
         });
-
-        els.modelSelect.addEventListener('change', updateQuotaDisplay);
     }
+    els.modelSelect?.addEventListener('change', updateQuotaDisplay);
 
-    // File upload
     if (els.btnSelectFile && els.fileUpload) {
         els.btnSelectFile.onclick = () => { els.fileUpload.click(); };
     }
@@ -3649,7 +3056,7 @@ function setupEventListeners() {
         els.fileUpload.onchange = () => {
             const file = els.fileUpload.files[0];
             if (file && els.fileNameDisplay) {
-                els.fileNameDisplay.textContent = "Selected: " + file.name + " (" + (file.size / 1048576).toFixed(1) + " MB)";
+                els.fileNameDisplay.textContent = "Selected: " + file.name;
                 els.fileNameDisplay.style.color = "var(--success)";
                 els.fileNameDisplay.style.fontWeight = "bold";
             } else if (els.fileNameDisplay) {
@@ -3658,24 +3065,6 @@ function setupEventListeners() {
         };
     }
 
-    // Mode tabs (already handled in global script, but keep for module compatibility)
-    if (els.tabRecord && els.tabUpload) {
-        els.tabRecord.onclick = () => {
-            els.tabRecord.classList.add('active'); 
-            els.tabUpload.classList.remove('active');
-            if (els.modeRecord) els.modeRecord.classList.remove('hidden'); 
-            if (els.modeUpload) els.modeUpload.classList.add('hidden');
-        };
-        
-        els.tabUpload.onclick = () => {
-            els.tabUpload.classList.add('active'); 
-            els.tabRecord.classList.remove('active');
-            if (els.modeUpload) els.modeUpload.classList.remove('hidden'); 
-            if (els.modeRecord) els.modeRecord.classList.add('hidden');
-        };
-    }
-
-    // Direct review
     if (els.btnDirectReview && els.directReviewInput) {
         els.btnDirectReview.onclick = () => { els.directReviewInput.click(); };
         els.directReviewInput.onchange = (e) => {
@@ -3688,12 +3077,8 @@ function setupEventListeners() {
                     setActiveTab('Cards');
                     if (els.btnTabStudy) els.btnTabStudy.style.display = 'none';
                     if (els.btnTabScribe) els.btnTabScribe.style.display = 'none';
-                    if (els.outputStudy) {
-                        els.outputStudy.innerHTML = "<p style='color:#64748b; text-align:center;'>Review Mode Only (Study Guide not loaded)</p>";
-                    }
-                    if (els.outputScribe) {
-                        els.outputScribe.innerHTML = "<p style='color:#64748b; text-align:center;'>Review Mode Only (Scribe Notes not loaded)</p>";
-                    }
+                    if (els.outputStudy) els.outputStudy.innerHTML = "<p style='color:#64748b; text-align:center;'>Review Mode Only (Study Guide not loaded)</p>";
+                    if (els.outputScribe) els.outputScribe.innerHTML = "<p style='color:#64748b; text-align:center;'>Review Mode Only (Scribe Notes not loaded)</p>";
                     if (els.btnDlCards) els.btnDlCards.disabled = false;
                 }
             };
@@ -3701,7 +3086,6 @@ function setupEventListeners() {
         };
     }
 
-    // Import cards
     if (els.btnImportCards && els.importCardsInput) {
         els.btnImportCards.onclick = () => { els.importCardsInput.click(); };
         els.importCardsInput.onchange = (e) => {
@@ -3718,49 +3102,75 @@ function setupEventListeners() {
         };
     }
 
-    // Start recording
     const btnStart = document.getElementById('btnStart');
-    if (btnStart) {
-        btnStart.onclick = startRecording;
-    }
+    if (btnStart) btnStart.onclick = startRecording;
 
-    // Pause/Resume recording
-    if (els.btnPause) {
-        els.btnPause.onclick = togglePauseRecording;
-    }
+    if (els.btnPause) els.btnPause.onclick = togglePauseRecording;
 
-    // Stop recording
     const btnStop = document.getElementById('btnStop');
-    if (btnStop) {
-        btnStop.onclick = stopRecording;
-    }
+    if (btnStop) btnStop.onclick = stopRecording;
 
-    // Upload process
     const btnUploadProcess = document.getElementById('btnUploadProcess');
-    if (btnUploadProcess) {
-        btnUploadProcess.onclick = processUploadedFile;
-    }
+    if (btnUploadProcess) btnUploadProcess.onclick = processUploadedFile;
 }
 
-// Unified model loader — used from both initializeApp and the input debouncer.
-// It fetches the live model list and populates the dropdown using the shared
-// helpers defined above. There are no hard-coded model names anywhere in this path.
+// --- STREAMING_CHUNK:Filtering Models & Raw API Architecture Setup... ---
 async function loadModels(key) {
     try {
-        const models = await discoverModels(key.trim());
-        if (!models || models.length === 0) {
-            throw new Error("No compatible models were returned for this API key.");
+        const cleanKey = key.trim();
+        const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${cleanKey}`);
+        
+        if (!resp.ok) {
+            let errText = `HTTP Error ${resp.status}`;
+            try {
+                const errData = await resp.json();
+                if (errData.error && errData.error.message) errText = errData.error.message;
+            } catch(e) {}
+            throw new Error(errText);
         }
-        populateModelDropdown(models);
-
+        
+        const data = await resp.json();
+        
+        // **CRITICAL FIX**: Explicitly filtering for "gemini" exclusively to block "antigravity" and internal text-only tests
+        const models = (data.models || [])
+            .filter(m => m.supportedGenerationMethods?.includes("generateContent"))
+            .filter(m => m.name.toLowerCase().includes("gemini"))
+            .map(m => m.name.replace('models/', ''))
+            .sort();
+        
+        if (els.modelSelect && models.length > 0) {
+            const currentVal = els.modelSelect.value;
+            els.modelSelect.innerHTML = "";
+            
+            let hasFlash = false;
+            models.forEach(m => {
+                const opt = document.createElement("option");
+                opt.value = m; 
+                
+                if (m.includes("flash")) opt.textContent = `🚀 ${m} (Fast & Free)`;
+                else if (m.includes("pro")) opt.textContent = `🧠 ${m} (Advanced)`;
+                else opt.textContent = m;
+                
+                els.modelSelect.appendChild(opt);
+                if (m.includes("flash") && !m.includes("8b")) hasFlash = true;
+            });
+            
+            if (models.includes(currentVal)) {
+                els.modelSelect.value = currentVal;
+            } else if (hasFlash) {
+                const defaultModel = models.find(m => m.includes("flash") && !m.includes("8b"));
+                if (defaultModel) els.modelSelect.value = defaultModel;
+            }
+        }
+        
         if (els.modelLoadStatus) {
-            els.modelLoadStatus.textContent = `✓ Key valid — ${models.length} models loaded (newest: ${models[0]})`;
+            els.modelLoadStatus.textContent = "✓ Key Valid & Models Loaded"; 
             els.modelLoadStatus.style.color = "var(--success)";
         }
         updateQuotaDisplay();
     } catch (e) {
         if (els.modelLoadStatus) {
-            let displayError = e.message || String(e);
+            let displayError = e.message;
             if (displayError.includes('Failed to fetch')) {
                 displayError = "Network error. Check internet or extensions blocking APIs.";
             }
@@ -3772,7 +3182,6 @@ async function loadModels(key) {
 
 function updateQuotaDisplay() {
     if (!els.modelSelect || !els.quotaInfo) return;
-    
     const model = els.modelSelect.value;
     if (model.includes("flash")) {
         els.quotaInfo.innerHTML = `Google API Quota: <span>~500 recordings/day</span> (1500 req/day).<br>Speed Limit: <span>5 recordings/minute</span> (15 req/min).`;
@@ -3796,10 +3205,7 @@ function parseAndLoadCards(text) {
                 if (parts.length >= 2) {
                     front = parts[0].replace(/^"|"$/g, '').replace(/""/g, '"').trim();
                     let back = parts[1].replace(/^"|"$/g, '').replace(/""/g, '"').trim();
-                    newCards.push({ 
-                        front: convertLatexToUnicode(front),
-                        back: convertLatexToUnicode(back)
-                    });
+                    newCards.push({ front: convertLatexToUnicode(front), back: convertLatexToUnicode(back) });
                 }
             }
         }
@@ -3825,36 +3231,24 @@ async function startRecording() {
     }
     
     try {
-        try { 
-            wakeLock = await navigator.wakeLock.request('screen'); 
-        } catch (e) {
-            console.log("Wake lock not supported:", e);
-        }
+        try { wakeLock = await navigator.wakeLock.request('screen'); } catch (e) {}
         
         await audioDB.open(); 
         await audioDB.clear();
         
         const selectedMicId = els.micSelect.value;
         const constraints = {
-            audio: { 
-                echoCancellation: true, 
-                deviceId: selectedMicId ? { exact: selectedMicId } : undefined 
-            }
+            audio: { echoCancellation: true, deviceId: selectedMicId ? { exact: selectedMicId } : undefined }
         };
         
         const stream = await navigator.mediaDevices.getUserMedia(constraints);
         const quality = parseInt(els.micQuality.value);
         let options = { bitsPerSecond: quality };
         
-        if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
-            detectedMimeType = 'audio/webm;codecs=opus';
-        } else if (MediaRecorder.isTypeSupported('audio/webm')) {
-            detectedMimeType = 'audio/webm';
-        } else if (MediaRecorder.isTypeSupported('audio/mp4')) {
-            detectedMimeType = 'audio/mp4'; 
-        } else {
-            detectedMimeType = '';
-        }
+        if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) detectedMimeType = 'audio/webm;codecs=opus';
+        else if (MediaRecorder.isTypeSupported('audio/webm')) detectedMimeType = 'audio/webm';
+        else if (MediaRecorder.isTypeSupported('audio/mp4')) detectedMimeType = 'audio/mp4'; 
+        else detectedMimeType = '';
         
         if (detectedMimeType) options.mimeType = detectedMimeType;
         
@@ -3867,9 +3261,7 @@ async function startRecording() {
                 await audioDB.addChunk(e.data);
                 totalSize += e.data.size;
                 updateSizeDisplay(totalSize);
-                if (totalSize > 99.5 * 1024 * 1024) {
-                    mediaRecorder.stop();
-                }
+                if (totalSize > 99.5 * 1024 * 1024) mediaRecorder.stop();
             }
         };
         
@@ -3880,15 +3272,12 @@ async function startRecording() {
     } catch (e) { 
         if (e.name === "NotAllowedError" || e.name === "PermissionDeniedError") {
             showToast("Microphone Access Denied. If using file://, upload to HTTPS website.", "error");
-        } else { 
-            showToast("Recording Error: " + e.message, "error");
-        }
+        } else { showToast("Recording Error: " + e.message, "error"); }
     }
 }
 
 function togglePauseRecording() {
     if (!mediaRecorder) return;
-    
     if (mediaRecorder.state === 'recording') {
         mediaRecorder.pause();
         clearInterval(timerInterval);
@@ -3915,20 +3304,10 @@ function togglePauseRecording() {
 }
 
 async function stopRecording() {
-    if(mediaRecorder && mediaRecorder.state !== 'inactive') {
-        mediaRecorder.stop();
-    }
-    
-    if(mediaRecorder && mediaRecorder.stream) {
-        mediaRecorder.stream.getTracks().forEach(t => t.stop());
-    }
-    
+    if(mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+    if(mediaRecorder && mediaRecorder.stream) mediaRecorder.stream.getTracks().forEach(t => t.stop());
     clearInterval(timerInterval);
-    
-    if(wakeLock) {
-        wakeLock.release();
-        wakeLock = null;
-    }
+    if(wakeLock) { wakeLock.release(); wakeLock = null; }
     
     if (mediaRecorder) {
         mediaRecorder.onstop = async () => {
@@ -3945,12 +3324,10 @@ async function processUploadedFile() {
         showToast("Please enter your API Key.", "error");
         return;
     }
-    
     if (!els.fileUpload.files[0]) {
         showToast("Please select an audio file.", "error");
         return;
     }
-    
     currentBlob = els.fileUpload.files[0];
     processMultiEngine();
 }
@@ -3959,417 +3336,74 @@ function startTimer() {
     startTime = Date.now() - elapsedMs;
     timerInterval = setInterval(() => {
         elapsedMs = Date.now() - startTime;
-        if (els.timer) {
-            els.timer.innerText = new Date(elapsedMs).toISOString().substr(11, 8);
-        }
+        if (els.timer) els.timer.innerText = new Date(elapsedMs).toISOString().substr(11, 8);
     }, 1000);
 }
 
 function updateSizeDisplay(bytes) {
     const mb = (bytes / (1024*1024)).toFixed(2);
-    if (els.sizeMonitor) {
-        els.sizeMonitor.innerHTML = `<i class="fas fa-hdd"></i> Current Size: <span id="sizeValue">${mb}</span> MB`;
-    }
-    
-    // Update progress bar
+    if (els.sizeMonitor) els.sizeMonitor.innerHTML = `<i class="fas fa-hdd"></i> Current Size: <span id="sizeValue">${mb}</span> MB`;
     const progress = (bytes / (99.5 * 1024 * 1024)) * 100;
     updateProgressBar('sizeProgress', Math.min(progress, 100));
 }
 
-// --- GEMINI FILE API UPLOAD (No inline size ceiling) ---
-// Uploads a Blob to Google's File API via the resumable upload protocol.
-// Two-step handshake: (1) POST a small JSON to get an upload URL, (2) POST the
-// raw bytes to that URL and finalize. Both calls are cross-origin fetches that
-// Google's CORS config explicitly allows, which is why this works without a server.
-async function uploadAudioToGemini(blob, apiKey) {
-    const mimeType = blob.type || 'audio/webm';
-    const size = blob.size;
-
-    // --- Step 1: Start a resumable upload session ---
-    const initResp = await fetch(
-        `https://generativelanguage.googleapis.com/upload/v1beta/files?key=${apiKey}`,
-        {
-            method: 'POST',
-            headers: {
-                'X-Goog-Upload-Protocol': 'resumable',
-                'X-Goog-Upload-Command': 'start',
-                'X-Goog-Upload-Header-Content-Length': String(size),
-                'X-Goog-Upload-Header-Content-Type': mimeType,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ file: { display_name: 'lecture-audio' } })
-        }
-    );
-
-    if (!initResp.ok) {
-        throw new Error(`File API init failed (HTTP ${initResp.status})`);
-    }
-
-    const uploadUrl = initResp.headers.get('X-Goog-Upload-URL');
-    if (!uploadUrl) {
-        throw new Error('File API did not return an upload URL');
-    }
-
-    // --- Step 2: Upload the bytes and finalize ---
-    // Note: Content-Length is a forbidden header in the browser fetch API,
-    // so we let the browser set it automatically based on the body.
-    const uploadResp = await fetch(uploadUrl, {
-        method: 'POST',
-        headers: {
-            'X-Goog-Upload-Offset': '0',
-            'X-Goog-Upload-Command': 'upload, finalize'
-        },
-        body: blob
-    });
-
-    if (!uploadResp.ok) {
-        throw new Error(`File API upload failed (HTTP ${uploadResp.status})`);
-    }
-
-    const info = await uploadResp.json();
-    const file = info.file;
-    if (!file || !file.name) {
-        throw new Error('File API returned an unexpected response');
-    }
-
-    let state = file.state;
-    let uri = file.uri;
-    let mime = file.mimeType || mimeType;
-
-    // --- Step 3: Poll until the file is ACTIVE (Google processes it server-side) ---
-    let waited = 0;
-    const POLL_INTERVAL = 2000;
-    const POLL_TIMEOUT = 5 * 60 * 1000; // 5 minutes
-    while (state === 'PROCESSING' && waited < POLL_TIMEOUT) {
-        await new Promise(r => setTimeout(r, POLL_INTERVAL));
-        waited += POLL_INTERVAL;
-        const check = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/${file.name}?key=${apiKey}`
-        );
-        if (!check.ok) continue;
-        const checkData = await check.json();
-        state = checkData.state;
-        uri = checkData.uri || uri;
-        mime = checkData.mimeType || mime;
-    }
-
-    if (state !== 'ACTIVE') {
-        throw new Error(`File did not become ACTIVE (state: ${state})`);
-    }
-
-    return { uri, mimeType: mime, name: file.name };
-}
-
-async function processMultiEngine(existingPendingId = null) {
-    if (els.quotaAlert) {
-        els.quotaAlert.style.display = 'none';
-        els.quotaAlert.classList.add('hidden');
-    }
+// --- STREAMING_CHUNK:Implementing Native REST Fetch & Retries... ---
+/**
+ * Custom Fetch for Gemini API replacing @google/generative-ai
+ * Supports auto-exponential backoff internally for 429/503 errors
+ */
+async function fetchGeminiAPI(modelName, apiKey, mimeType, base64Audio, promptText, maxRetries = 2) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
     
-    // 1. Immediate UI Switch
-    switchView('processing');
-    if (els.status) els.status.innerText = "Uploading Audio...";
-    if (els.subStatus) els.subStatus.innerHTML = '<i class="fas fa-cloud-upload-alt fa-spin"></i> Transferring audio via File API...';
-    
-    const apiKey = els.apiKey.value;
-    const modelName = els.modelSelect.value;
-    const course = els.courseName.value || "General Class";
-
-    // Guard: if the dropdown is still showing the disabled placeholder,
-    // run discovery now so we have a valid model to call.
-    if (!modelName || modelName.startsWith('__')) {
-        try {
-            const models = await discoverModels(apiKey);
-            if (models && models.length) {
-                populateModelDropdown(models);
-            }
-        } catch (e) {
-            showToast("Could not load models. Check your API key.", "error");
-            switchView('setup');
-            return;
+    const payload = {
+        contents: [{
+            parts: [
+                { inlineData: { mimeType: mimeType, data: base64Audio } },
+                { text: promptText }
+            ]
+        }],
+        generationConfig: {
+             temperature: 0.2
         }
-    }
+    };
 
-    // --- Save a pending record BEFORE uploading. ---
-    // If anything below fails (network, Google outage, user closes tab),
-    // the audio is safe in IndexedDB and can be retried from the sidebar.
-    let pendingId = existingPendingId;
-    if (pendingId == null) {
+    for (let i = 0; i <= maxRetries; i++) {
         try {
-            pendingId = await window.pendingAudioDB.savePending({
-                timestamp: Date.now(),
-                course: course,
-                mimeType: currentBlob.type || 'audio/webm',
-                blob: currentBlob,
-                size: currentBlob.size,
-                modelName: els.modelSelect.value,
-                promptStudy: els.promptStudy.value,
-                promptScribe: els.promptScribe.value,
-                promptCards: els.promptCards.value
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
             });
-            console.log('[Pending] Queued audio with ID:', pendingId);
-            if (typeof window.renderPendingList === 'function') window.renderPendingList();
-        } catch (e) {
-            console.warn('[Pending] Could not save pending record:', e);
-        }
-    }
-    
-    // Upload audio to Gemini File API (handles files up to 2 GB; no base64 inflation)
-    let uploadedFile;
-    try {
-        uploadedFile = await uploadAudioToGemini(currentBlob, apiKey);
-    } catch(e) { 
-        showToast("Audio upload failed: " + e.message + " — saved to Pending Uploads for retry.", "error"); 
-        if (typeof window.renderPendingList === 'function') window.renderPendingList();
-        switchView('setup');
-        return; 
-    }
-    
-    if (els.status) els.status.innerText = "Generating Notes...";
-    
-    // Switch to Results View IMMEDIATELY
-    switchView('result');
-    
-    // Setup Loading States
-    const loadingHTML = `
-        <div class="skeleton" style="height: 18px; width: 40%; margin-bottom: 15px;"></div>
-        <div class="skeleton" style="height: 14px; margin-bottom: 10px;"></div>
-        <div class="skeleton" style="height: 14px; width: 80%; margin-bottom: 10px;"></div>
-        <div class="skeleton" style="height: 14px; width: 60%; margin-bottom: 10px;"></div>
-        <div class="skeleton" style="height: 14px; margin-bottom: 10px;"></div>
-        <div class="skeleton" style="height: 14px; width: 80%; margin-bottom: 10px;"></div>
-        <p style="text-align:center; color:#64748b; font-size:0.85rem; margin-top: 15px;">Analysing audio & generating notes...</p>
-    `;
-    
-    if (els.outputStudy) els.outputStudy.innerHTML = loadingHTML;
-    if (els.outputScribe) els.outputScribe.innerHTML = loadingHTML;
-    if (els.flashcardContainer) els.flashcardContainer.style.opacity = "0.6"; 
-    
-    if (els.spinStudy) els.spinStudy.classList.remove('hidden');
-    if (els.spinScribe) els.spinScribe.classList.remove('hidden');
-    if (els.spinCards) els.spinCards.classList.remove('hidden');
 
-    if (els.btnDlStudy) els.btnDlStudy.disabled = true;
-    if (els.btnDlScribe) els.btnDlScribe.disabled = true;
-    if (els.btnDlCards) els.btnDlCards.disabled = true;
-
-    // Reference the uploaded file by URI instead of inlining the bytes.
-    // The model reads the audio from Google's own storage, so the browser
-    // never has to re-send it for the three engines.
-    const payload = { fileData: { mimeType: uploadedFile.mimeType, fileUri: uploadedFile.uri } };
-
-    // Track success per-engine so we know when the whole pipeline is done
-    // and it's safe to delete the pending record.
-    let studyOk = false;
-    let scribeOk = false;
-    let cardsOk = false;
-
-    // Shared error handler — replaces skeleton with a real error card,
-    // shows exactly one toast, and offers a one-click retry.
-    const showEngineError = (engineKey, engineLabel, err) => {
-        const box = engineKey === 'study' ? els.outputStudy
-                  : engineKey === 'scribe' ? els.outputScribe
-                  : null;
-
-        const isTransient = isTransientError(err.message);
-        const friendlyMsg = isTransient
-            ? 'Google\'s servers are overloaded right now. This is temporary — wait a moment and retry.'
-            : err.message;
-
-        const spinner = engineKey === 'study' ? els.spinStudy
-                     : engineKey === 'scribe' ? els.spinScribe
-                     : els.spinCards;
-        if (spinner) spinner.classList.add('hidden');
-
-        if (box) {
-            box.innerHTML = `
-                <div style="text-align:center; padding: 1.5rem 0;">
-                    <i class="fas fa-exclamation-triangle" style="font-size:2rem; color:var(--danger); margin-bottom:0.8rem;"></i>
-                    <p style="font-weight:600; margin-bottom:0.5rem;">${engineLabel} could not be generated.</p>
-                    <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1rem;">${friendlyMsg}</p>
-                    <button class="btn btn-primary btn-sm" id="retry-${engineKey}" style="width:auto; display:inline-flex;">
-                        <i class="fas fa-redo"></i> Retry ${engineLabel}
-                    </button>
-                </div>
-            `;
-            const retryBtn = document.getElementById(`retry-${engineKey}`);
-            if (retryBtn) {
-                retryBtn.onclick = () => {
-                    // Re-run just this engine
-                    if (engineKey === 'study') runStudy();
-                    else if (engineKey === 'scribe') runScribe();
-                    else if (engineKey === 'cards') runCards();
-                };
-            }
-        }
-
-        // Only show a toast the FIRST time a given engine fails, so retries
-        // that also fail don't spam the screen.
-        if (!showEngineError._seen) showEngineError._seen = new Set();
-        if (!showEngineError._seen.has(engineKey)) {
-            showEngineError._seen.add(engineKey);
-            showToast(
-                isTransient
-                    ? `${engineLabel}: Google is busy. Retry in a moment.`
-                    : `${engineLabel} generation failed.`,
-                isTransient ? "warning" : "error"
-            );
-        }
-
-        if (engineKey === 'study' && els.btnDlStudy) els.btnDlStudy.disabled = true;
-        if (engineKey === 'scribe' && els.btnDlScribe) els.btnDlScribe.disabled = true;
-        if (engineKey === 'cards' && els.btnDlCards) els.btnDlCards.disabled = true;
-    };
-
-    const runStudy = async () => {
-        // Reset any prior error state for this engine
-        if (showEngineError._seen) showEngineError._seen.delete('study');
-        if (els.outputStudy) els.outputStudy.innerHTML = loadingHTML;
-        if (els.spinStudy) els.spinStudy.classList.remove('hidden');
-
-        try {
-            rawStudyMarkdown = await generateWithAutoRetry(
-                apiKey,
-                els.modelSelect.value,
-                payload,
-                els.promptStudy.value.replace("[COURSE_NAME]", course),
-                (statusText) => {
-                    if (els.outputStudy) {
-                        els.outputStudy.innerHTML = `
-                            <div style="text-align:center; padding:1rem 0;">
-                                <div class="loading-spinner" style="width:30px; height:30px; border-width:3px; margin:0 auto 0.8rem;"></div>
-                                <p style="color:var(--text-muted); font-size:0.9rem;">${statusText}</p>
-                            </div>`;
-                    }
+            if (!response.ok) {
+                if ((response.status === 429 || response.status >= 500) && i < maxRetries) {
+                    const delay = (i + 1) * 2500; // Exponential backoff (2.5s, 5s)
+                    console.warn(`Gemini API Busy (HTTP ${response.status}). Retrying in ${delay}ms...`);
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    continue;
                 }
-            );
-            const processedStudy = convertLatexToUnicode(rawStudyMarkdown);
-            if (els.outputStudy) els.outputStudy.innerHTML = marked.parse(processedStudy);
-            if (els.spinStudy) els.spinStudy.classList.add('hidden');
-            if (els.btnDlStudy) els.btnDlStudy.disabled = false;
-            if (document.getElementById('studyBadge')) {
-                document.getElementById('studyBadge').textContent = '✓ Ready';
+                
+                let errMsg = `HTTP ${response.status}`;
+                try {
+                    const errData = await response.json();
+                    if (errData.error && errData.error.message) errMsg = errData.error.message;
+                } catch(e) {}
+                throw new Error(errMsg);
             }
-            studyOk = true;
-            setTimeout(saveCurrentSession, 500);
-        } catch (e) {
-            showEngineError('study', 'Study Guide', e);
-        }
-    };
 
-    const runScribe = async () => {
-        if (showEngineError._seen) showEngineError._seen.delete('scribe');
-        if (els.outputScribe) els.outputScribe.innerHTML = loadingHTML;
-        if (els.spinScribe) els.spinScribe.classList.remove('hidden');
-
-        try {
-            rawScribeMarkdown = await generateWithAutoRetry(
-                apiKey,
-                els.modelSelect.value,
-                payload,
-                els.promptScribe.value.replace("[COURSE_NAME]", course),
-                (statusText) => {
-                    if (els.outputScribe) {
-                        els.outputScribe.innerHTML = `
-                            <div style="text-align:center; padding:1rem 0;">
-                                <div class="loading-spinner" style="width:30px; height:30px; border-width:3px; margin:0 auto 0.8rem;"></div>
-                                <p style="color:var(--text-muted); font-size:0.9rem;">${statusText}</p>
-                            </div>`;
-                    }
-                }
-            );
-            const processedScribe = convertLatexToUnicode(rawScribeMarkdown);
-            if (els.outputScribe) els.outputScribe.innerHTML = marked.parse(processedScribe);
-            if (els.spinScribe) els.spinScribe.classList.add('hidden');
-            if (els.btnDlScribe) els.btnDlScribe.disabled = false;
-            if (document.getElementById('scribeBadge')) {
-                document.getElementById('scribeBadge').textContent = '✓ Ready';
+            const result = await response.json();
+            
+            // Parse robustly
+            if (result.candidates && result.candidates[0] && result.candidates[0].content && result.candidates[0].content.parts) {
+                return result.candidates[0].content.parts.map(p => p.text).join("");
+            } else {
+                throw new Error("Unexpected empty response from Gemini API.");
             }
-            scribeOk = true;
-        } catch (e) {
-            showEngineError('scribe', 'Scribe Notes', e);
+            
+        } catch (err) {
+            if (i === maxRetries) throw err;
+            await new Promise(resolve => setTimeout(resolve, (i + 1) * 2500));
         }
-    };
-
-    const runCards = async () => {
-        if (showEngineError._seen) showEngineError._seen.delete('cards');
-        if (els.spinCards) els.spinCards.classList.remove('hidden');
-
-        try {
-            const t3 = await generateWithAutoRetry(
-                apiKey,
-                els.modelSelect.value,
-                payload,
-                els.promptCards.value.replace("[COURSE_NAME]", course),
-                null
-            );
-            try {
-                const parsedCards = JSON.parse(t3.replace(/```json/g, '').replace(/```/g, '').trim());
-                flashcardsData = parsedCards.map(card => ({
-                    front: convertLatexToUnicode(card.front),
-                    back: convertLatexToUnicode(card.back)
-                }));
-                renderCard(0);
-            } catch (e) {
-                flashcardsData = [{front: "Error generating cards", back: "Raw: " + t3}];
-                renderCard(0);
-            }
-            if (els.flashcardContainer) els.flashcardContainer.style.opacity = "1";
-            if (els.spinCards) els.spinCards.classList.add('hidden');
-            if (els.btnDlCards) els.btnDlCards.disabled = false;
-            if (document.getElementById('cardsBadge')) {
-                document.getElementById('cardsBadge').textContent = `${flashcardsData.length} cards`;
-            }
-            showToast(`Generated ${flashcardsData.length} flashcards`, "success");
-            cardsOk = true;
-        } catch (e) {
-            showEngineError('cards', 'Flashcards', e);
-        }
-    };
-
-    // Execution Logic: Parallel for Flash, Sequential for Pro
-    // Note: we read the model tier from the CURRENT dropdown selection.
-    const selectedModel = els.modelSelect.value || '';
-    try {
-        if (selectedModel.includes("pro")) {
-            // Sequential for safety
-            await runStudy();
-            await runScribe();
-            await runCards();
-        } else {
-            // Staggered parallel for Flash — 1.5s between engines so a single
-            // strained model doesn't get three simultaneous hits. Total added
-            // latency ~3s, but dramatically reduces the chance of a triple
-            // 500/503 on the free tier.
-            const stagger = (fn, delay) => new Promise(r => setTimeout(r, delay)).then(fn);
-            await Promise.all([
-                runStudy(),
-                stagger(runScribe, 1500),
-                stagger(runCards, 3000)
-            ]);
-        }
-    } catch (error) {
-        // Each runX() already handled its own error UI and toast.
-        // This catch is a final safety net that should rarely fire.
-        console.error("Uncaught processing error:", error);
-    }
-
-    // --- Clean up the pending record only if ALL THREE engines succeeded. ---
-    // If any engine failed, the record stays so the user can retry from the
-    // history sidebar. This is what makes "retry after Google outage" work.
-    if (studyOk && scribeOk && cardsOk && pendingId != null) {
-        try {
-            await window.pendingAudioDB.deletePending(pendingId);
-            console.log('[Pending] Removed completed pending record ID:', pendingId);
-            if (typeof window.renderPendingList === 'function') window.renderPendingList();
-        } catch (e) {
-            console.warn('[Pending] Could not delete pending record:', e);
-        }
-    } else if (pendingId != null) {
-        // Partial success — keep the record but refresh the sidebar so the user
-        // sees it's still there.
-        console.log('[Pending] Keeping pending record for retry. studyOk=', studyOk, 'scribeOk=', scribeOk, 'cardsOk=', cardsOk);
-        if (typeof window.renderPendingList === 'function') window.renderPendingList();
     }
 }
 
@@ -4378,18 +3412,205 @@ function blobToBase64(blob) {
         const reader = new FileReader();
         reader.onloadend = () => {
             const result = reader.result;
-            if (typeof result === 'string') {
-                resolve(result.split(',')[1]);
-            } else {
-                reject(new Error('Failed to read blob as base64'));
-            }
+            if (typeof result === 'string') resolve(result.split(',')[1]);
+            else reject(new Error('Failed to read blob as base64'));
         };
         reader.onerror = reject;
         reader.readAsDataURL(blob);
     });
 }
 
-// Override the global downloadRTF function with proper implementation
+// Global specific retry bindings
+window.retryStudy = async () => { await _runEngineTask('study'); };
+window.retryScribe = async () => { await _runEngineTask('scribe'); };
+window.retryCards = async () => { await _runEngineTask('cards'); };
+
+// Reusable Task runner for initial process AND manual retries
+async function _runEngineTask(taskType) {
+    const course = document.getElementById('courseName')?.value || "General Class";
+    const apiKey = document.getElementById('apiKey')?.value;
+    const modelName = document.getElementById('modelSelect')?.value;
+
+    if (!window.currentBase64Audio || !window.currentMimeType) {
+        showToast("Audio data lost. Please upload/record again.", "error");
+        return;
+    }
+
+    try {
+        if (taskType === 'study') {
+            document.getElementById('outputStudy').innerHTML = getLoadingHTML("Generating Study Guide...");
+            document.getElementById('spinStudy').classList.remove('hidden');
+            
+            const textResponse = await fetchGeminiAPI(modelName, apiKey, window.currentMimeType, window.currentBase64Audio, document.getElementById('promptStudy').value.replace("[COURSE_NAME]", course));
+            
+            rawStudyMarkdown = textResponse;
+            const processedStudy = convertLatexToUnicode(rawStudyMarkdown);
+            document.getElementById('outputStudy').innerHTML = parseMarkdownWithMath(processedStudy);
+            
+            document.getElementById('spinStudy').classList.add('hidden');
+            document.getElementById('btnDlStudy').disabled = false;
+            document.getElementById('studyBadge').textContent = '✓ Ready';
+        }
+        
+        else if (taskType === 'scribe') {
+            document.getElementById('outputScribe').innerHTML = getLoadingHTML("Generating Scribe Notes...");
+            document.getElementById('spinScribe').classList.remove('hidden');
+            
+            const textResponse = await fetchGeminiAPI(modelName, apiKey, window.currentMimeType, window.currentBase64Audio, document.getElementById('promptScribe').value.replace("[COURSE_NAME]", course));
+            
+            rawScribeMarkdown = textResponse;
+            const processedScribe = convertLatexToUnicode(rawScribeMarkdown);
+            document.getElementById('outputScribe').innerHTML = parseMarkdownWithMath(processedScribe);
+            
+            document.getElementById('spinScribe').classList.add('hidden');
+            document.getElementById('btnDlScribe').disabled = false;
+            document.getElementById('scribeBadge').textContent = '✓ Ready';
+        }
+        
+        else if (taskType === 'cards') {
+            document.getElementById('flashcardErrorState').classList.add('hidden');
+            document.getElementById('flashcardContainer').classList.remove('hidden');
+            document.getElementById('flashcardContainer').style.opacity = "0.6"; 
+            document.getElementById('spinCards').classList.remove('hidden');
+            
+            const textResponse = await fetchGeminiAPI(modelName, apiKey, window.currentMimeType, window.currentBase64Audio, document.getElementById('promptCards').value.replace("[COURSE_NAME]", course));
+            
+            try { 
+                const parsedCards = JSON.parse(textResponse.replace(/```json/g, '').replace(/```/g, '').trim());
+                if (!Array.isArray(parsedCards)) throw new Error("JSON is not an array");
+
+                flashcardsData = parsedCards.map(card => ({
+                    front: convertLatexToUnicode(card.front),
+                    back: convertLatexToUnicode(card.back)
+                }));
+                renderCard(0); 
+                document.getElementById('flashcardContainer').style.opacity = "1";
+                document.getElementById('spinCards').classList.add('hidden');
+                document.getElementById('btnDlCards').disabled = false;
+                document.getElementById('cardsBadge').textContent = `${flashcardsData.length} cards`;
+            } catch (e) {
+                throw new Error("Failed to parse flashcard JSON format.");
+            }
+        }
+    } catch (err) {
+        console.error(`Task ${taskType} Failed:`, err);
+        // Bind UI specific error states with Retry buttons
+        if (taskType === 'study') {
+            document.getElementById('outputStudy').innerHTML = getErrorHTML("Study Guide", "retryStudy");
+            document.getElementById('spinStudy').classList.add('hidden');
+        } else if (taskType === 'scribe') {
+            document.getElementById('outputScribe').innerHTML = getErrorHTML("Scribe Notes", "retryScribe");
+            document.getElementById('spinScribe').classList.add('hidden');
+        } else if (taskType === 'cards') {
+            document.getElementById('flashcardContainer').classList.add('hidden');
+            document.getElementById('flashcardErrorState').classList.remove('hidden');
+            document.getElementById('flashcardErrorText').textContent = "API Error: " + err.message;
+            document.getElementById('spinCards').classList.add('hidden');
+        }
+        showToast(`Failed to generate ${taskType}.`, "error");
+    }
+}
+
+function getLoadingHTML(msg) {
+    return `
+        <div class="skeleton" style="height: 18px; width: 40%; margin-bottom: 15px;"></div>
+        <div class="skeleton" style="height: 14px; margin-bottom: 10px;"></div>
+        <div class="skeleton" style="height: 14px; width: 80%; margin-bottom: 10px;"></div>
+        <div class="skeleton" style="height: 14px; width: 60%; margin-bottom: 10px;"></div>
+        <p style="text-align:center; color:#64748b; font-size:0.85rem; margin-top: 15px;">${msg}</p>
+    `;
+}
+
+function getErrorHTML(moduleName, retryFnName) {
+    return `
+        <div class="retry-container">
+            <i class="fas fa-exclamation-triangle" style="font-size:2rem; color:var(--danger); margin-bottom:1rem;"></i>
+            <p style="color:var(--danger); margin-bottom:1rem;">Failed to generate ${moduleName}.</p>
+            <button onclick="window.${retryFnName}()" class="btn btn-primary"><i class="fas fa-sync"></i> Retry</button>
+        </div>
+    `;
+}
+
+
+// --- STREAMING_CHUNK:Executing Sequential Engine Calls... ---
+async function processMultiEngine() {
+    if (els.quotaAlert) {
+        els.quotaAlert.style.display = 'none';
+        els.quotaAlert.classList.add('hidden');
+    }
+    
+    switchView('processing');
+    if (els.status) els.status.innerText = "Encoding Audio...";
+    
+    // Fallback MIME injection if empty (Very common in Android WebView File choosers)
+    let finalMimeType = currentBlob.type;
+    if (!finalMimeType) {
+        const ext = currentBlob.name ? currentBlob.name.split('.').pop().toLowerCase() : '';
+        if (ext === 'mp3') finalMimeType = 'audio/mp3';
+        else if (ext === 'wav') finalMimeType = 'audio/wav';
+        else if (ext === 'm4a') finalMimeType = 'audio/mp4';
+        else if (ext === 'ogg') finalMimeType = 'audio/ogg';
+        else finalMimeType = 'audio/webm'; // Universal robust fallback
+    }
+
+    try {
+        window.currentBase64Audio = await blobToBase64(currentBlob);
+        window.currentMimeType = finalMimeType;
+    } catch(e) { 
+        showToast("Audio encoding failed", "error"); 
+        return; 
+    }
+    
+    switchView('result');
+    
+    // Set Initial Loading States
+    document.getElementById('outputStudy').innerHTML = getLoadingHTML("Analyzing audio & generating Study Guide...");
+    document.getElementById('outputScribe').innerHTML = getLoadingHTML("Pending in queue...");
+    
+    document.getElementById('flashcardContainer').style.opacity = "0.6"; 
+    document.getElementById('flashcardErrorState').classList.add('hidden');
+    document.getElementById('flashcardContainer').classList.remove('hidden');
+    
+    document.getElementById('spinStudy').classList.remove('hidden');
+    document.getElementById('spinScribe').classList.remove('hidden');
+    document.getElementById('spinCards').classList.remove('hidden');
+
+    document.getElementById('btnDlStudy').disabled = true;
+    document.getElementById('btnDlScribe').disabled = true;
+    document.getElementById('btnDlCards').disabled = true;
+
+    // --- SEQUENTIAL EXECUTION ARCHITECTURE (Fixes 429 Overload) ---
+    // Running sequentially with breathing room
+    await _runEngineTask('study');
+    
+    document.getElementById('outputScribe').innerHTML = getLoadingHTML("Generating Scribe Notes...");
+    await new Promise(r => setTimeout(r, 2000)); // 2s Breather for API Limits
+    await _runEngineTask('scribe');
+    
+    await new Promise(r => setTimeout(r, 2000)); // 2s Breather for API Limits
+    await _runEngineTask('cards');
+
+    // Attempt Auto-Save if at least ONE module succeeded
+    await saveCurrentSession();
+    
+    // Always store as raw blob backup in case of total failure (Allowing offline retry)
+    const checkStudy = document.getElementById('outputStudy').innerHTML.includes('Retry');
+    const checkScribe = document.getElementById('outputScribe').innerHTML.includes('Retry');
+    const checkCards = !document.getElementById('flashcardErrorState').classList.contains('hidden');
+
+    if (checkStudy && checkScribe && checkCards) {
+        showToast("All engines failed due to limit. Session saved locally to retry later.", "warning");
+        await sessionHistory.saveSession({
+            course: document.getElementById('courseName').value || 'Failed Lecture',
+            timestamp: Date.now(),
+            failed: true,
+            rawBlob: currentBlob // Storing for direct retry in UI
+        });
+        loadSessionHistory();
+    }
+}
+
+// RTF download logic
 window.downloadRTF = (type) => {
     const course = els.courseName?.value || "Class";
     const title = type === 'study' ? "Study_Guide" : "Scribe_Notes";
@@ -4454,16 +3675,7 @@ function escapeUnicode(str) {
         return `\\uc1\\u${code}?`;
     });
 }
-
-// Initialize the app when module loads
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeApp);
-} else {
-    initializeApp();
-}
 </script>
-
-<!-- Add Font Awesome for icons -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 </body>
 </html>
