@@ -776,17 +776,9 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.2); 
         }
         
-        .result-tab-btn.active.study-tab { 
-            color: var(--primary); 
-        }
-        
-        .result-tab-btn.active.scribe-tab { 
-            color: var(--scribe); 
-        }
-        
-        .result-tab-btn.active.cards-tab { 
-            color: var(--success); 
-        }
+        .result-tab-btn.active.study-tab { color: var(--primary); }
+        .result-tab-btn.active.scribe-tab { color: var(--scribe); }
+        .result-tab-btn.active.cards-tab { color: var(--success); }
 
         .result-tab-btn .badge {
             background: rgba(255, 255, 255, 0.1);
@@ -847,7 +839,6 @@
             padding-bottom: 5px; 
         }
 
-        /* Math symbol styling */
         .math-symbol {
             font-family: "Cambria Math", "Symbol", "STIXGeneral", serif;
             font-style: normal;
@@ -1103,120 +1094,34 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            body {
-                padding: 10px;
-                display: block;
-            }
-            
-            .container {
-                padding: 1.2rem;
-                margin: 0;
-                max-width: 100%;
-            }
-            
-            .history-sidebar {
-                width: 100%;
-                right: -100%;
-            }
-            
-            .timer {
-                font-size: 2.2rem;
-            }
-            
-            .control-buttons {
-                gap: 5px;
-            }
-            
-            .icon-btn {
-                width: 36px;
-                height: 36px;
-                font-size: 1rem;
-            }
-            
-            h1 {
-                font-size: 1.5rem;
-            }
-            
-            .header-badge {
-                font-size: 0.6rem;
-                padding: 3px 8px;
-            }
-            
-            .result-tab-btn {
-                font-size: 0.8rem;
-                padding: 8px 10px;
-                min-height: 40px;
-            }
-            
-            .flashcard {
-                height: 250px;
-            }
-            
-            .flashcard-front, .flashcard-back {
-                font-size: 1rem;
-                padding: 1rem;
-            }
-            
-            .mode-btn, .btn {
-                font-size: 0.85rem;
-                padding: 0.8rem 1rem;
-            }
+            body { padding: 10px; display: block; }
+            .container { padding: 1.2rem; margin: 0; max-width: 100%; }
+            .history-sidebar { width: 100%; right: -100%; }
+            .timer { font-size: 2.2rem; }
+            .control-buttons { gap: 5px; }
+            .icon-btn { width: 36px; height: 36px; font-size: 1rem; }
+            h1 { font-size: 1.5rem; }
+            .header-badge { font-size: 0.6rem; padding: 3px 8px; }
+            .result-tab-btn { font-size: 0.8rem; padding: 8px 10px; min-height: 40px; }
+            .flashcard { height: 250px; }
+            .flashcard-front, .flashcard-back { font-size: 1rem; padding: 1rem; }
+            .mode-btn, .btn { font-size: 0.85rem; padding: 0.8rem 1rem; }
         }
 
         @media (max-width: 480px) {
-            .app-header {
-                flex-wrap: wrap;
-                gap: 10px;
-                min-height: auto;
-            }
-            
-            .header-left, .header-right {
-                width: 100%;
-                justify-content: space-between;
-            }
-            
-            .header-title {
-                justify-content: center;
-                width: 100%;
-                margin: 5px 0;
-            }
-            
-            .mode-btn {
-                font-size: 0.8rem;
-                padding: 8px 10px;
-                min-height: 40px;
-            }
-            
-            .btn {
-                padding: 0.8rem 1rem;
-                font-size: 0.9rem;
-            }
-            
-            #login-view {
-                padding: 1.5rem;
-                margin: 1rem auto;
-            }
+            .app-header { flex-wrap: wrap; gap: 10px; min-height: auto; }
+            .header-left, .header-right { width: 100%; justify-content: space-between; }
+            .header-title { justify-content: center; width: 100%; margin: 5px 0; }
+            .mode-btn { font-size: 0.8rem; padding: 8px 10px; min-height: 40px; }
+            .btn { padding: 0.8rem 1rem; font-size: 0.9rem; }
+            #login-view { padding: 1.5rem; margin: 1rem auto; }
         }
 
         /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--input-bg);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary);
-        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--input-bg); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
         
         /* Toast Notifications */
         .toast {
@@ -1237,30 +1142,12 @@
             max-width: 300px;
         }
         
-        .toast.show {
-            transform: translateX(0);
-        }
-        
-        .toast-success {
-            border-left: 4px solid var(--success);
-        }
-        
-        .toast-error {
-            border-left: 4px solid var(--danger);
-        }
-        
-        .toast-warning {
-            border-left: 4px solid var(--scribe);
-        }
-        
-        .toast-info {
-            border-left: 4px solid var(--primary);
-        }
-        
-        .toast i {
-            font-size: 1.1rem;
-        }
-        
+        .toast.show { transform: translateX(0); }
+        .toast-success { border-left: 4px solid var(--success); }
+        .toast-error { border-left: 4px solid var(--danger); }
+        .toast-warning { border-left: 4px solid var(--scribe); }
+        .toast-info { border-left: 4px solid var(--primary); }
+        .toast i { font-size: 1.1rem; }
         .toast-success i { color: var(--success); }
         .toast-error i { color: var(--danger); }
         .toast-warning i { color: var(--scribe); }
@@ -1399,13 +1286,12 @@
                 </button>
                 <div class="header-title">
                     <h1>Lecture Scribe Pro</h1>
-                    <span class="header-badge">v2.2.0</span>
+                    <span class="header-badge">v2.3.0</span>
                 </div>
             </div>
             
             <div class="header-right">
-                <!-- DOWNLOAD BUTTON (Hidden by default, shown via JS if not in App) -->
-                <!-- REPLACE THE HREF WITH YOUR ACTUAL APK LINK -->
+                <!-- DOWNLOAD BUTTON -->
                 <a href="https://raw.githubusercontent.com/Cleo876/lecture-scribe-pro/refs/heads/main/app/lecture-scribe-pro.apk" id="btnDownloadApp" class="btn btn-app-dl btn-sm hidden md:hidden" download>
                     <i class="fab fa-android"></i> Get App
                 </a>
@@ -1496,10 +1382,8 @@
                             <i class="fas fa-chart-line" style="color: var(--primary); font-size: 0.9rem;"></i>
                             <span style="font-weight: 600; color: var(--primary);">Free Tier Limits:</span>
                         </div>
-                        <div style="line-height: 1.4; color: var(--text-muted);">
-                            • Flash: ~500 recordings/day<br>
-                            • Pro: ~16 recordings/day<br>
-                            • Speed limit: 1-5 recordings/minute
+                        <div id="quotaInfo" style="line-height: 1.4; color: var(--text-muted);">
+                            Google API Quota: <span>~500 recordings/day</span> (1500 req/day).<br>Speed Limit: <span>5 recordings/minute</span> (15 req/min).
                         </div>
                     </div>
                 </div>
@@ -1568,7 +1452,7 @@
                         <label style="margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
                             <i class="fas fa-file-audio"></i> Select Audio File
                         </label>
-                        <!-- FIXED: Enhanced accept attributes to ensure Android WV storage intent launches correctly -->
+                        <!-- ENHANCED ACCEPT TAG FOR ANDROID WV BYPASS -->
                         <input type="file" id="fileUpload" accept="audio/*, .mp3, .wav, .m4a, .aac, .flac, .ogg, video/*" class="hidden">
                         <button id="btnSelectFile" class="btn btn-secondary" style="width: 100%; padding: 0.9rem;">
                             <i class="fas fa-folder-open" style="font-size: 1.1rem;"></i>
@@ -1871,7 +1755,6 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
                             <i class="fas fa-download"></i> Export to Anki
                         </button>
                     </div>
-                    <!-- Moved save button to flashcards to ensure consistency -->
                     <button onclick="saveSession()" class="btn btn-success btn-sm" style="width: auto;">
                         <i class="fas fa-save"></i> Save All
                     </button>
@@ -1926,7 +1809,31 @@ CRITICAL: DO NOT USE LATEX ($ delimiters). Use actual UNICODE symbols for math (
     </div>
 
 <script>
-// --- TEXT TO SPEECH LOGIC (Enhanced) ---
+// --- STREAMING_CHUNK:Declaring Global Variables and DOM Map safely... ---
+// Global Variables safely declared for native use
+let rawStudyMarkdown = "";
+let rawScribeMarkdown = "";
+let flashcardsData = [];
+let currentCardIndex = 0;
+
+let wakeLock = null;
+let detectedMimeType = ""; 
+let mediaRecorder;
+let startTime;
+let timerInterval;
+let currentBlob = null;
+let debounceTimer; 
+let elapsedMs = 0; 
+let totalSize = 0;
+
+// Reusable Globals for Retries
+window.currentBase64Audio = null;
+window.currentMimeType = null;
+
+// Object to store DOM Elements (populated on DOMContentLoaded)
+const els = {};
+
+// --- TEXT TO SPEECH LOGIC ---
 function speakText(elementId) {
     if (!('speechSynthesis' in window)) {
         showToast("Text-to-speech not supported in this browser", "error");
@@ -1957,9 +1864,7 @@ function speakText(elementId) {
         btn.disabled = true;
     }
 
-    utterance.onstart = () => {
-        showToast("Starting text-to-speech playback", "info");
-    };
+    utterance.onstart = () => { showToast("Starting text-to-speech playback", "info"); };
 
     utterance.onend = () => {
         if (btn && btn.tagName === "BUTTON") {
@@ -1973,10 +1878,7 @@ function speakText(elementId) {
         console.error("Speech Error:", e);
         if (btn && btn.tagName === "BUTTON") {
             btn.innerHTML = '<i class="fas fa-times"></i> Error';
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }, 2000);
+            setTimeout(() => { btn.innerHTML = originalText; btn.disabled = false; }, 2000);
         }
         showToast("Audio playback failed", "error");
     };
@@ -1991,15 +1893,12 @@ function stopSpeech() {
     }
 }
 
+// --- STREAMING_CHUNK:Defining Utility Functions (Toast, Parsers, Background)... ---
 // --- TOAST NOTIFICATION SYSTEM ---
 function showToast(message, type = "info") {
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
-    toast.innerHTML = `
-        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
-        <span>${message}</span>
-    `;
-    
+    toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i> <span>${message}</span>`;
     document.body.appendChild(toast);
     
     setTimeout(() => toast.classList.add('show'), 10);
@@ -2012,6 +1911,7 @@ function showToast(message, type = "info") {
 // --- BACKGROUND ANIMATION ---
 function initBackgroundAnimation() {
     const bgAnimation = document.getElementById('bgAnimation');
+    if (!bgAnimation) return;
     for (let i = 0; i < 15; i++) {
         const particle = document.createElement('div');
         particle.className = 'bg-particle';
@@ -2019,9 +1919,7 @@ function initBackgroundAnimation() {
         particle.style.height = particle.style.width;
         particle.style.left = Math.random() * 100 + '%';
         particle.style.top = Math.random() * 100 + '%';
-        particle.style.background = `radial-gradient(circle, 
-            rgba(${Math.random() * 100 + 155}, ${Math.random() * 100 + 155}, 255, 0.1),
-            transparent 70%)`;
+        particle.style.background = `radial-gradient(circle, rgba(${Math.random() * 100 + 155}, ${Math.random() * 100 + 155}, 255, 0.1), transparent 70%)`;
         particle.style.animationDelay = Math.random() * 20 + 's';
         particle.style.animationDuration = Math.random() * 30 + 30 + 's';
         bgAnimation.appendChild(particle);
@@ -2031,84 +1929,40 @@ function initBackgroundAnimation() {
 // --- LATEX TO UNICODE CONVERSION ---
 function convertLatexToUnicode(text) {
     if (!text) return text;
-    
     const latexMap = {
-        // Greek letters
-        '\\alpha': 'α', '\\beta': 'β', '\\gamma': 'γ', '\\Gamma': 'Γ',
-        '\\delta': 'δ', '\\Delta': 'Δ', '\\epsilon': 'ε', '\\varepsilon': 'ε',
-        '\\zeta': 'ζ', '\\eta': 'η', '\\theta': 'θ', '\\Theta': 'Θ',
-        '\\iota': 'ι', '\\kappa': 'κ', '\\lambda': 'λ', '\\Lambda': 'Λ',
-        '\\mu': 'μ', '\\nu': 'ν', '\\xi': 'ξ', '\\Xi': 'Ξ',
-        '\\pi': 'π', '\\Pi': 'Π', '\\rho': 'ρ', '\\sigma': 'σ', '\\Sigma': 'Σ',
-        '\\tau': 'τ', '\\upsilon': 'υ', '\\phi': 'φ', '\\Phi': 'Φ',
-        '\\chi': 'χ', '\\psi': 'ψ', '\\Psi': 'Ψ', '\\omega': 'ω', '\\Omega': 'Ω',
-        
-        // Mathematical operators
-        '\\sum': '∑', '\\prod': '∏', '\\int': '∫', '\\oint': '∮',
-        '\\partial': '∂', '\\nabla': '∇', '\\infty': '∞',
-        
-        // Set theory
-        '\\cup': '∪', '\\cap': '∩', '\\subset': '⊂', '\\subseteq': '⊆',
-        '\\supset': '⊃', '\\supseteq': '⊇', '\\in': '∈', '\\notin': '∉',
-        '\\emptyset': '∅', '\\varnothing': '∅',
-        
-        // Logic
-        '\\wedge': '∧', '\\vee': '∨', '\\neg': '¬', '\\forall': '∀',
-        '\\exists': '∃', '\\nexists': '∄',
-        
-        // Relations
-        '\\leq': '≤', '\\geq': '≥', '\\neq': '≠', '\\approx': '≈',
-        '\\sim': '∼', '\\simeq': '≃', '\\cong': '≅', '\\equiv': '≡',
-        '\\propto': '∝',
-        
-        // Arrows
-        '\\rightarrow': '→', '\\leftarrow': '←', '\\Rightarrow': '⇒',
-        '\\Leftarrow': '⇐', '\\leftrightarrow': '↔', '\\Leftrightarrow': '⇔',
-        
-        // Other symbols
-        '\\times': '×', '\\div': '÷', '\\pm': '±', '\\mp': '∓',
-        '\\cdot': '·', '\\circ': '∘', '\\bullet': '•', '\\ast': '∗',
-        '\\sqrt': '√', '\\angle': '∠', '\\triangle': '△', '\\perp': '⊥',
-        '\\parallel': '∥', '\\ldots': '…', '\\cdots': '⋯',
-        '\\vdots': '⋮', '\\ddots': '⋱'
+        '\\alpha': 'α', '\\beta': 'β', '\\gamma': 'γ', '\\Gamma': 'Γ', '\\delta': 'δ', '\\Delta': 'Δ', '\\epsilon': 'ε', '\\varepsilon': 'ε',
+        '\\zeta': 'ζ', '\\eta': 'η', '\\theta': 'θ', '\\Theta': 'Θ', '\\iota': 'ι', '\\kappa': 'κ', '\\lambda': 'λ', '\\Lambda': 'Λ',
+        '\\mu': 'μ', '\\nu': 'ν', '\\xi': 'ξ', '\\Xi': 'Ξ', '\\pi': 'π', '\\Pi': 'Π', '\\rho': 'ρ', '\\sigma': 'σ', '\\Sigma': 'Σ',
+        '\\tau': 'τ', '\\upsilon': 'υ', '\\phi': 'φ', '\\Phi': 'Φ', '\\chi': 'χ', '\\psi': 'ψ', '\\Psi': 'Ψ', '\\omega': 'ω', '\\Omega': 'Ω',
+        '\\sum': '∑', '\\prod': '∏', '\\int': '∫', '\\oint': '∮', '\\partial': '∂', '\\nabla': '∇', '\\infty': '∞',
+        '\\cup': '∪', '\\cap': '∩', '\\subset': '⊂', '\\subseteq': '⊆', '\\supset': '⊃', '\\supseteq': '⊇', '\\in': '∈', '\\notin': '∉',
+        '\\emptyset': '∅', '\\varnothing': '∅', '\\wedge': '∧', '\\vee': '∨', '\\neg': '¬', '\\forall': '∀', '\\exists': '∃', '\\nexists': '∄',
+        '\\leq': '≤', '\\geq': '≥', '\\neq': '≠', '\\approx': '≈', '\\sim': '∼', '\\simeq': '≃', '\\cong': '≅', '\\equiv': '≡', '\\propto': '∝',
+        '\\rightarrow': '→', '\\leftarrow': '←', '\\Rightarrow': '⇒', '\\Leftarrow': '⇐', '\\leftrightarrow': '↔', '\\Leftrightarrow': '⇔',
+        '\\times': '×', '\\div': '÷', '\\pm': '±', '\\mp': '∓', '\\cdot': '·', '\\circ': '∘', '\\bullet': '•', '\\ast': '∗',
+        '\\sqrt': '√', '\\angle': '∠', '\\triangle': '△', '\\perp': '⊥', '\\parallel': '∥', '\\ldots': '…', '\\cdots': '⋯', '\\vdots': '⋮', '\\ddots': '⋱'
     };
     
     let result = text;
-    
-    // First, replace common LaTeX commands with Unicode
     for (const [latex, unicode] of Object.entries(latexMap)) {
         const regex = new RegExp(latex.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
         result = result.replace(regex, unicode);
     }
     
-    // Handle simple inline math: $...$ or $$...$$
     result = result.replace(/\$\$([^$]+)\$\$/g, '$1');
     result = result.replace(/\$([^$]+)\$/g, '$1');
     
-    // Handle superscripts: ^{...} or ^x
     result = result.replace(/\^{(\w+)}/g, (match, p1) => {
-        const superscripts = {'0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', 
-                             '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹',
-                             '+': '⁺', '-': '⁻', '=': '⁼', '(': '⁽', ')': '⁾',
-                             'n': 'ⁿ', 'i': 'ⁱ'};
+        const superscripts = {'0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹', '+': '⁺', '-': '⁻', '=': '⁼', '(': '⁽', ')': '⁾', 'n': 'ⁿ', 'i': 'ⁱ'};
         return p1.split('').map(c => superscripts[c] || c).join('');
     });
     
-    // Handle subscripts: _{...} or _x
     result = result.replace(/_{(\w+)}/g, (match, p1) => {
-        const subscripts = {'0': '₀', '1': '₁', '2': '₂', '3': '₃', '4': '₄',
-                           '5': '₅', '6': '₆', '7': '₇', '8': '₈', '9': '₉',
-                           '+': '₊', '-': '₋', '=': '₌', '(': '₍', ')': '₎',
-                           'a': 'ₐ', 'e': 'ₑ', 'h': 'ₕ', 'i': 'ᵢ', 'k': 'ₖ',
-                           'l': 'ₗ', 'm': 'ₘ', 'n': 'ₙ', 'o': 'ₒ', 'p': 'ₚ',
-                           'r': 'ᵣ', 's': 'ₛ', 't': 'ₜ', 'u': 'ᵤ', 'v': 'ᵥ',
-                           'x': 'ₓ'};
+        const subscripts = {'0': '₀', '1': '₁', '2': '₂', '3': '₃', '4': '₄', '5': '₅', '6': '₆', '7': '₇', '8': '₈', '9': '₉', '+': '₊', '-': '₋', '=': '₌', '(': '₍', ')': '₎', 'a': 'ₐ', 'e': 'ₑ', 'h': 'ₕ', 'i': 'ᵢ', 'k': 'ₖ', 'l': 'ₗ', 'm': 'ₘ', 'n': 'ₙ', 'o': 'ₒ', 'p': 'ₚ', 'r': 'ᵣ', 's': 'ₛ', 't': 'ₜ', 'u': 'ᵤ', 'v': 'ᵥ', 'x': 'ₓ'};
         return p1.split('').map(c => subscripts[c] || c).join('');
     });
     
-    // Handle fractions: \frac{a}{b}
     result = result.replace(/\\frac{([^}]+)}{([^}]+)}/g, '$1/$2');
-    
     return result;
 }
 
@@ -2147,7 +2001,7 @@ function parseMarkdownWithMath(markdown) {
     return result;
 }
 
-// --- STREAMING_CHUNK:Setting up IndexedDB Session Manager ---
+// --- STREAMING_CHUNK:Configuring Database Architectures... ---
 class SessionHistory {
     constructor() {
         this.dbName = 'LectureScribeProSessions';
@@ -2184,7 +2038,7 @@ class SessionHistory {
             const store = tx.objectStore(this.storeName);
             sessionData.timestamp = Date.now();
             sessionData.lastAccessed = Date.now();
-            sessionData.version = '2.2.0'; 
+            sessionData.version = '2.3.0'; 
             
             const request = store.add(sessionData);
             request.onsuccess = () => {
@@ -2265,10 +2119,515 @@ class SessionHistory {
         }
     }
 }
-
 const sessionHistory = new SessionHistory();
 
-// --- ENHANCED UI FUNCTIONS ---
+class AudioDB {
+    constructor(dbName = 'LectureScribePro', storeName = 'audioChunks') {
+        this.dbName = dbName;
+        this.storeName = storeName;
+        this.db = null;
+    }
+    
+    async open() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(this.dbName, 1);
+            request.onupgradeneeded = (e) => {
+                const db = e.target.result;
+                if (!db.objectStoreNames.contains(this.storeName)) {
+                    db.createObjectStore(this.storeName, { autoIncrement: true });
+                }
+            };
+            request.onsuccess = (e) => { 
+                this.db = e.target.result; 
+                resolve(this.db); 
+            };
+            request.onerror = (e) => reject(e.target.error);
+        });
+    }
+    
+    async addChunk(chunk) {
+        return new Promise((resolve, reject) => {
+            const tx = this.db.transaction(this.storeName, 'readwrite');
+            tx.objectStore(this.storeName).add(chunk);
+            tx.oncomplete = () => resolve();
+            tx.onerror = (e) => reject(e.target.error);
+        });
+    }
+    
+    async getAllChunks() {
+        return new Promise((resolve, reject) => {
+            const tx = this.db.transaction(this.storeName, 'readonly');
+            const request = tx.objectStore(this.storeName).getAll();
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = (e) => reject(e.target.error);
+        });
+    }
+    
+    async clear() {
+        return new Promise((resolve, reject) => {
+            const tx = this.db.transaction(this.storeName, 'readwrite');
+            tx.objectStore(this.storeName).clear();
+            tx.oncomplete = () => resolve();
+        });
+    }
+}
+const audioDB = new AudioDB();
+
+// --- STREAMING_CHUNK:Executing Primary DOM Initialization and Listener Bindings... ---
+// BIND ALL LISTENERS IMMEDIATELY TO AVOID RACE CONDITIONS
+document.addEventListener('DOMContentLoaded', () => {
+    initBackgroundAnimation();
+
+    // 1. Populate DOM Elements Map
+    els.mainContainer = document.getElementById('mainContainer');
+    els.loginView = document.getElementById('login-view');
+    els.btnLogin = document.getElementById('btn-login');
+    els.loginEmail = document.getElementById('login-email');
+    els.loginUcode = document.getElementById('login-ucode');
+    els.loginStatus = document.getElementById('login-status');
+    
+    els.apiKey = document.getElementById('apiKey');
+    els.courseName = document.getElementById('courseName');
+    els.modelSelect = document.getElementById('modelSelect');
+    els.micQuality = document.getElementById('micQuality');
+    els.micSelect = document.getElementById('micSelect');
+    els.btnRefreshMics = document.getElementById('btnRefreshMics');
+    els.quotaInfo = document.getElementById('quotaInfo');
+    els.timer = document.getElementById('timer');
+    els.sizeMonitor = document.getElementById('sizeMonitor');
+    els.status = document.getElementById('processStatus');
+    els.subStatus = document.getElementById('processSubStatus');
+    
+    els.outputStudy = document.getElementById('outputStudy');
+    els.outputScribe = document.getElementById('outputScribe');
+    els.flashcardContainer = document.getElementById('flashcardContainer');
+    
+    els.spinStudy = document.getElementById('spinStudy');
+    els.spinScribe = document.getElementById('spinScribe');
+    els.spinCards = document.getElementById('spinCards');
+    
+    els.btnDlStudy = document.getElementById('btnDlStudy');
+    els.btnDlScribe = document.getElementById('btnDlScribe');
+    els.btnDlCards = document.getElementById('btnDlCards');
+
+    els.modelLoadStatus = document.getElementById('modelLoadStatus');
+    els.quotaAlert = document.getElementById('quotaAlert'); 
+    els.protocolAlert = document.getElementById('protocolAlert');
+    els.btnFullscreen = document.getElementById('btnFullscreen');
+    els.btnPause = document.getElementById('btnPause');
+    els.recordingStatus = document.getElementById('recordingStatus');
+    
+    els.promptStudy = document.getElementById('promptStudy');
+    els.promptScribe = document.getElementById('promptScribe');
+    els.promptCards = document.getElementById('promptCards');
+    
+    els.tabRecord = document.getElementById('tabRecord');
+    els.tabUpload = document.getElementById('tabUpload');
+    els.modeRecord = document.getElementById('modeRecord');
+    els.modeUpload = document.getElementById('modeUpload');
+    els.fileUpload = document.getElementById('fileUpload');
+    
+    els.btnSelectFile = document.getElementById('btnSelectFile');
+    els.fileNameDisplay = document.getElementById('fileNameDisplay');
+    
+    els.btnDirectReview = document.getElementById('btnDirectReview');
+    els.directReviewInput = document.getElementById('directReviewInput');
+
+    els.btnTabStudy = document.getElementById('btnTabStudy');
+    els.btnTabScribe = document.getElementById('btnTabScribe');
+    els.btnTabCards = document.getElementById('btnTabCards');
+    els.paneStudy = document.getElementById('paneStudy');
+    els.paneScribe = document.getElementById('paneScribe');
+    els.paneCards = document.getElementById('paneCards');
+    
+    els.activeCard = document.getElementById('activeCard');
+    els.cardFront = document.getElementById('cardFrontText');
+    els.cardBack = document.getElementById('cardBackText');
+    els.btnPrevCard = document.getElementById('btnPrevCard');
+    els.btnNextCard = document.getElementById('btnNextCard');
+    els.cardCounter = document.getElementById('cardCounter');
+    els.importCardsInput = document.getElementById('importCardsInput');
+    els.btnImportCards = document.getElementById('btnImportCards');
+    
+    els.btnOpenHelp = document.getElementById('btnOpenHelp');
+    els.helpModal = document.getElementById('helpModal');
+    els.btnCloseModal = document.getElementById('btnCloseModal');
+
+    // 2. Attach All Event Listeners Universally (Destroys Race Condition)
+    bindGlobalListeners();
+
+    // 3. Initiate Login/Auth Protocol
+    handleAuthRoutine();
+});
+
+function bindGlobalListeners() {
+    // Top Bar Modals
+    document.getElementById('btnOpenHistory')?.addEventListener('click', () => {
+        document.getElementById('historySidebar').classList.add('active');
+        loadSessionHistory();
+    });
+    
+    document.getElementById('btnCloseHistory')?.addEventListener('click', () => {
+        document.getElementById('historySidebar').classList.remove('active');
+    });
+    
+    document.getElementById('btnClearHistory')?.addEventListener('click', async () => {
+        if (confirm('Clear all session history? This cannot be undone.')) {
+            await sessionHistory.clearAllSessions();
+            loadSessionHistory();
+        }
+    });
+    
+    document.getElementById('btnLoadSession')?.addEventListener('click', () => {
+        document.getElementById('historySidebar').classList.add('active');
+        loadSessionHistory();
+    });
+
+    // Modals
+    document.getElementById('btnWatchTutorial')?.addEventListener('click', () => {
+        document.getElementById('tutorialModal')?.classList.remove('hidden');
+    });
+    
+    document.getElementById('btnCloseTutorial')?.addEventListener('click', () => {
+        document.getElementById('tutorialModal')?.classList.add('hidden');
+    });
+    
+    document.getElementById('btnOpenHelp')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('helpModal')?.classList.remove('hidden');
+    });
+    
+    document.getElementById('btnCloseModal')?.addEventListener('click', () => {
+        document.getElementById('helpModal')?.classList.add('hidden');
+    });
+
+    // Global Action Attachments
+    window.saveSession = saveCurrentSession;
+
+    // Flashcard Interactions
+    document.getElementById('btnFlipCard')?.addEventListener('click', () => {
+        document.getElementById('activeCard')?.classList.toggle('flipped');
+    });
+    document.getElementById('activeCard')?.addEventListener('click', () => {
+        document.getElementById('activeCard')?.classList.toggle('flipped');
+    });
+    document.getElementById('btnPrevCard')?.addEventListener('click', () => {
+        if (currentCardIndex > 0) renderCard(currentCardIndex - 1);
+    });
+    document.getElementById('btnNextCard')?.addEventListener('click', () => {
+        if (currentCardIndex < flashcardsData.length - 1) renderCard(currentCardIndex + 1);
+    });
+
+    // Tab Managers
+    document.getElementById('btnTabStudy')?.addEventListener('click', () => setActiveTab('Study'));
+    document.getElementById('btnTabScribe')?.addEventListener('click', () => setActiveTab('Scribe'));
+    document.getElementById('btnTabCards')?.addEventListener('click', () => setActiveTab('Cards'));
+
+    document.getElementById('tabRecord')?.addEventListener('click', () => {
+        document.getElementById('tabRecord').classList.add('active');
+        document.getElementById('tabUpload').classList.remove('active');
+        document.getElementById('modeRecord').classList.remove('hidden');
+        document.getElementById('modeUpload').classList.add('hidden');
+    });
+    
+    document.getElementById('tabUpload')?.addEventListener('click', () => {
+        document.getElementById('tabUpload').classList.add('active');
+        document.getElementById('tabRecord').classList.remove('active');
+        document.getElementById('modeUpload').classList.remove('hidden');
+        document.getElementById('modeRecord').classList.add('hidden');
+    });
+
+    // Hardware interactions
+    if (els.btnRefreshMics) {
+        els.btnRefreshMics.onclick = async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                stream.getTracks().forEach(t => t.stop());
+                await loadMicrophones();
+            } catch (e) { showToast("Could not access microphones.", "error"); }
+        };
+    }
+
+    if (els.btnFullscreen) {
+        els.btnFullscreen.onclick = () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => console.error(err.message));
+            } else { document.exitFullscreen(); }
+        };
+        document.addEventListener('fullscreenchange', () => {
+            if (document.fullscreenElement) {
+                els.btnFullscreen.innerHTML = '<i class="fas fa-compress"></i>';
+            } else {
+                els.btnFullscreen.innerHTML = '<i class="fas fa-expand"></i>';
+            }
+        });
+    }
+
+    // App core flows
+    if (els.apiKey) {
+        els.apiKey.addEventListener('input', (e) => {
+            const key = e.target.value.trim();
+            localStorage.setItem('lsp_gemini_key', key);
+            clearTimeout(debounceTimer);
+            if (key.length > 20) { 
+                if (els.modelLoadStatus) {
+                    els.modelLoadStatus.textContent = "Checking key...";
+                    els.modelLoadStatus.style.color = "var(--text-muted)";
+                }
+                debounceTimer = setTimeout(() => { loadModels(key); }, 800); 
+            } else { 
+                if (els.modelLoadStatus) els.modelLoadStatus.textContent = ""; 
+            }
+        });
+    }
+    els.modelSelect?.addEventListener('change', updateQuotaDisplay);
+
+    if (els.btnSelectFile && els.fileUpload) {
+        els.btnSelectFile.onclick = (e) => { 
+            e.preventDefault(); 
+            els.fileUpload.click(); 
+        };
+    }
+    
+    if (els.fileUpload) {
+        els.fileUpload.onchange = () => {
+            const file = els.fileUpload.files[0];
+            if (file && els.fileNameDisplay) {
+                els.fileNameDisplay.textContent = "Selected: " + file.name;
+                els.fileNameDisplay.style.color = "var(--success)";
+                els.fileNameDisplay.style.fontWeight = "bold";
+            } else if (els.fileNameDisplay) {
+                els.fileNameDisplay.innerHTML = '<i class="fas fa-music"></i> No file selected';
+            }
+        };
+    }
+
+    if (els.btnDirectReview && els.directReviewInput) {
+        els.btnDirectReview.onclick = () => { els.directReviewInput.click(); };
+        els.directReviewInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+                if(parseAndLoadCards(evt.target.result)) {
+                    switchView('result');
+                    setActiveTab('Cards');
+                    if (els.btnTabStudy) els.btnTabStudy.style.display = 'none';
+                    if (els.btnTabScribe) els.btnTabScribe.style.display = 'none';
+                    if (els.outputStudy) els.outputStudy.innerHTML = "<p style='color:#64748b; text-align:center;'>Review Mode Only (Study Guide not loaded)</p>";
+                    if (els.outputScribe) els.outputScribe.innerHTML = "<p style='color:#64748b; text-align:center;'>Review Mode Only (Scribe Notes not loaded)</p>";
+                    if (els.btnDlCards) els.btnDlCards.disabled = false;
+                }
+            };
+            reader.readAsText(file);
+        };
+    }
+
+    if (els.btnImportCards && els.importCardsInput) {
+        els.btnImportCards.onclick = () => { els.importCardsInput.click(); };
+        els.importCardsInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+                if(parseAndLoadCards(evt.target.result)) {
+                    showToast(`Imported ${flashcardsData.length} cards successfully!`, "success");
+                }
+            };
+            reader.readAsText(file);
+            els.importCardsInput.value = '';
+        };
+    }
+
+    const btnStart = document.getElementById('btnStart');
+    if (btnStart) btnStart.onclick = startRecording;
+
+    if (els.btnPause) els.btnPause.onclick = togglePauseRecording;
+
+    const btnStop = document.getElementById('btnStop');
+    if (btnStop) btnStop.onclick = stopRecording;
+
+    const btnUploadProcess = document.getElementById('btnUploadProcess');
+    if (btnUploadProcess) btnUploadProcess.onclick = processUploadedFile;
+}
+
+// --- STREAMING_CHUNK:Securing Application Auth Routines... ---
+function handleAuthRoutine() {
+    const isDevMode = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const bypassAuth = new URLSearchParams(window.location.search).has('dev');
+    
+    const lastActive = localStorage.getItem('lsp_last_active');
+    if (lastActive && !bypassAuth) {
+        const diff = Date.now() - parseInt(lastActive, 10);
+        if (diff < (3 * 60 * 60 * 1000)) { 
+            localStorage.setItem('lsp_last_active', Date.now().toString()); 
+            els.loginView.style.display = 'none';
+            els.mainContainer.classList.remove('hidden');
+            document.body.style.userSelect = "auto";
+            bootApp(); 
+            return;
+        } else {
+            localStorage.removeItem('lsp_last_active');
+        }
+    }
+    
+    if (isDevMode && bypassAuth) {
+        els.loginView.style.display = 'none';
+        els.mainContainer.classList.remove('hidden');
+        document.body.style.userSelect = "auto";
+        bootApp(); 
+        return;
+    }
+
+    els.btnLogin.onclick = async () => {
+        const emailInput = els.loginEmail.value.trim().toLowerCase();
+        const codeInput = els.loginUcode.value.trim().toUpperCase();
+        
+        if (!emailInput || !codeInput) {
+            els.loginStatus.innerText = "✗ Please enter email and U-CODE";
+            els.loginStatus.style.color = "var(--danger)";
+            return;
+        }
+        
+        els.loginStatus.innerText = "Connecting to network...";
+        els.loginStatus.style.color = "var(--text-muted)";
+        els.btnLogin.disabled = true;
+
+        try {
+            const REPO_OWNER = "Cleo876";
+            const REPO_NAME = "lsp-data";
+            const FILE_PATH = "lsp-data.json";
+            const url = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${FILE_PATH}`;
+            const res = await fetch(url);
+            
+            if (!res.ok) throw new Error("Could not reach network database.");
+            
+            const content = await res.text();
+            const sanitizedContent = content.replace(/\n/g, '');
+            
+            let db;
+            try {
+                db = JSON.parse(sanitizedContent);
+            } catch (e) {
+                try {
+                    const deobfuscate = (str) => {
+                        try {
+                            const decoded = atob(str);
+                            return decoded.split('').map(c => String.fromCharCode(c.charCodeAt(0) - 2)).join('');
+                        } catch (e) { return "{}"; }
+                    };
+                    const jsonStr = deobfuscate(sanitizedContent); 
+                    db = JSON.parse(jsonStr);
+                } catch(err2) {
+                    throw new Error("Registry decryption failed.");
+                }
+            }
+
+            if (emailInput === "cleowillo@gmail.com" && codeInput === "K9W2") {
+                loginSuccess();
+                return;
+            }
+
+            let authorized = false;
+            if (db.distributors) {
+                db.distributors.forEach(dist => {
+                    if (dist.email.toLowerCase() === emailInput && dist.u_code.toUpperCase() === codeInput) {
+                        authorized = true;
+                    }
+                    if (dist.customers) {
+                        dist.customers.forEach(cust => {
+                            if (cust.email.toLowerCase() === emailInput && cust.u_code.toUpperCase() === codeInput) {
+                                authorized = true;
+                            }
+                        });
+                    }
+                });
+            }
+
+            if (authorized) {
+                loginSuccess();
+            } else {
+                els.loginStatus.innerText = "✗ Invalid Credentials";
+                els.loginStatus.style.color = "var(--danger)";
+                els.btnLogin.disabled = false;
+            }
+
+        } catch (err) {
+            console.error("Auth error:", err);
+            els.loginStatus.innerText = "✗ Network Error - Try Again";
+            els.loginStatus.style.color = "var(--danger)";
+            els.btnLogin.disabled = false;
+            
+            if (isDevMode) {
+                setTimeout(() => {
+                    els.loginStatus.innerText = "⚠️ Using dev fallback...";
+                    setTimeout(() => { loginSuccess(); }, 1000);
+                }, 1000);
+            }
+        }
+    };
+
+    els.loginUcode.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') els.btnLogin.click();
+    });
+}
+
+function loginSuccess() {
+    localStorage.setItem('lsp_last_active', Date.now().toString());
+    els.loginStatus.innerText = "✓ Access Granted";
+    els.loginStatus.style.color = "var(--success)";
+    setTimeout(() => {
+        els.loginView.style.display = 'none';
+        els.mainContainer.classList.remove('hidden');
+        document.body.style.userSelect = "auto";
+        els.btnLogin.disabled = false;
+        bootApp();
+    }, 800);
+}
+
+// --- STREAMING_CHUNK:Finalizing View, App State and UI Routines... ---
+function bootApp() {
+    // 1. Android APK detection logic
+    const isRunningInApp = () => {
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        if (/android/i.test(userAgent) && /wv/i.test(userAgent)) return true;
+        if (window.navigator.standalone === true) return true;
+        if (window.matchMedia('(display-mode: standalone)').matches) return true;
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('app')) return true;
+        return false;
+    };
+
+    if (!isRunningInApp()) {
+        const btnDownload = document.getElementById('btnDownloadApp');
+        if (btnDownload) btnDownload.classList.remove('hidden');
+    }
+
+    if (window.location.protocol === 'file:') {
+        if (els.protocolAlert) {
+            els.protocolAlert.style.display = 'block';
+            els.protocolAlert.classList.remove('hidden');
+        }
+        const btnStart = document.getElementById('btnStart');
+        if (btnStart) {
+            btnStart.disabled = true;
+            btnStart.innerText = "Blocked (HTTPS Required)";
+            btnStart.style.background = "#334155";
+        }
+    }
+
+    // 2. Load Models natively
+    const savedKey = localStorage.getItem('lsp_gemini_key');
+    if (savedKey && els.apiKey) {
+        els.apiKey.value = savedKey;
+        if (savedKey.length > 20) loadModels(savedKey);
+    }
+
+    // 3. Initiate Loaders
+    loadMicrophones();
+    loadSessionHistory();
+}
+
 function updateProgressBar(progressId, percentage) {
     const progressBar = document.getElementById(progressId);
     if (progressBar) progressBar.style.width = `${percentage}%`;
@@ -2289,7 +2648,39 @@ function formatDate(timestamp) {
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: diffDays < 365 ? undefined : 'numeric' });
 }
 
-// --- STREAMING_CHUNK:Loading Session UI logic... ---
+function switchView(view) {
+    ['step-setup','step-recording','step-processing','step-result'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+    });
+    const targetEl = document.getElementById(`step-${view}`);
+    if (targetEl) targetEl.classList.remove('hidden');
+    
+    if(view === 'result') {
+        document.getElementById('mainContainer')?.classList.add('wide-mode');
+        if (document.getElementById('mainContainer')) {
+            document.getElementById('mainContainer').style.animation = 'slideUp 0.5s ease';
+        }
+    } else {
+        document.getElementById('mainContainer')?.classList.remove('wide-mode');
+    }
+}
+
+function setActiveTab(tabName) {
+    ['Study', 'Scribe', 'Cards'].forEach(t => {
+        const btn = document.getElementById(`btnTab${t}`);
+        const pane = document.getElementById(`pane${t}`);
+        if (btn) btn.classList.remove('active');
+        if (pane) pane.classList.remove('active');
+    });
+    
+    const btn = document.getElementById(`btnTab${tabName}`);
+    const pane = document.getElementById(`pane${tabName}`);
+    if (btn) btn.classList.add('active');
+    if (pane) pane.classList.add('active');
+}
+
+// --- STREAMING_CHUNK:Configuring the History Tab Logics... ---
 async function loadSessionHistory() {
     const sessionList = document.getElementById('sessionList');
     const emptyHistory = document.getElementById('emptyHistory');
@@ -2306,7 +2697,7 @@ async function loadSessionHistory() {
         sessions.forEach(session => {
             const sessionItem = document.createElement('div');
             sessionItem.className = 'session-item';
-            if (session.failed) sessionItem.classList.add('failed'); // We can style this later if we want
+            if (session.failed) sessionItem.classList.add('failed'); 
             sessionItem.dataset.id = session.id;
             
             const cardCount = session.flashcards ? session.flashcards.length : 0;
@@ -2330,7 +2721,6 @@ async function loadSessionHistory() {
             sessionItem.addEventListener('click', async (e) => {
                 if (!e.target.closest('.session-action-btn')) {
                     if (session.failed && session.rawBlob) {
-                        // Allow retrying failed ones stored as blobs
                         retryFailedSession(session);
                     } else {
                         await loadSession(session.id);
@@ -2419,11 +2809,10 @@ async function loadSession(sessionId) {
     }
 }
 
-// --- STREAMING_CHUNK:Configuring Advanced Partial Saving Logic... ---
 async function saveCurrentSession() {
     const course = document.getElementById('courseName').value || 'Unnamed Lecture';
     
-    // Check states directly to allow partial saves. Ignore Skeletons or Error tags.
+    // Allow partial saves. Ignore Skeletons or Error tags.
     const outputStudy = document.getElementById('outputStudy').innerHTML;
     const outputScribe = document.getElementById('outputScribe').innerHTML;
     
@@ -2455,7 +2844,6 @@ async function saveCurrentSession() {
     }
 }
 
-// Support for failed session retries from DB
 async function retryFailedSession(session) {
     if (!session.rawBlob) {
         showToast("Audio data lost. Cannot retry.", "error");
@@ -2465,7 +2853,6 @@ async function retryFailedSession(session) {
     currentBlob = session.rawBlob;
     document.getElementById('historySidebar').classList.remove('active');
     
-    // Reset global states
     rawStudyMarkdown = "";
     rawScribeMarkdown = "";
     flashcardsData = [];
@@ -2475,516 +2862,7 @@ async function retryFailedSession(session) {
     processMultiEngine();
 }
 
-// --- STREAMING_CHUNK:Authentication Logic... ---
-const REPO_OWNER = "Cleo876";
-const REPO_NAME = "lsp-data";
-const FILE_PATH = "lsp-data.json";
-
-const deobfuscate = (str) => {
-    try {
-        const decoded = atob(str);
-        return decoded.split('').map(c => String.fromCharCode(c.charCodeAt(0) - 2)).join('');
-    } catch (e) { return "{}"; }
-};
-
-document.addEventListener('DOMContentLoaded', () => {
-    initBackgroundAnimation();
-    
-    const loginView = document.getElementById('login-view');
-    const mainContainer = document.getElementById('mainContainer');
-    const btnLogin = document.getElementById('btn-login');
-    const loginEmail = document.getElementById('login-email');
-    const loginUcode = document.getElementById('login-ucode');
-    const loginStatus = document.getElementById('login-status');
-
-    const isDevMode = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    const bypassAuth = new URLSearchParams(window.location.search).has('dev');
-    
-    const lastActive = localStorage.getItem('lsp_last_active');
-    if (lastActive && !bypassAuth) {
-        const diff = Date.now() - parseInt(lastActive, 10);
-        if (diff < (3 * 60 * 60 * 1000)) { 
-            localStorage.setItem('lsp_last_active', Date.now().toString()); 
-            loginView.style.display = 'none';
-            mainContainer.classList.remove('hidden');
-            document.body.style.userSelect = "auto";
-        } else {
-            localStorage.removeItem('lsp_last_active');
-        }
-    }
-    
-    if (isDevMode && bypassAuth) {
-        loginView.style.display = 'none';
-        mainContainer.classList.remove('hidden');
-        document.body.style.userSelect = "auto";
-        return;
-    }
-
-    btnLogin.onclick = async () => {
-        const emailInput = loginEmail.value.trim().toLowerCase();
-        const codeInput = loginUcode.value.trim().toUpperCase();
-        
-        if (!emailInput || !codeInput) {
-            loginStatus.innerText = "✗ Please enter email and U-CODE";
-            loginStatus.style.color = "var(--danger)";
-            return;
-        }
-        
-        loginStatus.innerText = "Connecting to network...";
-        loginStatus.style.color = "var(--text-muted)";
-        btnLogin.disabled = true;
-
-        try {
-            const url = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${FILE_PATH}`;
-            const res = await fetch(url);
-            
-            if (!res.ok) throw new Error("Could not reach network database.");
-            
-            const content = await res.text();
-            const sanitizedContent = content.replace(/\n/g, '');
-            
-            let db;
-            try {
-                db = JSON.parse(sanitizedContent);
-            } catch (e) {
-                try {
-                    const jsonStr = deobfuscate(sanitizedContent); 
-                    db = JSON.parse(jsonStr);
-                } catch(err2) {
-                    throw new Error("Registry decryption failed.");
-                }
-            }
-
-            if (emailInput === "cleowillo@gmail.com" && codeInput === "K9W2") {
-                loginSuccess(loginView, mainContainer, loginStatus, btnLogin);
-                return;
-            }
-
-            let authorized = false;
-            if (db.distributors) {
-                db.distributors.forEach(dist => {
-                    if (dist.email.toLowerCase() === emailInput && dist.u_code.toUpperCase() === codeInput) {
-                        authorized = true;
-                    }
-                    if (dist.customers) {
-                        dist.customers.forEach(cust => {
-                            if (cust.email.toLowerCase() === emailInput && cust.u_code.toUpperCase() === codeInput) {
-                                authorized = true;
-                            }
-                        });
-                    }
-                });
-            }
-
-            if (authorized) {
-                loginSuccess(loginView, mainContainer, loginStatus, btnLogin);
-            } else {
-                loginStatus.innerText = "✗ Invalid Credentials";
-                loginStatus.style.color = "var(--danger)";
-                btnLogin.disabled = false;
-            }
-
-        } catch (err) {
-            console.error("Auth error:", err);
-            loginStatus.innerText = "✗ Network Error - Try Again";
-            loginStatus.style.color = "var(--danger)";
-            btnLogin.disabled = false;
-            
-            if (isDevMode) {
-                setTimeout(() => {
-                    loginStatus.innerText = "⚠️ Using dev fallback...";
-                    setTimeout(() => {
-                        loginSuccess(loginView, mainContainer, loginStatus, btnLogin);
-                    }, 1000);
-                }, 1000);
-            }
-        }
-    };
-
-    loginUcode.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') btnLogin.click();
-    });
-});
-
-function loginSuccess(loginView, mainContainer, loginStatus, btnLogin) {
-    localStorage.setItem('lsp_last_active', Date.now().toString());
-    loginStatus.innerText = "✓ Access Granted";
-    loginStatus.style.color = "var(--success)";
-    setTimeout(() => {
-        loginView.style.display = 'none';
-        mainContainer.classList.remove('hidden');
-        document.body.style.userSelect = "auto";
-        btnLogin.disabled = false;
-        setTimeout(() => { loadSessionHistory(); }, 500);
-    }, 800);
-}
-
-// --- STREAMING_CHUNK:Registering Core App Listeners (Non-Module) ---
-document.addEventListener('DOMContentLoaded', () => {
-    const isRunningInApp = () => {
-        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-        if (/android/i.test(userAgent) && /wv/i.test(userAgent)) return true;
-        if (window.navigator.standalone === true) return true;
-        if (window.matchMedia('(display-mode: standalone)').matches) return true;
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('app')) return true;
-        return false;
-    };
-
-    if (!isRunningInApp()) {
-        const btnDownload = document.getElementById('btnDownloadApp');
-        if (btnDownload) btnDownload.classList.remove('hidden');
-    }
-
-    document.getElementById('btnOpenHistory')?.addEventListener('click', () => {
-        document.getElementById('historySidebar').classList.add('active');
-        loadSessionHistory();
-    });
-    
-    document.getElementById('btnCloseHistory')?.addEventListener('click', () => {
-        document.getElementById('historySidebar').classList.remove('active');
-    });
-    
-    document.getElementById('btnClearHistory')?.addEventListener('click', async () => {
-        if (confirm('Clear all session history? This cannot be undone.')) {
-            await sessionHistory.clearAllSessions();
-            loadSessionHistory();
-        }
-    });
-    
-    document.getElementById('btnLoadSession')?.addEventListener('click', () => {
-        document.getElementById('historySidebar').classList.add('active');
-        loadSessionHistory();
-    });
-    
-    document.getElementById('btnFlipCard')?.addEventListener('click', () => {
-        document.getElementById('activeCard').classList.toggle('flipped');
-    });
-    
-    window.saveSession = saveCurrentSession;
-    
-    document.getElementById('btnWatchTutorial')?.addEventListener('click', () => {
-        document.getElementById('tutorialModal')?.classList.remove('hidden');
-    });
-    
-    document.getElementById('btnCloseTutorial')?.addEventListener('click', () => {
-        document.getElementById('tutorialModal')?.classList.add('hidden');
-    });
-    
-    document.getElementById('btnOpenHelp')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        document.getElementById('helpModal')?.classList.remove('hidden');
-    });
-    
-    document.getElementById('btnCloseModal')?.addEventListener('click', () => {
-        document.getElementById('helpModal')?.classList.add('hidden');
-    });
-
-    // Wait a bit for the main container to be shown
-    setTimeout(() => {
-        if (els.mainContainer && !els.mainContainer.classList.contains('hidden')) {
-            initializeApp();
-        }
-    }, 1000);
-});
-
-// Global Variables safely declared for native use
-let rawStudyMarkdown = "";
-let rawScribeMarkdown = "";
-let flashcardsData = [];
-let currentCardIndex = 0;
-
-let wakeLock = null;
-let detectedMimeType = ""; 
-let mediaRecorder;
-let startTime;
-let timerInterval;
-let currentBlob = null;
-let debounceTimer; 
-let elapsedMs = 0; 
-let totalSize = 0;
-
-// Reusable Globals for Retries
-window.currentBase64Audio = null;
-window.currentMimeType = null;
-
-// --- STREAMING_CHUNK:Configuring Robust DOM Map and View Switcher... ---
-const els = {
-    mainContainer: document.getElementById('mainContainer'),
-    apiKey: document.getElementById('apiKey'),
-    courseName: document.getElementById('courseName'),
-    modelSelect: document.getElementById('modelSelect'),
-    micQuality: document.getElementById('micQuality'),
-    micSelect: document.getElementById('micSelect'),
-    btnRefreshMics: document.getElementById('btnRefreshMics'),
-    quotaInfo: document.getElementById('quotaInfo'),
-    timer: document.getElementById('timer'),
-    sizeMonitor: document.getElementById('sizeMonitor'),
-    status: document.getElementById('processStatus'),
-    subStatus: document.getElementById('processSubStatus'),
-    
-    outputStudy: document.getElementById('outputStudy'),
-    outputScribe: document.getElementById('outputScribe'),
-    flashcardContainer: document.getElementById('flashcardContainer'),
-    
-    spinStudy: document.getElementById('spinStudy'),
-    spinScribe: document.getElementById('spinScribe'),
-    spinCards: document.getElementById('spinCards'),
-    
-    btnDlStudy: document.getElementById('btnDlStudy'),
-    btnDlScribe: document.getElementById('btnDlScribe'),
-    btnDlCards: document.getElementById('btnDlCards'),
-
-    modelLoadStatus: document.getElementById('modelLoadStatus'),
-    quotaAlert: document.getElementById('quotaAlert'), 
-    protocolAlert: document.getElementById('protocolAlert'),
-    btnFullscreen: document.getElementById('btnFullscreen'),
-    btnPause: document.getElementById('btnPause'),
-    recordingStatus: document.getElementById('recordingStatus'),
-    
-    promptStudy: document.getElementById('promptStudy'),
-    promptScribe: document.getElementById('promptScribe'),
-    promptCards: document.getElementById('promptCards'),
-    
-    tabRecord: document.getElementById('tabRecord'),
-    tabUpload: document.getElementById('tabUpload'),
-    modeRecord: document.getElementById('modeRecord'),
-    modeUpload: document.getElementById('modeUpload'),
-    fileUpload: document.getElementById('fileUpload'),
-    
-    btnSelectFile: document.getElementById('btnSelectFile'),
-    fileNameDisplay: document.getElementById('fileNameDisplay'),
-    
-    btnDirectReview: document.getElementById('btnDirectReview'),
-    directReviewInput: document.getElementById('directReviewInput'),
-
-    btnTabStudy: document.getElementById('btnTabStudy'),
-    btnTabScribe: document.getElementById('btnTabScribe'),
-    btnTabCards: document.getElementById('btnTabCards'),
-    paneStudy: document.getElementById('paneStudy'),
-    paneScribe: document.getElementById('paneScribe'),
-    paneCards: document.getElementById('paneCards'),
-    
-    activeCard: document.getElementById('activeCard'),
-    cardFront: document.getElementById('cardFrontText'),
-    cardBack: document.getElementById('cardBackText'),
-    btnPrevCard: document.getElementById('btnPrevCard'),
-    btnNextCard: document.getElementById('btnNextCard'),
-    cardCounter: document.getElementById('cardCounter'),
-    importCardsInput: document.getElementById('importCardsInput'),
-    btnImportCards: document.getElementById('btnImportCards')
-};
-
-function switchView(view) {
-    ['step-setup','step-recording','step-processing','step-result'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.classList.add('hidden');
-    });
-    const targetEl = document.getElementById(`step-${view}`);
-    if (targetEl) targetEl.classList.remove('hidden');
-    
-    if(view === 'result') {
-        document.getElementById('mainContainer')?.classList.add('wide-mode');
-        if (document.getElementById('mainContainer')) {
-            document.getElementById('mainContainer').style.animation = 'slideUp 0.5s ease';
-        }
-    } else {
-        document.getElementById('mainContainer')?.classList.remove('wide-mode');
-    }
-}
-
-// --- STREAMING_CHUNK:Implementing Custom Flashcard UI Renderers... ---
-function renderCard(index) {
-    if (!flashcardsData || flashcardsData.length === 0) {
-        const frontText = document.getElementById('cardFrontText');
-        const backText = document.getElementById('cardBackText');
-        const counter = document.getElementById('cardCounter');
-        
-        if (frontText) frontText.textContent = 'No flashcards available';
-        if (backText) backText.textContent = '';
-        if (counter) counter.textContent = '0 / 0';
-        
-        const progressFill = document.getElementById('cardProgress');
-        if (progressFill) progressFill.style.width = '0%';
-        return;
-    }
-    
-    currentCardIndex = index;
-    const card = flashcardsData[index];
-    
-    const frontText = document.getElementById('cardFrontText');
-    const backText = document.getElementById('cardBackText');
-    const counter = document.getElementById('cardCounter');
-    
-    if (frontText) frontText.textContent = card.front;
-    if (backText) backText.textContent = card.back;
-    if (counter) counter.textContent = `${index + 1} / ${flashcardsData.length}`;
-    
-    const activeCard = document.getElementById('activeCard');
-    if (activeCard) activeCard.classList.remove('flipped');
-    
-    const btnPrevCard = document.getElementById('btnPrevCard');
-    const btnNextCard = document.getElementById('btnNextCard');
-    if (btnPrevCard) btnPrevCard.disabled = index === 0;
-    if (btnNextCard) btnNextCard.disabled = index === flashcardsData.length - 1;
-    
-    const progressFill = document.getElementById('cardProgress');
-    if (progressFill) {
-        const progress = ((index + 1) / flashcardsData.length) * 100;
-        progressFill.style.width = `${progress}%`;
-    }
-    
-    const cardsBadge = document.getElementById('cardsBadge');
-    if (cardsBadge) cardsBadge.textContent = `${flashcardsData.length} cards`;
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('btnPrevCard')?.addEventListener('click', () => {
-        if (currentCardIndex > 0) renderCard(currentCardIndex - 1);
-    });
-    
-    document.getElementById('btnNextCard')?.addEventListener('click', () => {
-        if (currentCardIndex < flashcardsData.length - 1) renderCard(currentCardIndex + 1);
-    });
-    
-    document.getElementById('activeCard')?.addEventListener('click', () => {
-        document.getElementById('activeCard')?.classList.toggle('flipped');
-    });
-});
-
-window.downloadFlashcards = () => {
-    if (!flashcardsData.length) {
-        showToast("No flashcards generated.", "error");
-        return;
-    }
-    
-    let csvContent = "Front,Back\n";
-    flashcardsData.forEach(card => {
-        const f = `"${card.front.replace(/"/g, '""')}"`;
-        const b = `"${card.back.replace(/"/g, '""')}"`;
-        csvContent += `${f},${b}\n`;
-    });
-    
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    const course = document.getElementById('courseName')?.value || "Class";
-    link.download = `${course.replace(/\s+/g,'_')}_AnkiDeck.csv`;
-    link.click();
-    showToast("Flashcards downloaded successfully!", "success");
-};
-
-// --- STREAMING_CHUNK:Configuring Device Hardware Interfaces (Mic/Tabs/WV)... ---
-function setActiveTab(tabName) {
-    ['Study', 'Scribe', 'Cards'].forEach(t => {
-        const btn = document.getElementById(`btnTab${t}`);
-        const pane = document.getElementById(`pane${t}`);
-        if (btn) btn.classList.remove('active');
-        if (pane) pane.classList.remove('active');
-    });
-    
-    const btn = document.getElementById(`btnTab${tabName}`);
-    const pane = document.getElementById(`pane${tabName}`);
-    if (btn) btn.classList.add('active');
-    if (pane) pane.classList.add('active');
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('btnTabStudy')?.addEventListener('click', () => setActiveTab('Study'));
-    document.getElementById('btnTabScribe')?.addEventListener('click', () => setActiveTab('Scribe'));
-    document.getElementById('btnTabCards')?.addEventListener('click', () => setActiveTab('Cards'));
-
-    document.getElementById('tabRecord')?.addEventListener('click', () => {
-        document.getElementById('tabRecord').classList.add('active');
-        document.getElementById('tabUpload').classList.remove('active');
-        document.getElementById('modeRecord').classList.remove('hidden');
-        document.getElementById('modeUpload').classList.add('hidden');
-    });
-    
-    document.getElementById('tabUpload')?.addEventListener('click', () => {
-        document.getElementById('tabUpload').classList.add('active');
-        document.getElementById('tabRecord').classList.remove('active');
-        document.getElementById('modeUpload').classList.remove('hidden');
-        document.getElementById('modeRecord').classList.add('hidden');
-    });
-});
-
-class AudioDB {
-    constructor(dbName = 'LectureScribePro', storeName = 'audioChunks') {
-        this.dbName = dbName;
-        this.storeName = storeName;
-        this.db = null;
-    }
-    
-    async open() {
-        return new Promise((resolve, reject) => {
-            const request = indexedDB.open(this.dbName, 1);
-            request.onupgradeneeded = (e) => {
-                const db = e.target.result;
-                if (!db.objectStoreNames.contains(this.storeName)) {
-                    db.createObjectStore(this.storeName, { autoIncrement: true });
-                }
-            };
-            request.onsuccess = (e) => { 
-                this.db = e.target.result; 
-                resolve(this.db); 
-            };
-            request.onerror = (e) => reject(e.target.error);
-        });
-    }
-    
-    async addChunk(chunk) {
-        return new Promise((resolve, reject) => {
-            const tx = this.db.transaction(this.storeName, 'readwrite');
-            tx.objectStore(this.storeName).add(chunk);
-            tx.oncomplete = () => resolve();
-            tx.onerror = (e) => reject(e.target.error);
-        });
-    }
-    
-    async getAllChunks() {
-        return new Promise((resolve, reject) => {
-            const tx = this.db.transaction(this.storeName, 'readonly');
-            const request = tx.objectStore(this.storeName).getAll();
-            request.onsuccess = () => resolve(request.result);
-            request.onerror = (e) => reject(e.target.error);
-        });
-    }
-    
-    async clear() {
-        return new Promise((resolve, reject) => {
-            const tx = this.db.transaction(this.storeName, 'readwrite');
-            tx.objectStore(this.storeName).clear();
-            tx.oncomplete = () => resolve();
-        });
-    }
-}
-const audioDB = new AudioDB();
-
-function initializeApp() {
-    if (window.location.protocol === 'file:') {
-        if (els.protocolAlert) {
-            els.protocolAlert.style.display = 'block';
-            els.protocolAlert.classList.remove('hidden');
-        }
-        const btnStart = document.getElementById('btnStart');
-        if (btnStart) {
-            btnStart.disabled = true;
-            btnStart.innerText = "Blocked (HTTPS Required)";
-            btnStart.style.background = "#334155";
-        }
-    }
-
-    const savedKey = localStorage.getItem('lsp_gemini_key');
-    if (savedKey && els.apiKey) {
-        els.apiKey.value = savedKey;
-        if (savedKey.length > 20) loadModels(savedKey);
-    }
-
-    loadMicrophones();
-    setupEventListeners();
-}
-
+// --- STREAMING_CHUNK:Binding Microphones & Model APIs natively... ---
 async function loadMicrophones() {
     if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) return;
     try {
@@ -3004,117 +2882,6 @@ async function loadMicrophones() {
     } catch(e) { console.log("Error enumerating devices:", e); }
 }
 
-function setupEventListeners() {
-    if (els.btnRefreshMics) {
-        els.btnRefreshMics.onclick = async () => {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                stream.getTracks().forEach(t => t.stop());
-                await loadMicrophones();
-            } catch (e) { showToast("Could not access microphones.", "error"); }
-        };
-    }
-
-    if (els.btnFullscreen) {
-        els.btnFullscreen.onclick = () => {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(err => console.error(err.message));
-            } else { document.exitFullscreen(); }
-        };
-        document.addEventListener('fullscreenchange', () => {
-            if (document.fullscreenElement) {
-                els.btnFullscreen.innerHTML = '<i class="fas fa-compress"></i>';
-            } else {
-                els.btnFullscreen.innerHTML = '<i class="fas fa-expand"></i>';
-            }
-        });
-    }
-
-    if (els.apiKey) {
-        els.apiKey.addEventListener('input', (e) => {
-            const key = e.target.value.trim();
-            localStorage.setItem('lsp_gemini_key', key);
-            clearTimeout(debounceTimer);
-            if (key.length > 20) { 
-                if (els.modelLoadStatus) {
-                    els.modelLoadStatus.textContent = "Checking key...";
-                    els.modelLoadStatus.style.color = "var(--text-muted)";
-                }
-                debounceTimer = setTimeout(() => { loadModels(key); }, 800); 
-            } else { 
-                if (els.modelLoadStatus) els.modelLoadStatus.textContent = ""; 
-            }
-        });
-    }
-    els.modelSelect?.addEventListener('change', updateQuotaDisplay);
-
-    if (els.btnSelectFile && els.fileUpload) {
-        els.btnSelectFile.onclick = () => { els.fileUpload.click(); };
-    }
-    
-    if (els.fileUpload) {
-        els.fileUpload.onchange = () => {
-            const file = els.fileUpload.files[0];
-            if (file && els.fileNameDisplay) {
-                els.fileNameDisplay.textContent = "Selected: " + file.name;
-                els.fileNameDisplay.style.color = "var(--success)";
-                els.fileNameDisplay.style.fontWeight = "bold";
-            } else if (els.fileNameDisplay) {
-                els.fileNameDisplay.innerHTML = '<i class="fas fa-music"></i> No file selected';
-            }
-        };
-    }
-
-    if (els.btnDirectReview && els.directReviewInput) {
-        els.btnDirectReview.onclick = () => { els.directReviewInput.click(); };
-        els.directReviewInput.onchange = (e) => {
-            const file = e.target.files[0];
-            if(!file) return;
-            const reader = new FileReader();
-            reader.onload = (evt) => {
-                if(parseAndLoadCards(evt.target.result)) {
-                    switchView('result');
-                    setActiveTab('Cards');
-                    if (els.btnTabStudy) els.btnTabStudy.style.display = 'none';
-                    if (els.btnTabScribe) els.btnTabScribe.style.display = 'none';
-                    if (els.outputStudy) els.outputStudy.innerHTML = "<p style='color:#64748b; text-align:center;'>Review Mode Only (Study Guide not loaded)</p>";
-                    if (els.outputScribe) els.outputScribe.innerHTML = "<p style='color:#64748b; text-align:center;'>Review Mode Only (Scribe Notes not loaded)</p>";
-                    if (els.btnDlCards) els.btnDlCards.disabled = false;
-                }
-            };
-            reader.readAsText(file);
-        };
-    }
-
-    if (els.btnImportCards && els.importCardsInput) {
-        els.btnImportCards.onclick = () => { els.importCardsInput.click(); };
-        els.importCardsInput.onchange = (e) => {
-            const file = e.target.files[0];
-            if(!file) return;
-            const reader = new FileReader();
-            reader.onload = (evt) => {
-                if(parseAndLoadCards(evt.target.result)) {
-                    showToast(`Imported ${flashcardsData.length} cards successfully!`, "success");
-                }
-            };
-            reader.readAsText(file);
-            els.importCardsInput.value = '';
-        };
-    }
-
-    const btnStart = document.getElementById('btnStart');
-    if (btnStart) btnStart.onclick = startRecording;
-
-    if (els.btnPause) els.btnPause.onclick = togglePauseRecording;
-
-    const btnStop = document.getElementById('btnStop');
-    if (btnStop) btnStop.onclick = stopRecording;
-
-    const btnUploadProcess = document.getElementById('btnUploadProcess');
-    if (btnUploadProcess) btnUploadProcess.onclick = processUploadedFile;
-}
-
-// --- STREAMING_CHUNK:Filtering Models & Raw API Architecture Setup... ---
 async function loadModels(key) {
     try {
         const cleanKey = key.trim();
@@ -3131,7 +2898,7 @@ async function loadModels(key) {
         
         const data = await resp.json();
         
-        // **CRITICAL FIX**: Explicitly filtering for "gemini" exclusively to block "antigravity" and internal text-only tests
+        // CRITICAL FIX: Filtering for "gemini" strictly ignores broken internal tests like "antigravity"
         const models = (data.models || [])
             .filter(m => m.supportedGenerationMethods?.includes("generateContent"))
             .filter(m => m.name.toLowerCase().includes("gemini"))
@@ -3224,6 +2991,7 @@ function parseAndLoadCards(text) {
     }
 }
 
+// --- STREAMING_CHUNK:Configuring Media Recorder Engine... ---
 async function startRecording() {
     if (!els.apiKey.value) {
         showToast("Please enter your API Key.", "error");
@@ -3347,10 +3115,10 @@ function updateSizeDisplay(bytes) {
     updateProgressBar('sizeProgress', Math.min(progress, 100));
 }
 
-// --- STREAMING_CHUNK:Implementing Native REST Fetch & Retries... ---
+// --- STREAMING_CHUNK:Building Google Native Fetch Rest Bridge... ---
 /**
- * Custom Fetch for Gemini API replacing @google/generative-ai
- * Supports auto-exponential backoff internally for 429/503 errors
+ * Custom Fetch for Gemini API safely operating without external CORS ES-Modules
+ * Automatically loops retries upon 429 server errors
  */
 async function fetchGeminiAPI(modelName, apiKey, mimeType, base64Audio, promptText, maxRetries = 2) {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
@@ -3376,6 +3144,7 @@ async function fetchGeminiAPI(modelName, apiKey, mimeType, base64Audio, promptTe
             });
 
             if (!response.ok) {
+                // If Google throttles (429) or breaks (500), implement auto backoff
                 if ((response.status === 429 || response.status >= 500) && i < maxRetries) {
                     const delay = (i + 1) * 2500; // Exponential backoff (2.5s, 5s)
                     console.warn(`Gemini API Busy (HTTP ${response.status}). Retrying in ${delay}ms...`);
@@ -3393,7 +3162,7 @@ async function fetchGeminiAPI(modelName, apiKey, mimeType, base64Audio, promptTe
 
             const result = await response.json();
             
-            // Parse robustly
+            // Extract the result safely
             if (result.candidates && result.candidates[0] && result.candidates[0].content && result.candidates[0].content.parts) {
                 return result.candidates[0].content.parts.map(p => p.text).join("");
             } else {
@@ -3420,11 +3189,12 @@ function blobToBase64(blob) {
     });
 }
 
-// Global specific retry bindings
+// Global specific retry bindings specifically attached to window scope for onclick mapping
 window.retryStudy = async () => { await _runEngineTask('study'); };
 window.retryScribe = async () => { await _runEngineTask('scribe'); };
 window.retryCards = async () => { await _runEngineTask('cards'); };
 
+// --- STREAMING_CHUNK:Finalizing Engine processing logic... ---
 // Reusable Task runner for initial process AND manual retries
 async function _runEngineTask(taskType) {
     const course = document.getElementById('courseName')?.value || "General Class";
@@ -3531,8 +3301,7 @@ function getErrorHTML(moduleName, retryFnName) {
     `;
 }
 
-
-// --- STREAMING_CHUNK:Executing Sequential Engine Calls... ---
+// Sequential Execution logic to defeat the 429 quota block
 async function processMultiEngine() {
     if (els.quotaAlert) {
         els.quotaAlert.style.display = 'none';
@@ -3542,7 +3311,7 @@ async function processMultiEngine() {
     switchView('processing');
     if (els.status) els.status.innerText = "Encoding Audio...";
     
-    // Fallback MIME injection if empty (Very common in Android WebView File choosers)
+    // Universal robust mime fallback for android intents
     let finalMimeType = currentBlob.type;
     if (!finalMimeType) {
         const ext = currentBlob.name ? currentBlob.name.split('.').pop().toLowerCase() : '';
@@ -3550,7 +3319,7 @@ async function processMultiEngine() {
         else if (ext === 'wav') finalMimeType = 'audio/wav';
         else if (ext === 'm4a') finalMimeType = 'audio/mp4';
         else if (ext === 'ogg') finalMimeType = 'audio/ogg';
-        else finalMimeType = 'audio/webm'; // Universal robust fallback
+        else finalMimeType = 'audio/webm'; 
     }
 
     try {
@@ -3563,7 +3332,6 @@ async function processMultiEngine() {
     
     switchView('result');
     
-    // Set Initial Loading States
     document.getElementById('outputStudy').innerHTML = getLoadingHTML("Analyzing audio & generating Study Guide...");
     document.getElementById('outputScribe').innerHTML = getLoadingHTML("Pending in queue...");
     
@@ -3579,18 +3347,17 @@ async function processMultiEngine() {
     document.getElementById('btnDlScribe').disabled = true;
     document.getElementById('btnDlCards').disabled = true;
 
-    // --- SEQUENTIAL EXECUTION ARCHITECTURE (Fixes 429 Overload) ---
     // Running sequentially with breathing room
     await _runEngineTask('study');
     
     document.getElementById('outputScribe').innerHTML = getLoadingHTML("Generating Scribe Notes...");
-    await new Promise(r => setTimeout(r, 2000)); // 2s Breather for API Limits
+    await new Promise(r => setTimeout(r, 2000)); // Breather
     await _runEngineTask('scribe');
     
-    await new Promise(r => setTimeout(r, 2000)); // 2s Breather for API Limits
+    await new Promise(r => setTimeout(r, 2000)); // Breather
     await _runEngineTask('cards');
 
-    // Attempt Auto-Save if at least ONE module succeeded
+    // Attempt Auto-Save 
     await saveCurrentSession();
     
     // Always store as raw blob backup in case of total failure (Allowing offline retry)
@@ -3608,72 +3375,6 @@ async function processMultiEngine() {
         });
         loadSessionHistory();
     }
-}
-
-// RTF download logic
-window.downloadRTF = (type) => {
-    const course = els.courseName?.value || "Class";
-    const title = type === 'study' ? "Study_Guide" : "Scribe_Notes";
-    const markdown = type === 'study' ? rawStudyMarkdown : rawScribeMarkdown;
-    
-    if(!markdown) {
-        showToast("Content not ready yet.", "warning");
-        return;
-    }
-    
-    let rtfBody = markdownToRTF(convertLatexToUnicode(markdown));
-    let rtf = `{\\rtf1\\ansi\\ansicpg1252\\deff0{\\fonttbl{\\f0 Arial;}}\\f0\\fs24 \n`;
-    rtf += `{\\colortbl;\\red0\\green0\\blue0;\\red59\\green130\\blue246;}\n`; 
-    rtf += `\\pard\\sa200\\sl276\\slmult1\\b\\fs36 ${course} - ${title.replace('_', ' ')}\\b0\\fs24 \\par \n`;
-    rtf += `Generated: ${new Date().toLocaleString()} \\par \\par \n`;
-    rtf += `-------------------------------------------------- \\par \\par \n`;
-    rtf += rtfBody;
-    rtf += `\n}`;
-    
-    const blob = new Blob([rtf], { type: "application/rtf" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = `${course.replace(/\s+/g,'_')}_${title}.rtf`;
-    link.click();
-    
-    showToast(`${title} downloaded successfully!`, "success");
-};
-
-function markdownToRTF(md) {
-    let lines = md.split('\n');
-    let rtf = "";
-    lines.forEach(line => {
-        line = line.trim();
-        if (!line) { rtf += "\\par \n"; return; }
-        line = escapeUnicode(line);
-        if (line.startsWith('# ')) { rtf += `\\par\\pard\\sa200\\sb200\\b\\fs32 ${line.substring(2)}\\b0\\fs24\\par \n`; return; }
-        if (line.startsWith('## ')) { rtf += `\\par\\pard\\sa150\\sb150\\b\\fs28 ${line.substring(3)}\\b0\\fs24\\par \n`; return; }
-        if (line.startsWith('### ')) { rtf += `\\par\\pard\\sa100\\sb100\\b\\i ${line.substring(4)}\\i0\\b0\\par \n`; return; }
-        if (line.includes('|')) {
-            let rowContent = line.replace(/^\||\|$/g, '');
-            if (rowContent.includes('---')) return; 
-            let cells = rowContent.split('|').map(c => c.trim());
-            rtf += `\\pard\\tqr\\tx9000 ${cells.join('\\tab ')} \\par \n`;
-            return;
-        }
-        line = line.replace(/\*\*(.*?)\*\*/g, '\\b $1\\b0 ');
-        line = line.replace(/\*(.*?)\*/g, '\\i $1\\i0 ');
-        if (line.startsWith('- ') || line.startsWith('* ')) {
-            rtf += `\\par\\pard\\li720\\fi-360 \\bullet \\tab ${line.substring(2)} \\par \n`;
-        } else if (/^\d+\./.test(line)) {
-            rtf += `\\par\\pard\\li720\\fi-360 ${line.split('.')[0]}. \\tab ${line.substring(line.indexOf('.')+1).trim()} \\par \n`;
-        } else {
-            rtf += `\\pard\\sa100 ${line} \\par \n`;
-        }
-    });
-    return rtf;
-}
-
-function escapeUnicode(str) {
-    return str.replace(/[^\x00-\x7F]/g, char => {
-        const code = char.charCodeAt(0);
-        return `\\uc1\\u${code}?`;
-    });
 }
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
